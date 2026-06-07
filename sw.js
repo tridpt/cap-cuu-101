@@ -4,13 +4,14 @@
    Toàn bộ là asset cục bộ nên precache hết -> chạy offline 100%,
    đặc biệt quan trọng cho Chế độ Hoảng loạn khi mất mạng. */
 
-const CACHE_VERSION = "capcuu101-v1";
+const CACHE_VERSION = "capcuu101-v2";
 const APP_SHELL_CACHE = `${CACHE_VERSION}:app-shell`;
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./style.css",
+  "./sound.js",
   "./app.js",
   "./manifest.json",
   "./icon.svg",

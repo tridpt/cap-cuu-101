@@ -15,10 +15,12 @@
     if (!screens[id]) return;
     if (current === "screen-game") stopGame();
     if (current === "screen-panic") stopPanic();
+    if (id === "screen-panic" && window.Sfx) Sfx.stopMusic();
     screens[current].classList.remove("active");
     screens[id].classList.add("active");
     current = id;
     if (id === "screen-levels") renderLevels();
+    if (id === "screen-achievements") renderAchievements();
   }
   document.querySelectorAll("[data-goto]").forEach(btn =>
     btn.addEventListener("click", () => go(btn.dataset.goto))
@@ -37,6 +39,84 @@
   }
   function totalStars() {
     return Object.values(loadStars()).reduce((a, b) => a + b, 0);
+  }
+
+  /* ---------- STATS, STREAK & BADGES ---------- */
+  const STATS_KEY = "capcuu101_stats";
+  function loadStats() {
+    try {
+      return Object.assign(
+        { wins: {}, totalWins: 0, best: {}, streak: { count: 0, last: "" }, badges: [] },
+        JSON.parse(localStorage.getItem(STATS_KEY)) || {}
+      );
+    } catch {
+      return { wins: {}, totalWins: 0, best: {}, streak: { count: 0, last: "" }, badges: [] };
+    }
+  }
+  function saveStats(s) { localStorage.setItem(STATS_KEY, JSON.stringify(s)); }
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+  }
+  function daysBetween(a, b) {
+    const pa = a.split("-").map(Number), pb = b.split("-").map(Number);
+    const da = new Date(pa[0], pa[1] - 1, pa[2]);
+    const db = new Date(pb[0], pb[1] - 1, pb[2]);
+    return Math.round((db - da) / 86400000);
+  }
+
+  function recordWin(id) {
+    const s = loadStats();
+    s.wins[id] = (s.wins[id] || 0) + 1;
+    s.totalWins++;
+    // streak
+    const t = todayStr();
+    if (s.streak.last !== t) {
+      const gap = s.streak.last ? daysBetween(s.streak.last, t) : 999;
+      s.streak.count = gap === 1 ? s.streak.count + 1 : 1;
+      s.streak.last = t;
+    }
+    saveStats(s);
+  }
+
+  function saveBest(id, val) {
+    const s = loadStats();
+    if (!s.best[id] || val > s.best[id]) { s.best[id] = val; saveStats(s); }
+  }
+
+  const BADGES = [
+    { id: "rookie", emoji: "🐣", name: "Lính mới", desc: "Cứu sống lần đầu tiên",
+      test: (s, st) => s.totalWins >= 1 },
+    { id: "cpr_master", emoji: "❤️‍🔥", name: "Bậc thầy CPR", desc: "Đạt 3 sao màn ép tim",
+      test: (s, st) => (st.cpr || 0) >= 3 },
+    { id: "combo", emoji: "🎯", name: "Tay nhịp vàng", desc: "Combo x10 ở màn CPR",
+      test: (s) => (s.best.cpr || 0) >= 10 },
+    { id: "five", emoji: "🖐️", name: "Nửa đường", desc: "3 sao ít nhất 5 màn",
+      test: (s, st) => Object.values(st).filter(v => v >= 3).length >= 5 },
+    { id: "explorer", emoji: "🧭", name: "Thử mọi thứ", desc: "Thắng đủ cả 10 màn",
+      test: (s) => Object.keys(s.wins).length >= 10 },
+    { id: "all_stars", emoji: "👑", name: "Cứu tinh", desc: "3 sao tất cả các màn",
+      test: (s, st) => LEVELS.every(l => (st[l.id] || 0) >= 3) },
+    { id: "streak3", emoji: "🔥", name: "Chăm chỉ", desc: "Chuỗi 3 ngày liên tiếp",
+      test: (s) => s.streak.count >= 3 },
+    { id: "streak7", emoji: "🏅", name: "Kiên trì", desc: "Chuỗi 7 ngày liên tiếp",
+      test: (s) => s.streak.count >= 7 }
+  ];
+
+  // trả về tên các huy hiệu MỚI mở khoá
+  function checkBadges() {
+    const s = loadStats();
+    const st = loadStars();
+    const newly = [];
+    BADGES.forEach(b => {
+      if (!s.badges.includes(b.id) && b.test(s, st)) {
+        s.badges.push(b.id);
+        newly.push(b.name);
+      }
+    });
+    if (newly.length) saveStats(s);
+    return newly;
   }
 
   /* ---------- LEVEL DATA ---------- */
@@ -63,8 +143,8 @@
       id: "burn",
       emoji: "🔥",
       title: "Cứu anh đầu bếp bị bỏng",
-      desc: "Xử lý bỏng đúng cách (chọn nhanh!)",
-      type: "quiz",
+      desc: "Xả nước mát lên vết bỏng cho đủ lâu",
+      type: "hose",
       char: "🧑‍🍳",
       lesson: "Bỏng: xả nước mát (KHÔNG dùng đá) 20 phút. Không bôi kem đánh răng, bơ, nước mắm gì cả!"
     },
@@ -72,16 +152,71 @@
       id: "bleed",
       emoji: "🩸",
       title: "Cầm máu cho Zombie hậu đậu",
-      desc: "Băng bó & ép cầm máu",
-      type: "quiz",
+      desc: "Đặt gạc đúng chỗ & giữ ép cầm máu",
+      type: "press",
       char: "🧟",
       lesson: "Chảy máu: ép trực tiếp lên vết thương bằng gạc sạch, nâng cao chi, giữ ép liên tục."
+    },
+    {
+      id: "drown",
+      emoji: "🌊",
+      title: "Vớt chú cá vàng đuối nước",
+      desc: "Xử lý đuối nước đúng trình tự",
+      type: "quiz",
+      char: "🐠",
+      lesson: "Đuối nước: đảm bảo an toàn cho mình trước, đưa nạn nhân lên cạn, gọi 115, kiểm tra thở & CPR nếu cần."
+    },
+    {
+      id: "electric",
+      emoji: "⚡",
+      title: "Robot bị điện giật",
+      desc: "Ngắt nguồn trước khi cứu!",
+      type: "quiz",
+      char: "🤖",
+      lesson: "Điện giật: NGẮT nguồn điện trước. Tuyệt đối không chạm vào nạn nhân khi còn dòng điện."
+    },
+    {
+      id: "seizure",
+      emoji: "🌀",
+      title: "Bạch tuộc lên cơn co giật",
+      desc: "Bảo vệ, đừng giữ chặt",
+      type: "quiz",
+      char: "🐙",
+      lesson: "Co giật: dọn vật nguy hiểm, lót đầu mềm, KHÔNG giữ chặt, KHÔNG nhét gì vào miệng, canh giờ cơn giật."
+    },
+    {
+      id: "anaphylaxis",
+      emoji: "🐝",
+      title: "Ong vò vẽ bị... dị ứng ong",
+      desc: "Sốc phản vệ — tiêm adrenaline & gọi 115",
+      type: "quiz",
+      char: "🐝",
+      lesson: "Sốc phản vệ: dùng bút tiêm adrenaline (EpiPen) vào đùi ngoài ngay, gọi 115, cho nằm kê chân cao."
+    },
+    {
+      id: "fracture",
+      emoji: "🦴",
+      title: "Khủng long gãy chân",
+      desc: "Cố định, đừng nắn xương",
+      type: "quiz",
+      char: "🦖",
+      lesson: "Gãy xương: cố định nguyên tư thế, KHÔNG nắn, chườm lạnh giảm sưng, đưa đi viện."
+    },
+    {
+      id: "snakebite",
+      emoji: "🐍",
+      title: "Rắn cắn nhầm... cao bồi",
+      desc: "Bất động & tới viện, đừng hút nọc",
+      type: "quiz",
+      char: "🤠",
+      lesson: "Rắn cắn: giữ nạn nhân bất động, để vết cắn thấp hơn tim, KHÔNG rạch, hút nọc hay garô chặt. Đến viện gấp."
     }
   ];
 
   /* ---------- RENDER LEVELS ---------- */
   function renderLevels() {
     document.getElementById("total-stars").textContent = totalStars();
+    renderStreakBanner();
     const saved = loadStars();
     const list = document.getElementById("level-list");
     list.innerHTML = "";
@@ -99,6 +234,52 @@
     });
   }
 
+  function renderStreakBanner() {
+    const el = document.getElementById("streak-banner");
+    if (!el) return;
+    const s = loadStats();
+    const t = todayStr();
+    const active = s.streak.last && daysBetween(s.streak.last, t) <= 1 && s.streak.count > 0;
+    if (active) {
+      const playedToday = s.streak.last === t;
+      el.className = "streak-banner";
+      el.innerHTML = `🔥 Chuỗi <b>${s.streak.count} ngày</b>` +
+        (playedToday ? " — giữ phong độ nhé!" : " — chơi 1 màn hôm nay để nối chuỗi!");
+    } else {
+      el.className = "streak-banner";
+      el.innerHTML = "🔥 Chơi mỗi ngày để xây chuỗi ôn tập. Bắt đầu hôm nay!";
+    }
+  }
+
+  /* ---------- RENDER ACHIEVEMENTS ---------- */
+  function renderAchievements() {
+    const s = loadStats();
+    const st = loadStars();
+    const threeStar = LEVELS.filter(l => (st[l.id] || 0) >= 3).length;
+    const body = document.getElementById("ach-body");
+    const badgeCards = BADGES.map(b => {
+      const on = s.badges.includes(b.id);
+      return `<div class="badge ${on ? "unlocked" : ""}">
+        <div class="b-emoji">${on ? b.emoji : "🔒"}</div>
+        <div class="b-name">${b.name}</div>
+        <div class="b-desc">${b.desc}</div>
+      </div>`;
+    }).join("");
+    body.innerHTML = `
+      <div class="ach-stats">
+        <div class="ach-stat"><div class="num">${totalStars()}</div><div class="lbl">⭐ Tổng sao</div></div>
+        <div class="ach-stat"><div class="num">${threeStar}/${LEVELS.length}</div><div class="lbl">🏆 Màn 3 sao</div></div>
+        <div class="ach-stat"><div class="num">${s.streak.count}</div><div class="lbl">🔥 Chuỗi ngày</div></div>
+      </div>
+      <div class="ach-stats">
+        <div class="ach-stat"><div class="num">${s.totalWins}</div><div class="lbl">💪 Lượt cứu sống</div></div>
+        <div class="ach-stat"><div class="num">x${s.best.cpr || 0}</div><div class="lbl">🎯 Combo CPR tốt nhất</div></div>
+        <div class="ach-stat"><div class="num">${s.badges.length}/${BADGES.length}</div><div class="lbl">🏅 Huy hiệu</div></div>
+      </div>
+      <div class="ach-section-title">🏅 Huy hiệu</div>
+      <div class="badge-grid">${badgeCards}</div>`;
+  }
+
   /* ============================================================
      GAME ENGINE
      ============================================================ */
@@ -108,6 +289,7 @@
   let gameState = null;
 
   function startGame(lv) {
+    if (window.Sfx) { Sfx.unlock(); Sfx.startMusic(); }
     go("screen-game");
     document.getElementById("game-title").textContent = lv.title;
     document.getElementById("game-hp").textContent = 100;
@@ -116,6 +298,8 @@
     instr.textContent = "";
     if (lv.type === "rhythm") initRhythm(lv);
     else if (lv.type === "thrust") initThrust(lv);
+    else if (lv.type === "hose") initHose(lv);
+    else if (lv.type === "press") initPress(lv);
     else if (lv.type === "quiz") initQuiz(lv);
   }
 
@@ -138,14 +322,21 @@
   function showResult(lv, success, stars, extra) {
     const ov = document.createElement("div");
     ov.className = "result-overlay";
-    if (success) saveStars(lv.id, stars);
+    if (success) { saveStars(lv.id, stars); recordWin(lv.id); }
+    if (window.Sfx) success ? Sfx.win() : Sfx.logout();
+    if (window.Sfx) Sfx.vibrate(success ? [40, 60, 40] : [200]);
+    const newBadges = success ? checkBadges() : [];
     const starStr = success ? "★".repeat(stars) + "☆".repeat(3 - stars) : "";
+    const badgeNote = newBadges.length
+      ? `<div class="lesson-box" style="border-left-color:var(--accent2)">🏅 Mở khoá huy hiệu: <b>${newBadges.join(", ")}</b></div>`
+      : "";
     ov.innerHTML = `
       <div class="r-emoji">${success ? "🎉" : "💀"}</div>
       <h2>${success ? "CỨU SỐNG RỒI!" : "ĐĂNG XUẤT KHỎI CUỘC ĐỜI 😵"}</h2>
       ${success ? `<div class="result-stars">${starStr}</div>` : ""}
       <p>${extra || ""}</p>
       <div class="lesson-box">💡 <b>Đời thực:</b> ${lv.lesson}</div>
+      ${badgeNote}
       <button class="btn btn-play" id="r-retry">🔁 Chơi lại</button>
       <button class="btn btn-ghost" id="r-back">← Danh sách</button>`;
     stage.appendChild(ov);
@@ -163,6 +354,7 @@
     stage.innerHTML = `
       <div class="progress-bar"><div class="progress-fill" id="pf"></div></div>
       <div class="beat-ring go" id="ring"></div>
+      <div class="combo-tag" id="combo"></div>
       <div class="character" id="char">${lv.char}</div>`;
     instr.innerHTML = "Chạm <b>TIM</b> đúng theo vòng tròn nảy ra. Đừng nhanh quá, đừng chậm quá!";
     controls.innerHTML = `<div class="tap-zone" id="tap">❤️ ÉP TIM</div>`;
@@ -171,15 +363,24 @@
     const charEl = document.getElementById("char");
     const pf = document.getElementById("pf");
     const tap = document.getElementById("tap");
+    const comboEl = document.getElementById("combo");
 
     ring.style.animationDuration = interval + "ms";
 
     let last = performance.now();
-    let hits = 0, good = 0, alive = true;
+    let hits = 0, good = 0, alive = true, combo = 0, bestCombo = 0;
 
-    function tick() { last = performance.now(); }
+    function tick() {
+      last = performance.now();
+      if (window.Sfx) { Sfx.tick(); Sfx.vibrate(35); }
+      ring.classList.remove("go"); void ring.offsetWidth; ring.classList.add("go");
+    }
     const beatTimer = setInterval(tick, interval);
     last = performance.now();
+
+    function bumpCombo() {
+      comboEl.classList.remove("bump"); void comboEl.offsetWidth; comboEl.classList.add("bump");
+    }
 
     function onTap() {
       if (!alive) return;
@@ -190,12 +391,17 @@
       charEl.classList.remove("pulse"); void charEl.offsetWidth; charEl.classList.add("pulse");
 
       if (diff <= tolerance) {
-        good++;
-        floatText("PERFECT!", "#3ddc97");
-      } else if (phase < interval / 2) {
-        floatText("Nhanh quá!", "#ffd23f");
+        good++; combo++;
+        bestCombo = Math.max(bestCombo, combo);
+        comboEl.textContent = combo >= 3 ? "x" + combo : "";
+        bumpCombo();
+        if (window.Sfx) Sfx.correct();
+        floatText(combo >= 5 ? "PERFECT! 🔥" : "PERFECT!", "#3ddc97");
       } else {
-        floatText("Chậm quá!", "#ff5d73");
+        combo = 0; comboEl.textContent = "";
+        if (window.Sfx) Sfx.blip();
+        if (phase < interval / 2) floatText("Nhanh quá!", "#ffd23f");
+        else floatText("Chậm quá!", "#ff5d73");
       }
 
       const pct = Math.min(100, (good / TARGET) * 100);
@@ -208,8 +414,9 @@
         charEl.classList.add("win");
         const acc = good / hits;
         const stars = acc > 0.9 ? 3 : acc > 0.7 ? 2 : 1;
+        saveBest("cpr", bestCombo);
         setTimeout(() => showResult(lv, true, stars,
-          `Độ chính xác nhịp: ${Math.round(acc * 100)}%`), 700);
+          `Độ chính xác nhịp: ${Math.round(acc * 100)}% · Combo cao nhất: x${bestCombo}`), 700);
       }
     }
     tap.addEventListener("pointerdown", onTap);
@@ -239,11 +446,13 @@
       charEl.classList.remove("pulse"); void charEl.offsetWidth; charEl.classList.add("pulse");
       if (strong) {
         thrusts++;
+        if (window.Sfx) { Sfx.correct(); Sfx.vibrate(60); }
         floatText("ĐẨY! 🟣", "#3ddc97");
         pf.style.width = (thrusts / NEED) * 100 + "%";
         document.getElementById("game-hp").textContent = Math.min(100, 50 + thrusts * 8);
         if (thrusts >= NEED) win();
       } else {
+        if (window.Sfx) Sfx.blip();
         floatText("Nhẹ quá!", "#ffd23f");
       }
     }
@@ -332,70 +541,417 @@
     gameState = { cleanup };
   }
 
-  /* ---------- MINI-GAME 3 & 4: QUIZ (burns / bleeding) ---------- */
+  /* ---------- MINI-GAME 3: HOSE (xả nước chữa bỏng) ---------- */
+  function initHose(lv) {
+    const NEED = 6000;          // ms "nước mát" cần tích đủ
+    stage.innerHTML = `
+      <div class="progress-bar"><div class="progress-fill" id="pf"></div></div>
+      <div class="wound" id="wound">${lv.char}</div>
+      <div class="water-stream" id="stream">🚿</div>
+      <div class="cool-label" id="cool">Kéo vòi nước lên vết bỏng</div>`;
+    instr.innerHTML = "<b>Đặt ngón tay & rê vòi nước</b> đè lên nhân vật, giữ cho mát đủ lâu. Nhấc tay ra là nóng lại!";
+
+    const wound = document.getElementById("wound");
+    const stream = document.getElementById("stream");
+    const pf = document.getElementById("pf");
+    const cool = document.getElementById("cool");
+
+    // đặt vết thương ở vị trí ngẫu nhiên trong stage
+    function place() {
+      const r = stage.getBoundingClientRect();
+      const x = 0.3 + Math.random() * 0.4, y = 0.35 + Math.random() * 0.3;
+      wound.style.left = x * r.width - 45 + "px";
+      wound.style.top = y * r.height - 45 + "px";
+    }
+    place();
+
+    let cooled = 0, alive = true, onWound = false, lastT = 0;
+    let pointerInside = false;
+
+    function woundRect() { return wound.getBoundingClientRect(); }
+
+    function moveStream(clientX, clientY) {
+      const r = stage.getBoundingClientRect();
+      stream.style.left = (clientX - r.left) + "px";
+      stream.style.top = (clientY - r.top) + "px";
+      const wr = woundRect();
+      pointerInside =
+        clientX > wr.left - 20 && clientX < wr.right + 20 &&
+        clientY > wr.top - 20 && clientY < wr.bottom + 20;
+    }
+
+    function onDown(e) {
+      if (!alive) return;
+      stream.classList.add("on");
+      if (window.Sfx) { Sfx.unlock(); }
+      lastT = performance.now();
+      moveStream(e.clientX, e.clientY);
+    }
+    function onMove(e) {
+      if (!alive || !stream.classList.contains("on")) return;
+      moveStream(e.clientX, e.clientY);
+    }
+    function onUp() { stream.classList.remove("on"); pointerInside = false; }
+
+    stage.addEventListener("pointerdown", onDown);
+    stage.addEventListener("pointermove", onMove);
+    stage.addEventListener("pointerup", onUp);
+    stage.addEventListener("pointerleave", onUp);
+
+    let hotPlays = 0;
+    const loop = setInterval(() => {
+      if (!alive) return;
+      const now = performance.now();
+      const dt = now - lastT; lastT = now;
+      if (stream.classList.contains("on") && pointerInside) {
+        cooled += dt;
+        wound.style.filter = "saturate(.6) brightness(1)";
+        cool.textContent = `Đang làm mát… ${Math.round(cooled / NEED * 100)}%`;
+        cool.style.color = "#3ddc97";
+        if (Math.random() < 0.04 && window.Sfx) Sfx.blip();
+      } else {
+        cooled = Math.max(0, cooled - dt * 0.5);  // nóng lại nếu rời vòi
+        wound.style.filter = "saturate(1.6) brightness(1.2)";
+        cool.textContent = "🔥 Đang nóng lại! Đưa vòi nước về!";
+        cool.style.color = "#ff5d73";
+      }
+      pf.style.width = Math.min(100, cooled / NEED * 100) + "%";
+      document.getElementById("game-hp").textContent =
+        Math.min(100, 40 + Math.round(cooled / NEED * 60));
+
+      if (cooled >= NEED) {
+        alive = false; clearInterval(loop); onUp();
+        wound.style.filter = "none";
+        wound.classList.add("character", "win");
+        floatText("MÁT RỒI! 💧", "#3ddc97");
+        setTimeout(() => showResult(lv, true, 3, "Hạ nhiệt vết bỏng đúng cách 👏"), 700);
+      }
+    }, 60);
+
+    gameState = {
+      cleanup() {
+        clearInterval(loop);
+        stage.removeEventListener("pointerdown", onDown);
+        stage.removeEventListener("pointermove", onMove);
+        stage.removeEventListener("pointerup", onUp);
+        stage.removeEventListener("pointerleave", onUp);
+      }
+    };
+  }
+
+  /* ---------- MINI-GAME 4: PRESS (đặt gạc & giữ ép cầm máu) ---------- */
+  function initPress(lv) {
+    stage.innerHTML = `
+      <div class="character" id="char">${lv.char}</div>
+      <div class="drop-target" id="target"></div>
+      <div class="gauze" id="gauze">🩹</div>`;
+    instr.innerHTML = "<b>Bước 1:</b> Kéo miếng gạc 🩹 vào vòng tròn vết thương.";
+
+    const charEl = document.getElementById("char");
+    const target = document.getElementById("target");
+    const gauze = document.getElementById("gauze");
+    let alive = true, placed = false;
+
+    const r = stage.getBoundingClientRect();
+    // vị trí vết thương
+    const tx = 0.5, ty = 0.4;
+    target.style.left = tx * r.width + "px";
+    target.style.top = ty * r.height + "px";
+    // vị trí gạc ban đầu (góc dưới)
+    gauze.style.left = 0.2 * r.width - 28 + "px";
+    gauze.style.top = 0.75 * r.height - 28 + "px";
+
+    let dragging = false;
+    function gz(e) {
+      if (placed) return;
+      dragging = true;
+      if (window.Sfx) Sfx.unlock();
+    }
+    function gmove(e) {
+      if (!dragging || placed) return;
+      const rr = stage.getBoundingClientRect();
+      gauze.style.left = (e.clientX - rr.left - 28) + "px";
+      gauze.style.top = (e.clientY - rr.top - 28) + "px";
+    }
+    function gup() {
+      if (!dragging || placed) return;
+      dragging = false;
+      const gr = gauze.getBoundingClientRect();
+      const tr = target.getBoundingClientRect();
+      const gcx = gr.left + gr.width / 2, gcy = gr.top + gr.height / 2;
+      const tcx = tr.left + tr.width / 2, tcy = tr.top + tr.height / 2;
+      const dist = Math.hypot(gcx - tcx, gcy - tcy);
+      if (dist < 55) {
+        placed = true;
+        const rr = stage.getBoundingClientRect();
+        gauze.style.left = tcx - rr.left - 28 + "px";
+        gauze.style.top = tcy - rr.top - 28 + "px";
+        target.style.opacity = "0";
+        if (window.Sfx) Sfx.correct();
+        floatText("ĐẶT CHUẨN!", "#3ddc97");
+        startHold();
+      } else {
+        if (window.Sfx) Sfx.blip();
+        floatText("Trượt rồi!", "#ffd23f");
+      }
+    }
+    gauze.addEventListener("pointerdown", gz);
+    stage.addEventListener("pointermove", gmove);
+    stage.addEventListener("pointerup", gup);
+
+    let holdLoop = null;
+    function startHold() {
+      instr.innerHTML = "<b>Bước 2:</b> Nhấn giữ nút bên dưới để <b>ép cầm máu</b>. Giữ thanh lực trong vùng xanh đủ lâu!";
+      controls.innerHTML = `
+        <div class="force-wrap">
+          <div class="force-track">
+            <div class="force-good-zone"></div>
+            <div class="force-fill" id="ffill"></div>
+          </div>
+          <div class="force-hint" id="fhint">Nhấn & GIỮ để tăng lực ép</div>
+        </div>
+        <div class="tap-zone" id="presszone">✋ NHẤN GIỮ ÉP</div>`;
+      const fill = document.getElementById("ffill");
+      const hint = document.getElementById("fhint");
+      const zone = document.getElementById("presszone");
+
+      let force = 0, holding = false, inZone = 0;
+      const NEED_ZONE = 3000;     // ms phải giữ trong vùng xanh
+      zone.addEventListener("pointerdown", () => { holding = true; if (window.Sfx) Sfx.unlock(); });
+      zone.addEventListener("pointerup", () => holding = false);
+      zone.addEventListener("pointerleave", () => holding = false);
+
+      let last = performance.now();
+      holdLoop = setInterval(() => {
+        if (!alive) return;
+        const now = performance.now(); const dt = now - last; last = now;
+        force += (holding ? 0.18 : -0.22) * (dt / 16);
+        force = Math.max(0, Math.min(100, force));
+        fill.style.width = force + "%";
+        charEl.classList.toggle("pulse", holding);
+        // vùng xanh ~ 55%..92%
+        if (force >= 55 && force <= 92) {
+          inZone += dt;
+          hint.textContent = `Giữ ổn định… ${Math.round(inZone / NEED_ZONE * 100)}%`;
+          hint.style.color = "#3ddc97";
+        } else {
+          hint.textContent = force > 92 ? "Mạnh quá, nới một chút!" : "Ép mạnh hơn!";
+          hint.style.color = "#ffd23f";
+        }
+        document.getElementById("game-hp").textContent =
+          Math.min(100, 40 + Math.round(inZone / NEED_ZONE * 60));
+
+        if (inZone >= NEED_ZONE) {
+          alive = false; clearInterval(holdLoop);
+          charEl.classList.add("win");
+          if (window.Sfx) Sfx.win();
+          floatText("CẦM MÁU OK! 🩸✋", "#3ddc97");
+          setTimeout(() => showResult(lv, true, 3, "Ép đúng lực, đúng chỗ. Giỏi!"), 700);
+        }
+      }, 60);
+    }
+
+    gameState = {
+      cleanup() {
+        if (holdLoop) clearInterval(holdLoop);
+        stage.removeEventListener("pointermove", gmove);
+        stage.removeEventListener("pointerup", gup);
+      }
+    };
+  }
+
+  /* ---------- MINI-GAME 5+: QUIZ ---------- */
   const QUIZZES = {
-    burn: [
+    drown: [
       {
-        q: "🔥 Anh đầu bếp vừa bị bỏng tay vì chảo nóng. Làm gì ĐẦU TIÊN?",
+        q: "🌊 Thấy người đang chới với dưới nước. Việc ĐẦU TIÊN?",
         options: [
-          { t: "Xả nước mát 15–20 phút", ok: true },
-          { t: "Bôi kem đánh răng", ok: false },
-          { t: "Chườm đá lạnh trực tiếp", ok: false },
-          { t: "Bôi nước mắm cho mát", ok: false }
+          { t: "Hô hoán, ném phao/dây cho họ bám", ok: true },
+          { t: "Nhảy ùm xuống cứu ngay", ok: false },
+          { t: "Quay video báo người thân", ok: false },
+          { t: "Đứng nhìn xem họ tự bơi được không", ok: false }
         ],
-        wrongMsg: "Sai bét! Kem đánh răng / đá / nước mắm chỉ làm tổn thương nặng hơn."
+        wrongMsg: "Lao xuống khi không có kỹ năng = thêm một nạn nhân. Ưu tiên cứu gián tiếp & gọi cứu hộ."
       },
       {
-        q: "Vết bỏng phồng rộp to. Nên làm gì với cái bọng nước?",
+        q: "Đưa được nạn nhân lên bờ, họ bất tỉnh không thở. Làm gì?",
         options: [
-          { t: "Để nguyên, không chọc vỡ", ok: true },
-          { t: "Chọc cho nước ra", ok: false },
-          { t: "Lột da bỏng đi", ok: false },
-          { t: "Chà xát cho xẹp", ok: false }
+          { t: "Gọi 115 & bắt đầu CPR", ok: true },
+          { t: "Dốc ngược cho ra nước", ok: false },
+          { t: "Lăn qua lăn lại cho tỉnh", ok: false },
+          { t: "Cho uống nước gừng", ok: false }
         ],
-        wrongMsg: "Chọc vỡ bọng nước = mở cửa cho nhiễm trùng. Để yên nhé!"
+        wrongMsg: "Dốc nước là quan niệm sai & làm chậm cấp cứu. Không thở thì CPR ngay + gọi 115."
       },
       {
-        q: "Sau khi xả nước, che vết bỏng bằng gì?",
+        q: "Nạn nhân còn thở nhưng lơ mơ. Tư thế nào tốt?",
         options: [
-          { t: "Gạc/vải sạch, không dính", ok: true },
-          { t: "Bông gòn", ok: false },
-          { t: "Băng keo dán thẳng lên", ok: false },
-          { t: "Lá cây hái ngoài vườn", ok: false }
+          { t: "Nằm nghiêng an toàn, giữ ấm", ok: true },
+          { t: "Ngồi dậy cho ăn uống", ok: false },
+          { t: "Nằm sấp úp mặt", ok: false },
+          { t: "Để mặc cho ngủ", ok: false }
         ],
-        wrongMsg: "Bông gòn dính vào vết thương. Dùng gạc sạch không dính."
+        wrongMsg: "Tư thế nằm nghiêng an toàn giúp tránh sặc nếu nôn. Luôn theo dõi & giữ ấm."
       }
     ],
-    bleed: [
+    electric: [
       {
-        q: "🩸 Zombie bị rách tay chảy máu nhiều. Việc QUAN TRỌNG nhất?",
+        q: "⚡ Ai đó bị điện giật còn dính vào dây điện. Làm gì TRƯỚC?",
         options: [
-          { t: "Ép trực tiếp lên vết thương", ok: true },
-          { t: "Rửa bằng nước oxy già thật mạnh", ok: false },
-          { t: "Thổi vào cho mát", ok: false },
-          { t: "Đắp lá thuốc lào", ok: false }
+          { t: "Ngắt cầu dao / nguồn điện", ok: true },
+          { t: "Kéo tay họ ra ngay", ok: false },
+          { t: "Tạt nước cho rời ra", ok: false },
+          { t: "Hét lên gọi tên họ", ok: false }
         ],
-        wrongMsg: "Ưu tiên số 1 là ÉP CẦM MÁU. Chần chừ là mất máu."
+        wrongMsg: "Chạm/tạt nước khi còn điện = bạn bị giật theo. NGẮT NGUỒN trước tiên!"
       },
       {
-        q: "Máu thấm ướt miếng gạc đầu tiên. Làm gì?",
+        q: "Không tắt được nguồn ngay. Tách nạn nhân thế nào?",
         options: [
-          { t: "Đắp thêm gạc & tiếp tục ép", ok: true },
-          { t: "Gỡ gạc cũ ra xem", ok: false },
-          { t: "Bỏ ép, đợi tự đông", ok: false },
-          { t: "Lau sạch rồi để hở", ok: false }
+          { t: "Dùng vật khô cách điện (gậy gỗ, nhựa) gạt dây ra", ok: true },
+          { t: "Dùng tay không kéo", ok: false },
+          { t: "Dùng thanh kim loại gạt", ok: false },
+          { t: "Đứng trên vũng nước kéo", ok: false }
         ],
-        wrongMsg: "Gỡ gạc cũ sẽ làm bong cục máu đông. Đắp chồng lên và ép tiếp."
+        wrongMsg: "Chỉ dùng vật KHÔ, cách điện. Kim loại/nước đều dẫn điện rất nguy hiểm."
       },
       {
-        q: "Tư thế tay bị thương nên như thế nào?",
+        q: "Đã an toàn, nạn nhân bất tỉnh ngừng thở. Làm gì?",
         options: [
-          { t: "Nâng cao hơn tim", ok: true },
-          { t: "Thả thõng xuống đất", ok: false },
-          { t: "Vẩy mạnh cho hết máu", ok: false },
-          { t: "Buộc garô thật chặt ngay", ok: false }
+          { t: "Gọi 115 & CPR ngay", ok: true },
+          { t: "Bôi dầu vào vết bỏng điện", ok: false },
+          { t: "Cho uống nước", ok: false },
+          { t: "Chờ họ tự tỉnh", ok: false }
         ],
-        wrongMsg: "Nâng cao chi giúp giảm áp lực máu. Garô là biện pháp cuối cùng, dễ hại nếu sai."
+        wrongMsg: "Điện giật có thể gây ngừng tim. Ngừng thở thì CPR ngay + gọi 115."
+      }
+    ],
+    seizure: [
+      {
+        q: "🌀 Người bên cạnh đột ngột co giật, ngã xuống. Làm gì?",
+        options: [
+          { t: "Dọn vật cứng/nguy hiểm quanh họ", ok: true },
+          { t: "Giữ chặt tay chân cho hết giật", ok: false },
+          { t: "Nhét khăn/muỗng vào miệng", ok: false },
+          { t: "Tát cho tỉnh", ok: false }
+        ],
+        wrongMsg: "KHÔNG giữ chặt, KHÔNG nhét gì vào miệng (gãy răng, ngạt). Chỉ bảo vệ khỏi va đập."
+      },
+      {
+        q: "Trong lúc co giật, nên làm gì với đầu họ?",
+        options: [
+          { t: "Lót vật mềm dưới đầu", ok: true },
+          { t: "Nâng đầu thật cao", ok: false },
+          { t: "Đè đầu xuống đất", ok: false },
+          { t: "Lắc đầu cho tỉnh", ok: false }
+        ],
+        wrongMsg: "Lót mềm dưới đầu để tránh chấn thương. Không đè, không lắc."
+      },
+      {
+        q: "Khi nào CẦN gọi 115 cho cơn co giật?",
+        options: [
+          { t: "Giật quá 5 phút hoặc giật liên tiếp", ok: true },
+          { t: "Chỉ khi họ yêu cầu", ok: false },
+          { t: "Không bao giờ cần", ok: false },
+          { t: "Sau khi quay đủ clip", ok: false }
+        ],
+        wrongMsg: "Cơn kéo dài >5 phút, lặp lại, hoặc lần đầu/chấn thương -> gọi 115. Canh giờ cơn giật!"
+      }
+    ],
+    anaphylaxis: [
+      {
+        q: "🐝 Bị ong đốt, mặt sưng to, khó thở nhanh chóng. Đây là?",
+        options: [
+          { t: "Sốc phản vệ — cấp cứu khẩn", ok: true },
+          { t: "Cảm cúm thường", ok: false },
+          { t: "Chỉ là ngứa, bôi dầu là xong", ok: false },
+          { t: "Đói bụng", ok: false }
+        ],
+        wrongMsg: "Sưng mặt + khó thở sau dị nguyên = sốc phản vệ, có thể tử vong nhanh."
+      },
+      {
+        q: "Có sẵn bút tiêm adrenaline (EpiPen). Làm gì?",
+        options: [
+          { t: "Tiêm vào mặt ngoài đùi & gọi 115", ok: true },
+          { t: "Chờ xem có đỡ không", ok: false },
+          { t: "Cho uống nước đường", ok: false },
+          { t: "Tiêm vào mông", ok: false }
+        ],
+        wrongMsg: "Adrenaline tiêm bắp mặt ngoài đùi là cứu cánh. Tiêm ngay rồi gọi 115."
+      },
+      {
+        q: "Trong khi chờ xe cấp cứu, cho nạn nhân nằm thế nào?",
+        options: [
+          { t: "Nằm ngửa, kê chân cao (nếu khó thở thì cho ngồi)", ok: true },
+          { t: "Đứng dậy đi lại cho khỏe", ok: false },
+          { t: "Nằm sấp", ok: false },
+          { t: "Ngồi xổm", ok: false }
+        ],
+        wrongMsg: "Nằm kê chân cao hỗ trợ tuần hoàn; khó thở thì cho ngồi. Không để đứng/đi lại đột ngột."
+      }
+    ],
+    fracture: [
+      {
+        q: "🦴 Bạn ngã, cẳng chân biến dạng, đau dữ dội. Nên?",
+        options: [
+          { t: "Cố định nguyên tư thế, không di chuyển thừa", ok: true },
+          { t: "Nắn cho thẳng lại", ok: false },
+          { t: "Đứng dậy đi thử", ok: false },
+          { t: "Xoa bóp cho đỡ đau", ok: false }
+        ],
+        wrongMsg: "Tuyệt đối KHÔNG nắn xương — dễ tổn thương mạch máu, thần kinh. Cố định nguyên trạng."
+      },
+      {
+        q: "Cố định xương gãy bằng nẹp thì nẹp tới đâu?",
+        options: [
+          { t: "Qua khớp trên & dưới chỗ gãy", ok: true },
+          { t: "Chỉ ngay tại điểm gãy", ok: false },
+          { t: "Buộc thật chặt cho cứng", ok: false },
+          { t: "Không cần cố định", ok: false }
+        ],
+        wrongMsg: "Nẹp phải bất động được khớp trên và dưới ổ gãy, buộc vừa đủ (không quá chặt)."
+      },
+      {
+        q: "Có vết thương hở lòi xương ra. Làm gì?",
+        options: [
+          { t: "Che bằng gạc sạch, không ấn xương vào", ok: true },
+          { t: "Nhét xương trở lại", ok: false },
+          { t: "Rửa bằng cồn xát mạnh", ok: false },
+          { t: "Để hở cho thoáng", ok: false }
+        ],
+        wrongMsg: "Không nhét xương vào trong. Che gạc sạch, cầm máu nhẹ, đến viện gấp."
+      }
+    ],
+    snakebite: [
+      {
+        q: "🐍 Bị rắn cắn ở chân. Việc nên làm là?",
+        options: [
+          { t: "Giữ bất động, để chân thấp hơn tim, đi viện", ok: true },
+          { t: "Rạch vết cắn nặn nọc ra", ok: false },
+          { t: "Hút nọc bằng miệng", ok: false },
+          { t: "Garô thật chặt phía trên", ok: false }
+        ],
+        wrongMsg: "Rạch/hút/garô chặt đều gây hại. Giữ yên, hạn chế cử động để nọc lan chậm, tới viện ngay."
+      },
+      {
+        q: "Vì sao phải giữ nạn nhân BẤT ĐỘNG?",
+        options: [
+          { t: "Cử động làm nọc lan nhanh hơn", ok: true },
+          { t: "Để tiết kiệm sức", ok: false },
+          { t: "Cho đỡ buồn chân", ok: false },
+          { t: "Không có lý do", ok: false }
+        ],
+        wrongMsg: "Vận động bơm nọc lan theo mạch bạch huyết/máu nhanh hơn. Giữ yên & cố định chi."
+      },
+      {
+        q: "Thông tin nào HỮU ÍCH cho bác sĩ?",
+        options: [
+          { t: "Đặc điểm/màu con rắn (nếu thấy an toàn)", ok: true },
+          { t: "Bắt con rắn mang theo bằng tay", ok: false },
+          { t: "Đuổi theo trả thù con rắn", ok: false },
+          { t: "Không cần gì cả", ok: false }
+        ],
+        wrongMsg: "Nhớ đặc điểm con rắn giúp chọn huyết thanh, nhưng ĐỪNG mạo hiểm bắt nó."
       }
     ]
   };
@@ -437,12 +993,14 @@
       all.forEach(b => (b.style.pointerEvents = "none"));
       if (opt.ok) {
         btn.classList.add("correct");
+        if (window.Sfx) { Sfx.correct(); Sfx.vibrate(40); }
         floatText("ĐÚNG! ✅", "#3ddc97");
         charEl.classList.remove("pulse"); void charEl.offsetWidth; charEl.classList.add("pulse");
         idx++;
         setTimeout(render, 750);
       } else {
         btn.classList.add("wrong");
+        if (window.Sfx) { Sfx.wrong(); Sfx.vibrate(120); }
         all.forEach(b => { if (b.textContent === item.options.find(o => o.ok).t) b.classList.add("correct"); });
         hp -= 40;
         document.getElementById("game-hp").textContent = Math.max(0, hp);
@@ -514,6 +1072,78 @@
         "Máu thấm qua thì đắp thêm gạc, đừng gỡ lớp cũ.",
         "Giữ ấm cho nạn nhân, trấn an họ.",
         "Chảy máu không cầm được: gọi một một năm ngay."
+      ]
+    },
+    drown: {
+      title: "🌊 Đuối nước",
+      steps: [
+        "Đảm bảo an toàn cho chính bạn trước.",
+        "Đưa phao, dây, sào cho nạn nhân bám. Đừng liều nhảy xuống nếu không biết bơi cứu hộ.",
+        "Đưa được lên cạn thì gọi một một năm ngay.",
+        "Kiểm tra nạn nhân có thở không.",
+        "Không thở: bắt đầu ép tim, thổi ngạt nếu biết.",
+        "Đừng dốc ngược tìm nước trong bụng.",
+        "Còn thở nhưng lơ mơ: đặt nằm nghiêng an toàn, giữ ấm."
+      ]
+    },
+    electric: {
+      title: "⚡ Điện giật",
+      steps: [
+        "Không chạm vào nạn nhân khi còn dòng điện.",
+        "Ngắt cầu dao hoặc rút nguồn điện ngay.",
+        "Không tắt được thì dùng vật khô cách điện gạt dây ra.",
+        "An toàn rồi mới lại gần. Gọi một một năm.",
+        "Kiểm tra thở. Ngừng thở thì ép tim ngay.",
+        "Để ý cả vết bỏng ở chỗ điện vào và ra.",
+        "Theo dõi liên tục đến khi cấp cứu tới."
+      ]
+    },
+    seizure: {
+      title: "🌀 Co giật / động kinh",
+      steps: [
+        "Giữ bình tĩnh. Canh đồng hồ thời gian cơn giật.",
+        "Dọn vật cứng, sắc nhọn quanh nạn nhân.",
+        "Lót vật mềm dưới đầu họ.",
+        "Không giữ chặt tay chân.",
+        "Không nhét bất cứ thứ gì vào miệng.",
+        "Hết giật thì đặt nằm nghiêng an toàn.",
+        "Cơn quá năm phút hoặc giật lặp lại: gọi một một năm."
+      ]
+    },
+    anaphylaxis: {
+      title: "🐝 Sốc phản vệ",
+      steps: [
+        "Nghi sốc phản vệ: sưng mặt môi, khó thở, nổi mề đay sau khi tiếp xúc dị nguyên.",
+        "Có bút adrenaline thì tiêm ngay vào mặt ngoài đùi.",
+        "Gọi một một năm ngay lập tức.",
+        "Cho nằm ngửa, kê chân cao. Khó thở thì cho ngồi.",
+        "Nôn thì cho nằm nghiêng.",
+        "Sau năm tới mười phút còn nặng, có thể tiêm mũi thứ hai.",
+        "Theo dõi sát đến khi cấp cứu tới."
+      ]
+    },
+    fracture: {
+      title: "🦴 Gãy xương",
+      steps: [
+        "Giữ nạn nhân yên, trấn an họ.",
+        "Không cố nắn xương về vị trí cũ.",
+        "Cố định bằng nẹp, bất động khớp trên và dưới chỗ gãy.",
+        "Có vết thương hở: che bằng gạc sạch, đừng ấn xương vào.",
+        "Chườm lạnh quanh chỗ sưng để giảm đau.",
+        "Không cho ăn uống phòng khi cần mổ.",
+        "Đưa đến cơ sở y tế. Gãy lớn hoặc nghi cột sống thì gọi một một năm."
+      ]
+    },
+    snakebite: {
+      title: "🐍 Rắn cắn",
+      steps: [
+        "Đưa nạn nhân tránh xa con rắn, giữ bình tĩnh.",
+        "Cho nằm yên, hạn chế cử động vùng bị cắn.",
+        "Để vết cắn thấp hơn tim.",
+        "Tháo nhẫn, vòng, đồ chật quanh chỗ cắn trước khi sưng.",
+        "Không rạch, không hút nọc, không garô chặt, không chườm đá.",
+        "Nhớ đặc điểm con rắn nếu an toàn, nhưng đừng bắt nó.",
+        "Đưa đến viện càng nhanh càng tốt. Gọi một một năm."
       ]
     }
   };
@@ -613,6 +1243,30 @@
     stopMetronome();
     if ("speechSynthesis" in window) speechSynthesis.cancel();
   }
+
+  /* ---------- SETTINGS MODAL ---------- */
+  (function initSettings() {
+    if (!window.Sfx) return;
+    const modal = document.getElementById("settings-modal");
+    const open = document.getElementById("open-settings");
+    const close = document.getElementById("close-settings");
+    const cbSound = document.getElementById("set-sound");
+    const cbMusic = document.getElementById("set-music");
+    const cbVibe = document.getElementById("set-vibrate");
+
+    function sync() {
+      cbSound.checked = Sfx.settings.sound;
+      cbMusic.checked = Sfx.settings.music;
+      cbVibe.checked = Sfx.settings.vibrate;
+    }
+    open.addEventListener("click", () => { Sfx.unlock(); sync(); modal.classList.remove("hidden"); });
+    close.addEventListener("click", () => modal.classList.add("hidden"));
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+    cbSound.addEventListener("change", () => { Sfx.setSound(cbSound.checked); if (cbSound.checked) Sfx.correct(); });
+    cbMusic.addEventListener("change", () => Sfx.setMusic(cbMusic.checked));
+    cbVibe.addEventListener("change", () => { Sfx.setVibrate(cbVibe.checked); if (cbVibe.checked) Sfx.vibrate(60); });
+    sync();
+  })();
 
   /* ---------- INIT ---------- */
   // Mở thẳng Chế độ Hoảng loạn khi vào từ shortcut ?panic=1

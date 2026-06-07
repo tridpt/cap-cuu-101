@@ -32,11 +32,17 @@
         <button class="btn btn-panic" data-goto="screen-panic">
           <span class="btn-emoji">🆘</span> CHẾ ĐỘ HOẢNG LOẠN
         </button>
-        <button class="btn btn-ghost" data-goto="screen-about">
-          <span class="btn-emoji">❓</span> Đây là cái gì?
-        </button>
+        <div class="home-row">
+          <button class="btn btn-ghost" data-goto="screen-achievements">
+            <span class="btn-emoji">🏆</span> Thành tích
+          </button>
+          <button class="btn btn-ghost" data-goto="screen-about">
+            <span class="btn-emoji">❓</span> Giới thiệu
+          </button>
+        </div>
       </div>
 
+      <button class="settings-gear" id="open-settings" aria-label="Cài đặt">⚙️</button>
       <p class="disclaimer-mini">⚠️ Game giải trí. Việc thật hãy gọi <b>115</b>.</p>
     </section>
 
@@ -47,6 +53,7 @@
         <h2>Chọn thử thách</h2>
         <div class="score-pill">⭐ <span id="total-stars">0</span></div>
       </header>
+      <div id="streak-banner" class="streak-banner"></div>
       <div id="level-list" class="level-list"></div>
     </section>
 
@@ -76,6 +83,12 @@
         <button class="panic-card" data-emergency="choke">🫁 Hóc nghẹn dị vật</button>
         <button class="panic-card" data-emergency="burn">🔥 Bỏng</button>
         <button class="panic-card" data-emergency="bleed">🩸 Chảy máu nhiều</button>
+        <button class="panic-card" data-emergency="drown">🌊 Đuối nước</button>
+        <button class="panic-card" data-emergency="electric">⚡ Điện giật</button>
+        <button class="panic-card" data-emergency="seizure">🌀 Co giật / động kinh</button>
+        <button class="panic-card" data-emergency="anaphylaxis">🐝 Sốc phản vệ</button>
+        <button class="panic-card" data-emergency="fracture">🦴 Gãy xương</button>
+        <button class="panic-card" data-emergency="snakebite">🐍 Rắn cắn</button>
         <a class="panic-call" href="tel:115">📞 GỌI 115 NGAY</a>
       </div>
 
@@ -111,7 +124,38 @@
       </div>
     </section>
 
+    <!-- ===== THÀNH TÍCH ===== -->
+    <section id="screen-achievements" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-home">←</button>
+        <h2>🏆 Thành tích</h2>
+        <div></div>
+      </header>
+      <div class="ach-body" id="ach-body"></div>
+    </section>
+
+    <!-- ===== CÀI ĐẶT (overlay) ===== -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-card">
+        <h2>⚙️ Cài đặt</h2>
+        <label class="toggle-row">
+          <span>🔊 Âm thanh hiệu ứng</span>
+          <input type="checkbox" id="set-sound" />
+        </label>
+        <label class="toggle-row">
+          <span>🎵 Nhạc nền 8-bit</span>
+          <input type="checkbox" id="set-music" />
+        </label>
+        <label class="toggle-row">
+          <span>📳 Rung</span>
+          <input type="checkbox" id="set-vibrate" />
+        </label>
+        <button class="btn btn-play" id="close-settings">Xong</button>
+      </div>
+    </div>
+
   </div>
+  <script src="sound.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

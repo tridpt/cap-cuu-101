@@ -248,3 +248,103 @@ body {
 }
 
 .hidden { display: none !important; }
+
+/* ===== HOME EXTRAS ===== */
+.home-row { display: flex; gap: 12px; }
+.home-row .btn { flex: 1; padding: 14px 10px; font-size: 16px; }
+.settings-gear {
+  position: absolute; top: 16px; right: 16px; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,.08); color: var(--text); font-size: 22px; cursor: pointer;
+}
+.settings-gear:active { transform: rotate(40deg); }
+
+/* ===== SETTINGS MODAL ===== */
+.modal {
+  position: fixed; inset: 0; z-index: 50; display: flex;
+  align-items: center; justify-content: center; padding: 24px;
+  background: rgba(8,9,20,.75); animation: fadeIn .2s ease;
+}
+.modal-card {
+  background: var(--card); border-radius: 20px; padding: 22px;
+  width: 100%; max-width: 360px; box-shadow: var(--shadow);
+}
+.modal-card h2 { margin: 0 0 16px; text-align: center; }
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 4px; font-size: 16px; font-weight: 600;
+  border-bottom: 1px solid #34376a;
+}
+.toggle-row input { width: 52px; height: 30px; appearance: none; background: #3a3d70; border-radius: 999px; position: relative; cursor: pointer; transition: background .2s; }
+.toggle-row input:checked { background: var(--good); }
+.toggle-row input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: left .2s; }
+.toggle-row input:checked::after { left: 25px; }
+.modal-card .btn { margin-top: 18px; width: 100%; }
+
+/* ===== STREAK BANNER ===== */
+.streak-banner {
+  background: linear-gradient(90deg, rgba(255,210,63,.18), rgba(255,93,115,.14));
+  border: 1.5px solid #4a4632; border-radius: 14px;
+  padding: 12px 14px; margin-bottom: 14px; font-weight: 700; font-size: 14.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.streak-banner.empty { display: none; }
+
+/* ===== ACHIEVEMENTS ===== */
+.ach-body { overflow-y: auto; padding-bottom: 20px; }
+.ach-stats {
+  display: flex; gap: 12px; margin-bottom: 18px;
+}
+.ach-stat {
+  flex: 1; background: var(--card); border-radius: 16px; padding: 16px 10px;
+  text-align: center; box-shadow: var(--shadow);
+}
+.ach-stat .num { font-size: 30px; font-weight: 900; color: var(--accent2); }
+.ach-stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.ach-section-title { font-size: 15px; color: var(--muted); margin: 6px 0 10px; font-weight: 700; }
+.badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.badge {
+  background: var(--card); border-radius: 16px; padding: 14px; text-align: center;
+  border: 1.5px solid transparent; opacity: .45; filter: grayscale(1);
+}
+.badge.unlocked { opacity: 1; filter: none; border-color: var(--accent2); }
+.badge .b-emoji { font-size: 38px; }
+.badge .b-name { font-weight: 800; font-size: 14px; margin: 6px 0 2px; }
+.badge .b-desc { font-size: 12px; color: var(--muted); line-height: 1.3; }
+
+/* ===== COMBO ===== */
+.combo-tag {
+  position: absolute; top: 30px; right: 14px; font-weight: 900; font-size: 20px;
+  color: var(--accent2); text-shadow: 0 2px 0 rgba(0,0,0,.3); transition: transform .1s;
+}
+.combo-tag.bump { transform: scale(1.35); }
+
+/* ===== GAME: HOSE (xả nước chữa bỏng) ===== */
+.wound {
+  position: absolute; font-size: 90px; transition: filter .2s;
+  touch-action: none;
+}
+.water-stream {
+  position: absolute; font-size: 60px; pointer-events: none;
+  transform: translate(-50%, -90%); transition: opacity .1s; opacity: 0;
+}
+.water-stream.on { opacity: 1; }
+.cool-label {
+  position: absolute; bottom: 44px; left: 12px; right: 12px; text-align: center;
+  font-weight: 800; font-size: 15px; color: var(--good);
+}
+
+/* ===== GAME: PRESS (cầm máu) ===== */
+.gauze {
+  position: absolute; font-size: 56px; touch-action: none; cursor: grab;
+  transition: transform .1s;
+}
+.drop-target {
+  position: absolute; width: 90px; height: 90px; margin: -45px 0 0 -45px;
+  border: 3px dashed var(--good); border-radius: 50%; opacity: .8;
+}
+.force-wrap { position: absolute; bottom: 14px; left: 12px; right: 12px; }
+.force-track { height: 26px; background: rgba(255,255,255,.1); border-radius: 999px; overflow: hidden; position: relative; }
+.force-good-zone { position: absolute; top: 0; bottom: 0; left: 55%; right: 8%; background: rgba(61,220,151,.3); }
+.force-fill { height: 100%; width: 0; background: var(--accent); transition: width .06s linear; }
+.force-hint { text-align: center; font-size: 13px; color: var(--muted); margin-top: 6px; }
