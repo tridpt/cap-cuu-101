@@ -1,0 +1,14 @@
+# OS
+Thumbs.db
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Python (nếu chạy http.server thì không sinh file, nhưng phòng khi)
+__pycache__/
+*.pyc
+
+# Logs
+*.log

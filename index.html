@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f1020" />
+  <title>Cấp Cứu 101: Đừng Để Chết Nhảm</title>
+  <link rel="icon" href="icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ===== MÀN HÌNH CHÍNH ===== -->
+    <section id="screen-home" class="screen active">
+      <div class="home-bg"></div>
+      <header class="home-header">
+        <div class="logo-bounce">🚑</div>
+        <h1 class="title">CẤP CỨU <span>101</span></h1>
+        <p class="subtitle">Đừng để chết nhảm</p>
+      </header>
+
+      <div class="home-menu">
+        <button class="btn btn-play" data-goto="screen-levels">
+          <span class="btn-emoji">🎮</span> CHƠI &amp; HỌC
+        </button>
+        <button class="btn btn-panic" data-goto="screen-panic">
+          <span class="btn-emoji">🆘</span> CHẾ ĐỘ HOẢNG LOẠN
+        </button>
+        <button class="btn btn-ghost" data-goto="screen-about">
+          <span class="btn-emoji">❓</span> Đây là cái gì?
+        </button>
+      </div>
+
+      <p class="disclaimer-mini">⚠️ Game giải trí. Việc thật hãy gọi <b>115</b>.</p>
+    </section>
+
+    <!-- ===== CHỌN MÀN ===== -->
+    <section id="screen-levels" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-home">←</button>
+        <h2>Chọn thử thách</h2>
+        <div class="score-pill">⭐ <span id="total-stars">0</span></div>
+      </header>
+      <div id="level-list" class="level-list"></div>
+    </section>
+
+    <!-- ===== KHU CHƠI GAME ===== -->
+    <section id="screen-game" class="screen game-screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-levels">←</button>
+        <h2 id="game-title">Mini-game</h2>
+        <div class="score-pill">❤️ <span id="game-hp">100</span></div>
+      </header>
+      <div id="game-stage" class="game-stage"></div>
+      <div id="game-instruction" class="game-instruction"></div>
+      <div id="game-controls" class="game-controls"></div>
+    </section>
+
+    <!-- ===== CHẾ ĐỘ HOẢNG LOẠN ===== -->
+    <section id="screen-panic" class="screen panic-screen">
+      <header class="topbar panic-topbar">
+        <button class="icon-btn" data-goto="screen-home">←</button>
+        <h2>🆘 HOẢNG LOẠN</h2>
+        <button class="icon-btn" id="stop-voice">🔇</button>
+      </header>
+
+      <div id="panic-pick" class="panic-pick">
+        <p class="panic-lead">Hít một hơi. Chọn tình huống. App sẽ đọc từng bước cho bạn.</p>
+        <button class="panic-card" data-emergency="cpr">💔 Ngừng tim / Bất tỉnh</button>
+        <button class="panic-card" data-emergency="choke">🫁 Hóc nghẹn dị vật</button>
+        <button class="panic-card" data-emergency="burn">🔥 Bỏng</button>
+        <button class="panic-card" data-emergency="bleed">🩸 Chảy máu nhiều</button>
+        <a class="panic-call" href="tel:115">📞 GỌI 115 NGAY</a>
+      </div>
+
+      <div id="panic-steps" class="panic-steps hidden">
+        <div class="metronome-ring" id="metronome-ring"><span id="metronome-count">●</span></div>
+        <div class="panic-step-text" id="panic-step-text">...</div>
+        <div class="panic-nav">
+          <button class="btn btn-ghost" id="panic-prev">◀ Lùi</button>
+          <button class="btn btn-play" id="panic-next">Bước tiếp ▶</button>
+        </div>
+        <button class="btn btn-replay" id="panic-replay">🔊 Đọc lại</button>
+        <button class="btn btn-ghost" id="panic-back-pick">↺ Đổi tình huống</button>
+        <a class="panic-call small" href="tel:115">📞 115</a>
+      </div>
+    </section>
+
+    <!-- ===== GIỚI THIỆU ===== -->
+    <section id="screen-about" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-home">←</button>
+        <h2>Đây là cái gì?</h2>
+        <div></div>
+      </header>
+      <div class="about-body">
+        <p>👋 <b>Cấp Cứu 101</b> dạy bạn kỹ năng sơ cứu sinh tử qua các mini-game châm biếm kiểu <i>Dumb Ways to Die</i>.</p>
+        <p>🎮 Vuốt đúng nhịp ép tim cho chú gấu. Nghiêng điện thoại thông đường thở cho người ngoài hành tinh. Làm sai? Nhân vật "đăng xuất" cực buồn cười.</p>
+        <p>🧠 Mục tiêu: nhồi kỹ năng vào đầu bạn một cách vô thức, để khi gặp chuyện thật tay chân tự biết làm gì.</p>
+        <p>🆘 Gặp chuyện thật? Bật <b>Chế độ Hoảng loạn</b> — app đọc to từng bước ngắn gọn, bình tĩnh để bạn làm theo.</p>
+        <div class="about-warn">
+          ⚠️ <b>Quan trọng:</b> Đây KHÔNG thay thế khoá học sơ cứu chính quy hay nhân viên y tế.
+          Trong tình huống thật, việc đầu tiên luôn là <b>gọi 115</b>.
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
