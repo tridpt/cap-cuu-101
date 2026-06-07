@@ -615,5 +615,20 @@
   }
 
   /* ---------- INIT ---------- */
-  go("screen-home");
+  // Mở thẳng Chế độ Hoảng loạn khi vào từ shortcut ?panic=1
+  const params = new URLSearchParams(location.search);
+  if (params.get("panic") === "1") {
+    go("screen-panic");
+  } else {
+    go("screen-home");
+  }
+
+  /* ---------- SERVICE WORKER (offline) ---------- */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch((err) =>
+        console.warn("SW chưa đăng ký được:", err)
+      );
+    });
+  }
 })();
