@@ -79,7 +79,12 @@
     win_title_serious: { vi: "HOÀN THÀNH ĐÚNG CÁCH", en: "DONE CORRECTLY" },
     lose_title_serious: { vi: "Chưa đạt — thử lại nhé", en: "Not quite — try again" },
     reminder_title: { vi: "Cấp Cứu 101", en: "First Aid 101" },
-    reminder_body: { vi: "Ôn sơ cứu 1 phút hôm nay để giữ chuỗi nhé! 🔥", en: "Do 1 minute of first-aid practice today to keep your streak! 🔥" }
+    reminder_body: { vi: "Ôn sơ cứu 1 phút hôm nay để giữ chuỗi nhé! 🔥", en: "Do 1 minute of first-aid practice today to keep your streak! 🔥" },
+    set_voice: { vi: "🗣️ Giọng đọc", en: "🗣️ Voice" },
+    voice_auto: { vi: "Tự động", en: "Auto" },
+    voice_off: { vi: "Tắt giọng đọc", en: "Voice off" },
+    voice_test: { vi: "🔊 Thử giọng đọc", en: "🔊 Test voice" },
+    voice_warn_vi: { vi: "⚠️ Máy chưa có giọng tiếng Việt nên giọng đọc sẽ KHÔNG chuẩn. Cách khắc phục: Windows → Settings → Time & Language → Language → thêm Tiếng Việt + gói giọng nói (Speech). Hoặc chọn 'Tắt giọng đọc' và làm theo chữ.", en: "⚠️ No Vietnamese voice installed, so speech won't sound right. Add a Vietnamese speech voice in your OS settings, or choose 'Voice off' and follow the on-screen text." }
   };
 
   /* ---------- NAVIGATION ---------- */
@@ -2433,30 +2438,53 @@
   }
 
   /* ---- Text-to-speech (đọc theo ngôn ngữ) ---- */
-  let viVoice = null, enVoice = null;
-  function pickVoice() {
-    const voices = speechSynthesis.getVoices();
-    viVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("vi")) || null;
-    enVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en")) || null;
+  let allVoices = [];
+  let chosenVoiceURI = localStorage.getItem("capcuu101_voice") || "";  // "" = auto, "off" = tắt
+  let onVoicesReady = null;
+  function refreshVoices() {
+    allVoices = ("speechSynthesis" in window ? speechSynthesis.getVoices() : []) || [];
+    if (typeof onVoicesReady === "function") onVoicesReady();
   }
   if ("speechSynthesis" in window) {
-    pickVoice();
-    speechSynthesis.onvoiceschanged = pickVoice;
+    refreshVoices();
+    speechSynthesis.onvoiceschanged = refreshVoices;
+  }
+  function voicesForLang(prefix) {
+    return allVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith(prefix));
+  }
+  function hasViVoice() { return voicesForLang("vi").length > 0; }
+  function pickSpeakVoice() {
+    if (chosenVoiceURI === "off") return "off";
+    if (chosenVoiceURI) {
+      const v = allVoices.find(v => v.voiceURI === chosenVoiceURI);
+      if (v) return v;
+    }
+    return voicesForLang(LANG === "en" ? "en" : "vi")[0] || null;  // auto
   }
   function speakStep() {
     if (!panicCtx || !("speechSynthesis" in window)) return;
     speechSynthesis.cancel();
+    const v = pickSpeakVoice();
+    if (v === "off") return;                 // người dùng tắt giọng đọc
     const raw = panicCtx.data.steps[panicCtx.step];
     const u = new SpeechSynthesisUtterance(raw);
-    if (LANG === "en") {
-      u.lang = "en-US";
-      if (enVoice) u.voice = enVoice;
-    } else {
-      u.lang = "vi-VN";
-      if (viVoice) u.voice = viVoice;
-    }
+    if (v) { u.voice = v; u.lang = v.lang; }
+    else { u.lang = LANG === "en" ? "en-US" : "vi-VN"; }
     u.rate = 0.95;
     u.pitch = 1;
+    speechSynthesis.speak(u);
+  }
+  function speakSample() {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const v = pickSpeakVoice();
+    if (v === "off") return;
+    const u = new SpeechSynthesisUtterance(LANG === "en"
+      ? "Press hard and fast in the center of the chest."
+      : "Ép mạnh và nhanh vào giữa lồng ngực.");
+    if (v) { u.voice = v; u.lang = v.lang; }
+    else { u.lang = LANG === "en" ? "en-US" : "vi-VN"; }
+    u.rate = 0.95;
     speechSynthesis.speak(u);
   }
 
@@ -2589,8 +2617,37 @@
       });
     }
 
+    // Trình chọn giọng đọc
+    const voiceSel = document.getElementById("voice-select");
+    const voiceWarn = document.getElementById("voice-warn");
+    const voiceTest = document.getElementById("voice-test");
+    function updateVoiceWarn() {
+      if (!voiceWarn) return;
+      const show = LANG !== "en" && !hasViVoice() && chosenVoiceURI !== "off";
+      voiceWarn.textContent = t(UI.voice_warn_vi);
+      voiceWarn.classList.toggle("hidden", !show);
+    }
+    function populateVoiceSelect() {
+      if (!voiceSel) return;
+      voiceSel.innerHTML = "";
+      voiceSel.appendChild(new Option(t(UI.voice_auto), ""));
+      voiceSel.appendChild(new Option(t(UI.voice_off), "off"));
+      const vi = voicesForLang("vi");
+      const rest = allVoices.filter(v => !vi.includes(v));
+      [...vi, ...rest].forEach(v => voiceSel.appendChild(new Option(`${v.name} (${v.lang})`, v.voiceURI)));
+      voiceSel.value = (chosenVoiceURI === "off" || chosenVoiceURI === "" || allVoices.some(v => v.voiceURI === chosenVoiceURI)) ? chosenVoiceURI : "";
+      updateVoiceWarn();
+    }
+    onVoicesReady = populateVoiceSelect;
+    if (voiceSel) voiceSel.addEventListener("change", () => {
+      chosenVoiceURI = voiceSel.value;
+      localStorage.setItem("capcuu101_voice", chosenVoiceURI);
+      updateVoiceWarn();
+    });
+    if (voiceTest) voiceTest.addEventListener("click", () => speakSample());
+
     const origSync = sync;
-    sync = function () { origSync(); syncPrefs(); };
+    sync = function () { origSync(); syncPrefs(); populateVoiceSelect(); };
     sync();
   })();
 
