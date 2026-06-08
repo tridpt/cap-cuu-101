@@ -419,3 +419,13 @@ body:not(.lang-en) .only-en { display: none; }
   background: transparent; color: var(--muted); font-weight: 800; cursor: pointer;
 }
 .lang-opt.active { background: var(--accent2); color: #16172b; border-color: var(--accent2); }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; left: 50%; bottom: 32px; transform: translate(-50%, 20px);
+  background: #2b2e57; color: var(--text); padding: 12px 20px; border-radius: 999px;
+  font-weight: 700; font-size: 14.5px; box-shadow: var(--shadow); z-index: 120;
+  opacity: 0; transition: opacity .25s ease, transform .25s ease; pointer-events: none;
+  max-width: 90%; text-align: center;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }

@@ -4,7 +4,7 @@
    Toàn bộ là asset cục bộ nên precache hết -> chạy offline 100%,
    đặc biệt quan trọng cho Chế độ Hoảng loạn khi mất mạng. */
 
-const CACHE_VERSION = "capcuu101-v5";
+const CACHE_VERSION = "capcuu101-v6";
 const APP_SHELL_CACHE = `${CACHE_VERSION}:app-shell`;
 
 const APP_SHELL = [
@@ -19,6 +19,7 @@ const APP_SHELL = [
   "./icons/icon-512.png",
   "./screenshots/home.png",
   "./screenshots/game.png",
+  "./screenshots/og.png",
 ];
 
 self.addEventListener("install", (event) => {

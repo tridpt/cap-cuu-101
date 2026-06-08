@@ -53,6 +53,14 @@ Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo
 
 > Ở chế độ English, phần đọc to dùng giọng tiếng Anh và nói "call emergency services" thay cho số 115 (vì số khẩn cấp khác nhau theo quốc gia).
 
+## 📤 Chia sẻ & 🔔 Nhắc ôn tập
+
+- **Chia sẻ**: sau khi thắng một màn hoặc ở màn Thành tích, bấm **Chia sẻ** — app tạo sẵn một tấm thẻ ảnh (canvas) kèm điểm/sao/huy hiệu và dùng **Web Share API** để gửi qua mạng xã hội/tin nhắn. Thiết bị không hỗ trợ thì tự **chép link** vào clipboard.
+- **Link preview đẹp**: đã thêm thẻ Open Graph + ảnh `screenshots/og.png` (1200×630), nên khi dán link lên Zalo/Facebook/Messenger sẽ hiện ảnh + mô tả.
+- **Nhắc ôn tập**: bật trong ⚙️ Cài đặt → 🔔. App xin quyền thông báo; khi bạn mở lại app vào ngày mới mà chuỗi đang chờ nối, app sẽ bắn một thông báo nhắc.
+
+> ⚠️ Đây là nhắc **khi mở app** (không có máy chủ đẩy thông báo nền). Thông báo đẩy chạy nền kể cả khi đóng app cần thêm hạ tầng web push (server + VAPID) — chưa làm trong bản này.
+
 ## 🆘 Chế độ Hoảng loạn (Panic Mode)
 
 Khi sự cố xảy ra thật:
@@ -115,9 +123,10 @@ cap-cuu-101/
 ├─ sw.js        # service worker: precache app shell -> chạy offline
 ├─ gen_icons.py # script tạo icon PNG (chạy 1 lần, cần Pillow)
 ├─ gen_screens.py # script tạo ảnh screenshot cho manifest (cần Pillow)
+├─ gen_og.py    # script tạo ảnh Open Graph 1200x630 cho link preview (cần Pillow)
 ├─ icon.svg
 ├─ icons/       # icon-192.png, icon-512.png
-├─ screenshots/ # home.png, game.png (cho prompt Install)
+├─ screenshots/ # home.png, game.png, og.png
 └─ README.md
 ```
 

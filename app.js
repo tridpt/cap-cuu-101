@@ -59,7 +59,13 @@
     st_wins: { vi: "💪 Lượt cứu sống", en: "💪 Lives saved" },
     st_combo: { vi: "🎯 Combo CPR tốt nhất", en: "🎯 Best CPR combo" },
     st_badges: { vi: "🏅 Huy hiệu", en: "🏅 Badges" },
-    badges_title: { vi: "🏅 Huy hiệu", en: "🏅 Badges" }
+    badges_title: { vi: "🏅 Huy hiệu", en: "🏅 Badges" },
+    share: { vi: "📤 Chia sẻ", en: "📤 Share" },
+    share_ach: { vi: "📤 Khoe thành tích", en: "📤 Share progress" },
+    copied: { vi: "Đã chép link!", en: "Link copied!" },
+    set_reminder: { vi: "🔔 Nhắc ôn tập", en: "🔔 Practice reminders" },
+    reminder_title: { vi: "Cấp Cứu 101", en: "First Aid 101" },
+    reminder_body: { vi: "Ôn sơ cứu 1 phút hôm nay để giữ chuỗi nhé! 🔥", en: "Do 1 minute of first-aid practice today to keep your streak! 🔥" }
   };
 
   /* ---------- NAVIGATION ---------- */
@@ -327,7 +333,20 @@
         <div class="ach-stat"><div class="num">${s.badges.length}/${BADGES.length}</div><div class="lbl">${t(UI.st_badges)}</div></div>
       </div>
       <div class="ach-section-title">${t(UI.badges_title)}</div>
-      <div class="badge-grid">${badgeCards}</div>`;
+      <div class="badge-grid">${badgeCards}</div>
+      <button class="btn btn-replay" id="ach-share" style="width:100%;margin-top:16px">${t(UI.share_ach)}</button>`;
+    const shareBtn = document.getElementById("ach-share");
+    if (shareBtn) {
+      shareBtn.addEventListener("click", () => {
+        const big = LANG === "en"
+          ? `${totalStars()}★ · ${s.badges.length}/${BADGES.length} badges`
+          : `${totalStars()}★ · ${s.badges.length}/${BADGES.length} huy hiệu`;
+        const sub = LANG === "en"
+          ? `${threeStar}/${LEVELS.length} levels mastered · ${s.streak.count}-day streak\nLearn first aid by playing!`
+          : `Thành thạo ${threeStar}/${LEVELS.length} màn · chuỗi ${s.streak.count} ngày\nHọc sơ cứu bằng cách chơi!`;
+        shareCard(big, sub);
+      });
+    }
   }
 
   /* ============================================================
@@ -438,6 +457,59 @@
     setTimeout(() => el.remove(), 800);
   }
 
+  /* ---------- SHARE ---------- */
+  const SHARE_URL = "https://tridpt.github.io/cap-cuu-101/";
+
+  function toast(msg) {
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    document.body.appendChild(el);
+    requestAnimationFrame(() => el.classList.add("show"));
+    setTimeout(() => { el.classList.remove("show"); setTimeout(() => el.remove(), 300); }, 2200);
+  }
+
+  function buildShareImage(bigText, subText) {
+    const c = document.createElement("canvas");
+    c.width = 1080; c.height = 1080;
+    const x = c.getContext("2d");
+    const g = x.createLinearGradient(0, 0, 0, 1080);
+    g.addColorStop(0, "#1a1c3a"); g.addColorStop(1, "#0f1020");
+    x.fillStyle = g; x.fillRect(0, 0, 1080, 1080);
+    // chữ thập
+    x.fillStyle = "#ff5d73"; x.beginPath(); x.arc(540, 300, 150, 0, Math.PI * 2); x.fill();
+    x.fillStyle = "#fff"; x.fillRect(540 - 32, 300 - 95, 64, 190); x.fillRect(540 - 95, 300 - 32, 190, 64);
+    x.textAlign = "center";
+    x.fillStyle = "#f4f4ff"; x.font = "bold 92px Segoe UI, Arial, sans-serif";
+    x.fillText("CẤP CỨU 101", 540, 580);
+    x.fillStyle = "#ffd23f"; x.font = "bold 62px Segoe UI, Arial, sans-serif";
+    x.fillText(bigText, 540, 690);
+    x.fillStyle = "#9aa0c7"; x.font = "40px Segoe UI, Arial, sans-serif";
+    (subText || "").split("\n").forEach((line, i) => x.fillText(line, 540, 800 + i * 56));
+    x.fillStyle = "#3ddc97"; x.font = "34px Segoe UI, Arial, sans-serif";
+    x.fillText(SHARE_URL.replace("https://", ""), 540, 1000);
+    return new Promise(res => c.toBlob(res, "image/png"));
+  }
+
+  async function shareCard(bigText, subText) {
+    const text = `${bigText} — ${subText.replace(/\n/g, " ")}`;
+    try {
+      const blob = await buildShareImage(bigText, subText);
+      if (blob && navigator.canShare) {
+        const file = new File([blob], "capcuu101.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text, url: SHARE_URL, title: "Cấp Cứu 101" });
+          return;
+        }
+      }
+      if (navigator.share) { await navigator.share({ text, url: SHARE_URL, title: "Cấp Cứu 101" }); return; }
+    } catch (e) {
+      if (e && e.name === "AbortError") return;   // người dùng huỷ
+    }
+    try { await navigator.clipboard.writeText(text + "\n" + SHARE_URL); toast(t(UI.copied)); }
+    catch { toast(SHARE_URL); }
+  }
+
   function showResult(lv, success, stars, extra) {
     const ov = document.createElement("div");
     ov.className = "result-overlay";
@@ -456,11 +528,19 @@
       <p>${extra || ""}</p>
       <div class="lesson-box">${t(UI.real_life)} ${t(lv.lesson)}</div>
       ${badgeNote}
+      ${success ? `<button class="btn btn-replay" id="r-share">${t(UI.share)}</button>` : ""}
       <button class="btn btn-play" id="r-retry">${t(UI.retry)}</button>
       <button class="btn btn-ghost" id="r-back">${t(UI.back_list)}</button>`;
     stage.appendChild(ov);
     ov.querySelector("#r-retry").addEventListener("click", () => startGame(lv));
     ov.querySelector("#r-back").addEventListener("click", () => go("screen-levels"));
+    if (success) {
+      const big = LANG === "en" ? `${stars}/3 ★ on "${t(lv.title)}"` : `${stars}/3 ★ màn "${t(lv.title)}"`;
+      const sub = LANG === "en"
+        ? "I'm learning life-saving first aid by playing.\nTry it too!"
+        : "Mình đang học sơ cứu cứu người bằng cách chơi game.\nThử xem!";
+      ov.querySelector("#r-share").addEventListener("click", () => shareCard(big, sub));
+    }
   }
 
   /* ---------- MINI-GAME 1: CPR RHYTHM ---------- */
@@ -1838,6 +1918,44 @@
     if ("speechSynthesis" in window) speechSynthesis.cancel();
   }
 
+  /* ---------- REMINDERS (nhắc ôn tập) ---------- */
+  const REMIND_KEY = "capcuu101_reminder";
+  function reminderOn() { return localStorage.getItem(REMIND_KEY) === "1"; }
+  async function setReminder(on) {
+    if (on) {
+      if (!("Notification" in window)) { toast(LANG === "en" ? "Notifications not supported" : "Thiết bị không hỗ trợ thông báo"); return false; }
+      let perm = Notification.permission;
+      if (perm === "default") perm = await Notification.requestPermission();
+      if (perm !== "granted") { toast(LANG === "en" ? "Permission denied" : "Chưa được cấp quyền thông báo"); return false; }
+      localStorage.setItem(REMIND_KEY, "1");
+      fireReminder(LANG === "en" ? "Reminders on! We'll nudge you to keep your streak. 🔥" : "Đã bật! App sẽ nhắc bạn giữ chuỗi ôn tập. 🔥");
+      return true;
+    }
+    localStorage.setItem(REMIND_KEY, "0");
+    return false;
+  }
+  function fireReminder(body) {
+    try {
+      const opts = { body, icon: "icons/icon-192.png", badge: "icons/icon-192.png", lang: LANG };
+      if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+        navigator.serviceWorker.ready.then(reg => reg.showNotification(t(UI.reminder_title), opts)).catch(() => {
+          new Notification(t(UI.reminder_title), opts);
+        });
+      } else {
+        new Notification(t(UI.reminder_title), opts);
+      }
+    } catch { /* bỏ qua */ }
+  }
+  // Khi mở app: nếu bật nhắc + có chuỗi nhưng chưa chơi hôm nay -> nhắc
+  function maybeRemind() {
+    if (!reminderOn() || !("Notification" in window) || Notification.permission !== "granted") return;
+    const s = loadStats();
+    const today = todayStr();
+    if (s.streak.last && s.streak.last !== today && daysBetween(s.streak.last, today) >= 1 && s.streak.count > 0) {
+      fireReminder(t(UI.reminder_body));
+    }
+  }
+
   /* ---------- SETTINGS MODAL ---------- */
   (function initSettings() {
     if (!window.Sfx) return;
@@ -1847,11 +1965,13 @@
     const cbSound = document.getElementById("set-sound");
     const cbMusic = document.getElementById("set-music");
     const cbVibe = document.getElementById("set-vibrate");
+    const cbRemind = document.getElementById("set-reminder");
 
     function sync() {
       cbSound.checked = Sfx.settings.sound;
       cbMusic.checked = Sfx.settings.music;
       cbVibe.checked = Sfx.settings.vibrate;
+      if (cbRemind) cbRemind.checked = reminderOn();
     }
     open.addEventListener("click", () => { Sfx.unlock(); sync(); modal.classList.remove("hidden"); });
     close.addEventListener("click", () => modal.classList.add("hidden"));
@@ -1859,6 +1979,10 @@
     cbSound.addEventListener("change", () => { Sfx.setSound(cbSound.checked); if (cbSound.checked) Sfx.correct(); });
     cbMusic.addEventListener("change", () => Sfx.setMusic(cbMusic.checked));
     cbVibe.addEventListener("change", () => { Sfx.setVibrate(cbVibe.checked); if (cbVibe.checked) Sfx.vibrate(60); });
+    if (cbRemind) cbRemind.addEventListener("change", async () => {
+      const ok = await setReminder(cbRemind.checked);
+      cbRemind.checked = ok;
+    });
     sync();
   })();
 
@@ -1919,6 +2043,9 @@
   } else {
     go("screen-home");
   }
+
+  // Nhắc ôn tập nếu chuỗi đang chờ nối
+  setTimeout(maybeRemind, 1800);
 
   /* ---------- SERVICE WORKER (offline) ---------- */
   if ("serviceWorker" in navigator) {
