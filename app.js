@@ -419,9 +419,15 @@
   const controls = document.getElementById("game-controls");
   let gameState = null;
 
+  const gameScreen = document.getElementById("screen-game");
+  function clearOverlays() {
+    gameScreen.querySelectorAll(".result-overlay").forEach(o => o.remove());
+  }
+
   function startGame(lv) {
     if (window.Sfx) { Sfx.unlock(); Sfx.startMusic(); }
     go("screen-game");
+    clearOverlays();
     document.getElementById("game-title").textContent = t(lv.title);
     document.getElementById("game-hp").textContent = 100;
     stage.innerHTML = "";
@@ -443,6 +449,7 @@
   function startSurvival() {
     if (window.Sfx) { Sfx.unlock(); Sfx.startMusic(); }
     go("screen-game");
+    clearOverlays();
     document.getElementById("game-title").textContent = t(UI.survival);
     document.getElementById("game-hp").textContent = "0";
     stage.innerHTML = "";
@@ -563,7 +570,7 @@
         <button class="btn btn-replay" id="s-share">${t(UI.share)}</button>
         <button class="btn btn-play" id="s-retry">${t(UI.retry)}</button>
         <button class="btn btn-ghost" id="s-back">${t(UI.back_list)}</button>`;
-      stage.appendChild(ov);
+      gameScreen.appendChild(ov);
       ov.querySelector("#s-retry").addEventListener("click", () => startSurvival());
       ov.querySelector("#s-back").addEventListener("click", () => go("screen-levels"));
       ov.querySelector("#s-share").addEventListener("click", () => {
@@ -731,7 +738,7 @@
       ${success ? `<button class="btn btn-replay" id="r-share">${t(UI.share)}</button>` : ""}
       <button class="btn btn-play" id="r-retry">${t(UI.retry)}</button>
       <button class="btn btn-ghost" id="r-back">${t(UI.back_list)}</button>`;
-    stage.appendChild(ov);
+    gameScreen.appendChild(ov);
     ov.querySelector("#r-retry").addEventListener("click", () => startGame(lv));
     ov.querySelector("#r-back").addEventListener("click", () => go("screen-levels"));
     if (success) {
