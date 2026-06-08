@@ -137,7 +137,7 @@
       desc: "Heimlich — đẩy bụng tống dị vật ra",
       type: "thrust",
       char: "👽",
-      lesson: "Hóc dị vật: đứng sau, ôm bụng trên rốn, đẩy mạnh vào trong & lên trên cho đến khi bật ra."
+      lesson: "Hóc dị vật (người lớn/trẻ &gt;1 tuổi): xen kẽ 5 lần vỗ lưng giữa hai bả vai và 5 lần đẩy bụng (Heimlich) đến khi bật ra. Còn ho được thì cứ để họ ho mạnh."
     },
     {
       id: "burn",
@@ -209,7 +209,7 @@
       desc: "Bất động & tới viện, đừng hút nọc",
       type: "quiz",
       char: "🤠",
-      lesson: "Rắn cắn: giữ nạn nhân bất động, để vết cắn thấp hơn tim, KHÔNG rạch, hút nọc hay garô chặt. Đến viện gấp."
+      lesson: "Rắn cắn: giữ nạn nhân bất động, vùng bị cắn để ngang hoặc thấp hơn tim, tháo đồ chật. KHÔNG rạch, hút nọc, garô chặt hay chườm đá. Đến viện gấp."
     }
   ];
 
@@ -1099,13 +1099,13 @@
     choke: {
       title: "🫁 Hóc nghẹn dị vật",
       steps: [
-        "Hỏi: bạn có nghẹn không? Nếu họ ho được, khuyến khích ho mạnh.",
-        "Nếu không ho, không nói được: đứng phía sau họ.",
-        "Vòng hai tay ôm quanh bụng, trên rốn.",
-        "Một tay nắm đấm, tay kia nắm lấy, đẩy mạnh vào trong và lên trên.",
-        "Lặp lại động tác đẩy bụng dứt khoát.",
-        "Làm đến khi dị vật bật ra hoặc họ ho được.",
-        "Nếu họ bất tỉnh, đặt nằm xuống và bắt đầu ép tim. Gọi một một năm."
+        "Hỏi: bạn có bị nghẹn không? Nếu còn ho được, khuyến khích họ ho thật mạnh.",
+        "Không ho, không nói, không thở được: gọi một một năm ngay.",
+        "Đứng sau, cho người hơi cúi về trước. Vỗ năm cái dứt khoát vào giữa hai bả vai bằng gót bàn tay.",
+        "Chưa ra: chuyển sang đẩy bụng. Vòng hai tay ôm quanh bụng, trên rốn.",
+        "Một tay nắm đấm, tay kia nắm lấy, đẩy mạnh vào trong và lên trên năm lần.",
+        "Xen kẽ năm lần vỗ lưng và năm lần đẩy bụng cho đến khi dị vật bật ra.",
+        "Nếu họ bất tỉnh, đặt nằm xuống, gọi một một năm và bắt đầu ép tim."
       ]
     },
     burn: {
@@ -1197,7 +1197,7 @@
       steps: [
         "Đưa nạn nhân tránh xa con rắn, giữ bình tĩnh.",
         "Cho nằm yên, hạn chế cử động vùng bị cắn.",
-        "Để vết cắn thấp hơn tim.",
+        "Giữ vùng bị cắn bất động, để ngang hoặc thấp hơn tim.",
         "Tháo nhẫn, vòng, đồ chật quanh chỗ cắn trước khi sưng.",
         "Không rạch, không hút nọc, không garô chặt, không chườm đá.",
         "Nhớ đặc điểm con rắn nếu an toàn, nhưng đừng bắt nó.",

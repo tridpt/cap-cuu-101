@@ -113,5 +113,20 @@ cap-cuu-101/
 
 ## 🧠 Nội dung sơ cứu tham khảo
 
-Các bước dựa trên hướng dẫn sơ cứu phổ thông (CPR, Heimlich, xử lý bỏng, cầm máu).
-Vẫn nên học một khoá sơ cứu thực hành có người hướng dẫn để thao tác chuẩn.
+Các bước được biên soạn dựa trên hướng dẫn sơ cứu phổ thông và đối chiếu với tài liệu của
+các tổ chức y tế uy tín (lần đối chiếu gần nhất: **06/2026**). Nội dung rút gọn cho dễ nhớ;
+vẫn nên học một khoá sơ cứu thực hành có người hướng dẫn để thao tác chuẩn.
+
+| Chủ đề | Điểm chính | Nguồn |
+|--------|-----------|-------|
+| CPR | 100–120 nhịp/phút, sâu ~5–6cm, giữa ngực; chưa đào tạo thì ép tim liên tục | [AHA](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines) |
+| Hóc dị vật | Xen kẽ **5 vỗ lưng + 5 đẩy bụng** (người lớn & trẻ >1 tuổi) | [Mayo Clinic](https://www.mayoclinic.org/first-aid/first-aid-choking/basics/art-20056637), [British Red Cross](https://www.redcross.org.uk/first-aid) |
+| Sốc phản vệ | Adrenaline tiêm mặt ngoài đùi, gọi cấp cứu, nằm kê chân cao | [NHS inform](https://www.nhsinform.scot/illnesses-and-conditions/immune-system/anaphylaxis) |
+| Rắn cắn | Bất động, không garô chặt/rạch/hút nọc, tới viện gấp | [WHO](https://www.who.int/news-room/fact-sheets/detail/snakebite-envenoming) |
+| Bỏng, chảy máu, gãy xương, co giật, đuối nước, điện giật | Sơ cứu phổ thông | [WHO](https://www.who.int/), [American Red Cross](https://www.redcross.org/take-a-class/first-aid) |
+
+> 🩺 Hướng dẫn sơ cứu có thể thay đổi theo thời gian. Khi có khác biệt, hãy tin tưởng hướng
+> dẫn của cơ quan y tế và tổng đài **115**. App này là công cụ giải trí + ghi nhớ, **không**
+> thay thế đào tạo sơ cứu chính quy hay can thiệp y tế.
+>
+> *Một số nội dung đã được diễn đạt lại cho phù hợp mục đích học tập và tuân thủ giấy phép nguồn.*
