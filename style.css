@@ -429,3 +429,67 @@ body:not(.lang-en) .only-en { display: none; }
   max-width: 90%; text-align: center;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Hiện rõ viền focus khi điều hướng bàn phím */
+:focus-visible {
+  outline: 3px solid #8ab4ff;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Vùng chỉ dành cho trình đọc màn hình */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Giảm chuyển động: theo cài đặt hệ điều hành hoặc bật trong app */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+body.a11y-reduce *, body.a11y-reduce *::before, body.a11y-reduce *::after {
+  animation-duration: .001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .001ms !important;
+}
+/* vẫn giữ nhịp metronome & vòng beat vì là chức năng (dẫn nhịp CPR) */
+body.a11y-reduce .beat-ring.go { animation: ring 1s linear infinite !important; }
+body.a11y-reduce .metronome-ring.beat { transition: none; }
+
+/* Tương phản cao */
+body.a11y-contrast {
+  --text: #ffffff;
+  --muted: #d6daf5;
+  --bg: #000010;
+  --card: #1c1e3e;
+}
+body.a11y-contrast .level-card,
+body.a11y-contrast .src-item,
+body.a11y-contrast .panic-card,
+body.a11y-contrast .choice { border: 2px solid #c9cee8; }
+body.a11y-contrast .btn-ghost { border-color: #c9cee8; color: #fff; }
+body.a11y-contrast .disclaimer-mini,
+body.a11y-contrast .game-instruction { color: #eef0ff; }
+
+/* Chữ lớn */
+body.a11y-large .btn { font-size: 20px; }
+body.a11y-large .panic-step-text { font-size: 28px; }
+body.a11y-large .panic-card { font-size: 21px; }
+body.a11y-large .choice { font-size: 17px; }
+body.a11y-large .game-instruction { font-size: 17px; }
+body.a11y-large .level-card .lv-info h3 { font-size: 19px; }
+body.a11y-large .level-card .lv-info p { font-size: 15px; }
+body.a11y-large .about-body { font-size: 17.5px; }
+body.a11y-large .topbar h2 { font-size: 22px; }
+body.a11y-large .result-overlay p,
+body.a11y-large .lesson-box { font-size: 16px; }
+
+/* Chế độ nghiêm túc: bỏ animation "đăng xuất" quay lộn, thay bằng mờ dần nhẹ */
+body.mode-serious .character.dead { animation: seriousFade .8s forwards; }
+@keyframes seriousFade { to { opacity: .25; filter: grayscale(1); } }

@@ -64,6 +64,12 @@
     share_ach: { vi: "📤 Khoe thành tích", en: "📤 Share progress" },
     copied: { vi: "Đã chép link!", en: "Link copied!" },
     set_reminder: { vi: "🔔 Nhắc ôn tập", en: "🔔 Practice reminders" },
+    set_contrast: { vi: "🔆 Tương phản cao", en: "🔆 High contrast" },
+    set_large: { vi: "🔠 Chữ lớn", en: "🔠 Large text" },
+    set_reduce: { vi: "🎬 Giảm chuyển động", en: "🎬 Reduce motion" },
+    set_serious: { vi: "🎓 Chế độ nghiêm túc", en: "🎓 Serious mode" },
+    win_title_serious: { vi: "HOÀN THÀNH ĐÚNG CÁCH", en: "DONE CORRECTLY" },
+    lose_title_serious: { vi: "Chưa đạt — thử lại nhé", en: "Not quite — try again" },
     reminder_title: { vi: "Cấp Cứu 101", en: "First Aid 101" },
     reminder_body: { vi: "Ôn sơ cứu 1 phút hôm nay để giữ chuỗi nhé! 🔥", en: "Do 1 minute of first-aid practice today to keep your streak! 🔥" }
   };
@@ -80,6 +86,8 @@
     if (id === "screen-panic" && window.Sfx) Sfx.stopMusic();
     screens[current].classList.remove("active");
     screens[id].classList.add("active");
+    screens[current].setAttribute("aria-hidden", "true");
+    screens[id].removeAttribute("aria-hidden");
     current = id;
     if (id === "screen-levels") renderLevels();
     if (id === "screen-achievements") renderAchievements();
@@ -550,8 +558,8 @@
       ? `<div class="lesson-box" style="border-left-color:var(--accent2)">${t(UI.unlock_badge)} <b>${newBadges.join(", ")}</b></div>`
       : "";
     ov.innerHTML = `
-      <div class="r-emoji">${success ? "🎉" : "💀"}</div>
-      <h2>${success ? t(UI.win_title) : t(UI.lose_title)}</h2>
+      <div class="r-emoji">${success ? "🎉" : (PREFS.serious ? "⚠️" : "💀")}</div>
+      <h2>${success ? (PREFS.serious ? t(UI.win_title_serious) : t(UI.win_title)) : (PREFS.serious ? t(UI.lose_title_serious) : t(UI.lose_title))}</h2>
       ${success ? `<div class="result-stars">${starStr}</div>` : ""}
       <p>${extra || ""}</p>
       <div class="lesson-box">${t(UI.real_life)} ${t(lv.lesson)}</div>
@@ -586,7 +594,7 @@
     instr.innerHTML = LANG === "en"
       ? "Tap <b>HEART</b> in time with the bouncing ring. Not too fast, not too slow!"
       : "Chạm <b>TIM</b> đúng theo vòng tròn nảy ra. Đừng nhanh quá, đừng chậm quá!";
-    controls.innerHTML = `<div class="tap-zone" id="tap">${LANG === "en" ? "❤️ COMPRESS" : "❤️ ÉP TIM"}</div>`;
+    controls.innerHTML = `<div class="tap-zone" id="tap" role="button" tabindex="0" aria-label="${LANG === "en" ? "Compress (Space/Enter)" : "Ép tim (Space/Enter)"}">${LANG === "en" ? "❤️ COMPRESS" : "❤️ ÉP TIM"}</div>`;
 
     const ring = document.getElementById("ring");
     const charEl = document.getElementById("char");
@@ -651,6 +659,9 @@
       }
     }
     tap.addEventListener("pointerdown", onTap);
+    tap.addEventListener("keydown", (e) => {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); onTap(); }
+    });
 
     function cleanup() { clearInterval(beatTimer); ring.classList.remove("go"); }
     gameState = { cleanup };
@@ -2338,6 +2349,22 @@
     }
   }
 
+  /* ---------- PREFERENCES (a11y + chế độ nghiêm túc) ---------- */
+  const PREFS_KEY = "capcuu101_prefs";
+  function loadPrefs() {
+    const def = { contrast: false, large: false, reduce: false, serious: false };
+    try { return Object.assign(def, JSON.parse(localStorage.getItem(PREFS_KEY)) || {}); }
+    catch { return def; }
+  }
+  let PREFS = loadPrefs();
+  function savePrefs() { localStorage.setItem(PREFS_KEY, JSON.stringify(PREFS)); }
+  function applyPrefs() {
+    document.body.classList.toggle("a11y-contrast", PREFS.contrast);
+    document.body.classList.toggle("a11y-large", PREFS.large);
+    document.body.classList.toggle("a11y-reduce", PREFS.reduce);
+    document.body.classList.toggle("mode-serious", PREFS.serious);
+  }
+
   /* ---------- SETTINGS MODAL ---------- */
   (function initSettings() {
     if (!window.Sfx) return;
@@ -2365,6 +2392,34 @@
       const ok = await setReminder(cbRemind.checked);
       cbRemind.checked = ok;
     });
+
+    // a11y + chế độ nghiêm túc
+    const prefMap = {
+      "set-contrast": "contrast",
+      "set-large": "large",
+      "set-reduce": "reduce",
+      "set-serious": "serious"
+    };
+    Object.entries(prefMap).forEach(([id, key]) => {
+      const cb = document.getElementById(id);
+      if (!cb) return;
+      cb.addEventListener("change", () => {
+        PREFS[key] = cb.checked;
+        savePrefs();
+        applyPrefs();
+        if (window.Sfx) Sfx.blip();
+      });
+    });
+
+    function syncPrefs() {
+      Object.entries(prefMap).forEach(([id, key]) => {
+        const cb = document.getElementById(id);
+        if (cb) cb.checked = !!PREFS[key];
+      });
+    }
+
+    const origSync = sync;
+    sync = function () { origSync(); syncPrefs(); };
     sync();
   })();
 
@@ -2383,9 +2438,18 @@
       if (data) card.textContent = data.title;
     });
     // trạng thái nút chọn ngôn ngữ
-    document.querySelectorAll(".lang-opt").forEach(b =>
-      b.classList.toggle("active", b.dataset.lang === LANG)
-    );
+    document.querySelectorAll(".lang-opt").forEach(b => {
+      const on = b.dataset.lang === LANG;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    // nhãn ARIA cho nút biểu tượng
+    const backLbl = LANG === "en" ? "Back" : "Quay lại";
+    document.querySelectorAll(".icon-btn[data-goto]").forEach(b => b.setAttribute("aria-label", backLbl));
+    const sv = document.getElementById("stop-voice");
+    if (sv) sv.setAttribute("aria-label", LANG === "en" ? "Stop voice" : "Dừng đọc");
+    const gear = document.getElementById("open-settings");
+    if (gear) gear.setAttribute("aria-label", LANG === "en" ? "Settings" : "Cài đặt");
   }
 
   function setLang(lang) {
@@ -2403,6 +2467,7 @@
 
   /* ---------- INIT ---------- */
   applyLang();
+  applyPrefs();
   // Ẩn splash sau khi tải xong (tối thiểu ~1.4s cho đẹp)
   (function hideSplash() {
     const splash = document.getElementById("splash");

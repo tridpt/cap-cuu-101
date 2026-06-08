@@ -90,7 +90,7 @@
         <div class="score-pill">❤️ <span id="game-hp">100</span></div>
       </header>
       <div id="game-stage" class="game-stage"></div>
-      <div id="game-instruction" class="game-instruction"></div>
+      <div id="game-instruction" class="game-instruction" role="status" aria-live="polite"></div>
       <div id="game-controls" class="game-controls"></div>
     </section>
 
@@ -125,7 +125,7 @@
 
       <div id="panic-steps" class="panic-steps hidden">
         <div class="metronome-ring" id="metronome-ring"><span id="metronome-count">●</span></div>
-        <div class="panic-step-text" id="panic-step-text">...</div>
+        <div class="panic-step-text" id="panic-step-text" role="status" aria-live="assertive" aria-atomic="true">...</div>
         <div class="panic-nav">
           <button class="btn btn-ghost" id="panic-prev" data-i18n="prev">◀ Lùi</button>
           <button class="btn btn-play" id="panic-next" data-i18n="next">Bước tiếp ▶</button>
@@ -262,6 +262,22 @@
         <label class="toggle-row">
           <span data-i18n="set_reminder">🔔 Nhắc ôn tập</span>
           <input type="checkbox" id="set-reminder" />
+        </label>
+        <label class="toggle-row">
+          <span data-i18n="set_contrast">🔆 Tương phản cao</span>
+          <input type="checkbox" id="set-contrast" />
+        </label>
+        <label class="toggle-row">
+          <span data-i18n="set_large">🔠 Chữ lớn</span>
+          <input type="checkbox" id="set-large" />
+        </label>
+        <label class="toggle-row">
+          <span data-i18n="set_reduce">🎬 Giảm chuyển động</span>
+          <input type="checkbox" id="set-reduce" />
+        </label>
+        <label class="toggle-row">
+          <span data-i18n="set_serious">🎓 Chế độ nghiêm túc</span>
+          <input type="checkbox" id="set-serious" />
         </label>
         <div class="toggle-row">
           <span data-i18n="set_lang">🌐 Ngôn ngữ</span>
