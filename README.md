@@ -15,10 +15,12 @@ Gặp chuyện thật? Bật **Chế độ Hoảng loạn** để app đọc to 
 
 | Màn | Kỹ năng thật | Cách chơi |
 |-----|--------------|-----------|
-| 🐻 **Ép tim cho Gấu Béo** | CPR đúng nhịp 100–120/phút | Chạm theo vòng tròn nảy ra — có tiếng "tách" + rung theo nhịp, tính combo |
-| 👽 **Người ngoài hành tinh nghẹn trân châu** | Nghiệm pháp Heimlich | Nghiêng điện thoại đẩy bụng (hoặc nhấn-giữ-thả nếu không có cảm biến) |
-| 🧑‍🍳 **Cứu đầu bếp bị bỏng** | Xả nước mát chữa bỏng | Rê vòi nước 🚿 đè lên vết bỏng, giữ đủ lâu — rời tay là nóng lại |
-| 🧟 **Cầm máu cho Zombie** | Đặt gạc & ép cầm máu | Kéo gạc vào vết thương, rồi nhấn giữ giữ thanh lực trong vùng xanh |
+| 🐻 **Ép tim cho Gấu Béo** | CPR người lớn đúng nhịp 100–120/phút | Chạm theo vòng tròn nảy ra — tiếng "tách" + rung theo nhịp, tính combo |
+| 👶 **CPR cho em bé Bông** | CPR trẻ sơ sinh (2 ngón cái, ~4cm) | Như trên nhưng nhấn mạnh khác biệt ở trẻ sơ sinh |
+| 👽 **Người ngoài hành tinh nghẹn trân châu** | Heimlich (vỗ lưng + đẩy bụng) | Nghiêng điện thoại đẩy bụng (hoặc nhấn-giữ-thả) |
+| 🍼 **Bé Bông hóc dị vật** | Trẻ sơ sinh: vỗ lưng + ấn ngực, KHÔNG đẩy bụng | Trả lời nhanh các tình huống |
+| 🧑‍🍳 **Cứu đầu bếp bị bỏng** | Xả nước mát chữa bỏng | Rê vòi nước 🚿 đè lên vết bỏng, giữ đủ lâu — vết bỏng còn **lan sang chỗ khác** |
+| 🧟 **Cầm máu cho Zombie** | Đặt gạc & ép cầm máu | Kéo gạc vào vết thương, giữ thanh lực trong **vùng xanh đang di chuyển** |
 | 🌊 **Đuối nước** · ⚡ **Điện giật** · 🌀 **Co giật** · 🐝 **Sốc phản vệ** · 🦴 **Gãy xương** · 🐍 **Rắn cắn** | Xử lý đúng trình tự | Trả lời nhanh các tình huống sinh tử |
 
 Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo đời thực sau khi chơi.
@@ -42,6 +44,14 @@ Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo
 - **Hướng dẫn nhanh** hiện lần đầu chơi mỗi kiểu mini-game (chỉ 1 lần, lưu localStorage)
 - Nhân vật **lắc lư sống động**, hiệu ứng chuyển màn & nảy thẻ mượt
 - **Screenshot** trong manifest → nút "Install" của trình duyệt hiển thị đẹp hơn
+
+## 🌐 Đa ngôn ngữ (Tiếng Việt / English)
+
+- Đổi ngôn ngữ trong ⚙️ **Cài đặt** → 🌐 (VI/EN), lưu lại cho lần sau
+- Dịch toàn bộ: giao diện, nội dung mini-game, câu hỏi, và **Chế độ Hoảng loạn** (giọng đọc tự đổi sang `en-US` khi ở chế độ English)
+- Trẻ sơ sinh & các tình huống đều có cả hai ngôn ngữ
+
+> Ở chế độ English, phần đọc to dùng giọng tiếng Anh và nói "call emergency services" thay cho số 115 (vì số khẩn cấp khác nhau theo quốc gia).
 
 ## 🆘 Chế độ Hoảng loạn (Panic Mode)
 
@@ -120,7 +130,8 @@ vẫn nên học một khoá sơ cứu thực hành có người hướng dẫn 
 | Chủ đề | Điểm chính | Nguồn |
 |--------|-----------|-------|
 | CPR | 100–120 nhịp/phút, sâu ~5–6cm, giữa ngực; chưa đào tạo thì ép tim liên tục | [AHA](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines) |
-| Hóc dị vật | Xen kẽ **5 vỗ lưng + 5 đẩy bụng** (người lớn & trẻ >1 tuổi) | [Mayo Clinic](https://www.mayoclinic.org/first-aid/first-aid-choking/basics/art-20056637), [British Red Cross](https://www.redcross.org.uk/first-aid) |
+| CPR trẻ sơ sinh | Hai ngón cái ôm ngực, sâu ~4cm (1/3 lồng ngực), 100–120/phút | [AHA Pediatric BLS](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support) |
+| Hóc dị vật | Xen kẽ **5 vỗ lưng + 5 đẩy bụng** (người lớn & trẻ >1 tuổi); trẻ sơ sinh: **5 vỗ lưng + 5 ấn ngực, KHÔNG đẩy bụng** | [Mayo Clinic](https://www.mayoclinic.org/first-aid/first-aid-choking/basics/art-20056637), [AHA 2025](https://newsroom.heart.org/news/updated-cpr-guidelines-tackle-choking-response-opioid-related-emergencies-and-a-revised-chain-of-survival) |
 | Sốc phản vệ | Adrenaline tiêm mặt ngoài đùi, gọi cấp cứu, nằm kê chân cao | [NHS inform](https://www.nhsinform.scot/illnesses-and-conditions/immune-system/anaphylaxis) |
 | Rắn cắn | Bất động, không garô chặt/rạch/hút nọc, tới viện gấp | [WHO](https://www.who.int/news-room/fact-sheets/detail/snakebite-envenoming) |
 | Bỏng, chảy máu, gãy xương, co giật, đuối nước, điện giật | Sơ cứu phổ thông | [WHO](https://www.who.int/), [American Red Cross](https://www.redcross.org/take-a-class/first-aid) |

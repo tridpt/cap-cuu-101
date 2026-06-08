@@ -409,3 +409,13 @@ body {
   color: var(--accent2); text-decoration: none;
 }
 .src-item a:active { opacity: .7; }
+
+/* ===== I18N ===== */
+body.lang-en .only-vi { display: none; }
+body:not(.lang-en) .only-en { display: none; }
+.lang-switch { display: flex; gap: 6px; }
+.lang-opt {
+  padding: 6px 14px; border-radius: 10px; border: 1.5px solid #34376a;
+  background: transparent; color: var(--muted); font-weight: 800; cursor: pointer;
+}
+.lang-opt.active { background: var(--accent2); color: #16172b; border-color: var(--accent2); }

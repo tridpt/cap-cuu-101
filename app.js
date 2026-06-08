@@ -6,6 +6,62 @@
 (() => {
   "use strict";
 
+  /* ============================================================
+     I18N — đa ngôn ngữ (Tiếng Việt / English)
+     ============================================================ */
+  let LANG = localStorage.getItem("capcuu101_lang") || "vi";
+  function t(v) {
+    if (v && typeof v === "object" && ("vi" in v || "en" in v)) return v[LANG] ?? v.vi;
+    return v;
+  }
+  // từ điển cho phần giao diện tĩnh (đánh dấu bằng data-i18n trong HTML)
+  const UI = {
+    play: { vi: "🎮 CHƠI & HỌC", en: "🎮 PLAY & LEARN" },
+    panic_btn: { vi: "🆘 CHẾ ĐỘ HOẢNG LOẠN", en: "🆘 PANIC MODE" },
+    ach_btn: { vi: "🏆 Thành tích", en: "🏆 Achievements" },
+    about_btn: { vi: "❓ Giới thiệu", en: "❓ About" },
+    disclaimer: { vi: "⚠️ Game giải trí. Việc thật hãy gọi 115.", en: "⚠️ A game for learning. In real life, call emergency services." },
+    levels_title: { vi: "Chọn thử thách", en: "Choose a challenge" },
+    panic_title: { vi: "🆘 HOẢNG LOẠN", en: "🆘 PANIC" },
+    panic_lead: { vi: "Hít một hơi. Chọn tình huống. App sẽ đọc từng bước cho bạn.", en: "Take a breath. Pick the situation. The app reads each step aloud." },
+    call_115: { vi: "📞 GỌI 115 NGAY", en: "📞 CALL EMERGENCY NOW" },
+    prev: { vi: "◀ Lùi", en: "◀ Back" },
+    next: { vi: "Bước tiếp ▶", en: "Next ▶" },
+    done: { vi: "✓ Xong", en: "✓ Done" },
+    replay: { vi: "🔊 Đọc lại", en: "🔊 Read again" },
+    change_sit: { vi: "↺ Đổi tình huống", en: "↺ Change situation" },
+    about_title: { vi: "Đây là cái gì?", en: "What is this?" },
+    ach_title: { vi: "🏆 Thành tích", en: "🏆 Achievements" },
+    sources_title: { vi: "📚 Nguồn tham khảo", en: "📚 References" },
+    sources_btn: { vi: "📚 Nguồn tham khảo", en: "📚 References" },
+    settings_title: { vi: "⚙️ Cài đặt", en: "⚙️ Settings" },
+    set_sound: { vi: "🔊 Âm thanh hiệu ứng", en: "🔊 Sound effects" },
+    set_music: { vi: "🎵 Nhạc nền 8-bit", en: "🎵 8-bit music" },
+    set_vibrate: { vi: "📳 Rung", en: "📳 Vibration" },
+    set_lang: { vi: "🌐 Ngôn ngữ", en: "🌐 Language" },
+    set_done: { vi: "Xong", en: "Done" },
+    tut_howto: { vi: "Cách chơi", en: "How to play" },
+    tut_start: { vi: "Bắt đầu! 🚀", en: "Start! 🚀" },
+    retry: { vi: "🔁 Chơi lại", en: "🔁 Retry" },
+    back_list: { vi: "← Danh sách", en: "← Level list" },
+    win_title: { vi: "CỨU SỐNG RỒI!", en: "YOU SAVED THEM!" },
+    lose_title: { vi: "ĐĂNG XUẤT KHỎI CUỘC ĐỜI 😵", en: "LOGGED OUT OF LIFE 😵" },
+    real_life: { vi: "💡 Đời thực:", en: "💡 Real life:" },
+    unlock_badge: { vi: "🏅 Mở khoá huy hiệu:", en: "🏅 Badge unlocked:" },
+    q_label: { vi: "Câu", en: "Question" },
+    correct: { vi: "ĐÚNG! ✅", en: "CORRECT! ✅" },
+    streak_active_today: { vi: "— giữ phong độ nhé!", en: "— keep it up!" },
+    streak_active_due: { vi: "— chơi 1 màn hôm nay để nối chuỗi!", en: "— play one today to keep the streak!" },
+    streak_none: { vi: "🔥 Chơi mỗi ngày để xây chuỗi ôn tập. Bắt đầu hôm nay!", en: "🔥 Play daily to build a review streak. Start today!" },
+    st_total_stars: { vi: "⭐ Tổng sao", en: "⭐ Total stars" },
+    st_three: { vi: "🏆 Màn 3 sao", en: "🏆 3-star levels" },
+    st_streak: { vi: "🔥 Chuỗi ngày", en: "🔥 Day streak" },
+    st_wins: { vi: "💪 Lượt cứu sống", en: "💪 Lives saved" },
+    st_combo: { vi: "🎯 Combo CPR tốt nhất", en: "🎯 Best CPR combo" },
+    st_badges: { vi: "🏅 Huy hiệu", en: "🏅 Badges" },
+    badges_title: { vi: "🏅 Huy hiệu", en: "🏅 Badges" }
+  };
+
   /* ---------- NAVIGATION ---------- */
   const screens = {};
   document.querySelectorAll(".screen").forEach(s => (screens[s.id] = s));
@@ -86,21 +142,21 @@
   }
 
   const BADGES = [
-    { id: "rookie", emoji: "🐣", name: "Lính mới", desc: "Cứu sống lần đầu tiên",
+    { id: "rookie", emoji: "🐣", name: { vi: "Lính mới", en: "Rookie" }, desc: { vi: "Cứu sống lần đầu tiên", en: "First life saved" },
       test: (s, st) => s.totalWins >= 1 },
-    { id: "cpr_master", emoji: "❤️‍🔥", name: "Bậc thầy CPR", desc: "Đạt 3 sao màn ép tim",
+    { id: "cpr_master", emoji: "❤️‍🔥", name: { vi: "Bậc thầy CPR", en: "CPR Master" }, desc: { vi: "Đạt 3 sao màn ép tim", en: "3 stars on the CPR level" },
       test: (s, st) => (st.cpr || 0) >= 3 },
-    { id: "combo", emoji: "🎯", name: "Tay nhịp vàng", desc: "Combo x10 ở màn CPR",
+    { id: "combo", emoji: "🎯", name: { vi: "Tay nhịp vàng", en: "Golden Rhythm" }, desc: { vi: "Combo x10 ở màn CPR", en: "x10 combo on CPR" },
       test: (s) => (s.best.cpr || 0) >= 10 },
-    { id: "five", emoji: "🖐️", name: "Nửa đường", desc: "3 sao ít nhất 5 màn",
+    { id: "five", emoji: "🖐️", name: { vi: "Nửa đường", en: "Halfway" }, desc: { vi: "3 sao ít nhất 5 màn", en: "3 stars on 5+ levels" },
       test: (s, st) => Object.values(st).filter(v => v >= 3).length >= 5 },
-    { id: "explorer", emoji: "🧭", name: "Thử mọi thứ", desc: "Thắng đủ cả 10 màn",
-      test: (s) => Object.keys(s.wins).length >= 10 },
-    { id: "all_stars", emoji: "👑", name: "Cứu tinh", desc: "3 sao tất cả các màn",
+    { id: "explorer", emoji: "🧭", name: { vi: "Thử mọi thứ", en: "Explorer" }, desc: { vi: "Thắng đủ mọi màn", en: "Win every level once" },
+      test: (s) => Object.keys(s.wins).length >= LEVELS.length },
+    { id: "all_stars", emoji: "👑", name: { vi: "Cứu tinh", en: "Lifesaver" }, desc: { vi: "3 sao tất cả các màn", en: "3 stars on all levels" },
       test: (s, st) => LEVELS.every(l => (st[l.id] || 0) >= 3) },
-    { id: "streak3", emoji: "🔥", name: "Chăm chỉ", desc: "Chuỗi 3 ngày liên tiếp",
+    { id: "streak3", emoji: "🔥", name: { vi: "Chăm chỉ", en: "Diligent" }, desc: { vi: "Chuỗi 3 ngày liên tiếp", en: "3-day streak" },
       test: (s) => s.streak.count >= 3 },
-    { id: "streak7", emoji: "🏅", name: "Kiên trì", desc: "Chuỗi 7 ngày liên tiếp",
+    { id: "streak7", emoji: "🏅", name: { vi: "Kiên trì", en: "Persistent" }, desc: { vi: "Chuỗi 7 ngày liên tiếp", en: "7-day streak" },
       test: (s) => s.streak.count >= 7 }
   ];
 
@@ -112,7 +168,7 @@
     BADGES.forEach(b => {
       if (!s.badges.includes(b.id) && b.test(s, st)) {
         s.badges.push(b.id);
-        newly.push(b.name);
+        newly.push(t(b.name));
       }
     });
     if (newly.length) saveStats(s);
@@ -122,94 +178,88 @@
   /* ---------- LEVEL DATA ---------- */
   const LEVELS = [
     {
-      id: "cpr",
-      emoji: "🐻",
-      title: "Ép tim cho Gấu Béo",
-      desc: "CPR — vỗ tim đúng nhịp 100–120 lần/phút",
-      type: "rhythm",
-      char: "🐻",
-      lesson: "CPR thật: ép giữa ngực, sâu 5–6cm, nhịp 100–120/phút. Nhớ bài hát 'Stayin' Alive' — đúng nhịp đấy!"
+      id: "cpr", emoji: "🐻", type: "rhythm", char: "🐻",
+      title: { vi: "Ép tim cho Gấu Béo", en: "CPR for Chunky Bear" },
+      desc: { vi: "CPR — vỗ tim đúng nhịp 100–120 lần/phút", en: "CPR — compress at 100–120 beats/min" },
+      lesson: { vi: "CPR người lớn: ép giữa ngực, sâu 5–6cm, nhịp 100–120/phút. Nhớ bài 'Stayin' Alive' — đúng nhịp đấy!",
+                en: "Adult CPR: push center of chest, 5–6cm deep, 100–120/min. Hum 'Stayin' Alive' — that's the beat!" }
     },
     {
-      id: "choke",
-      emoji: "👽",
-      title: "Người ngoài hành tinh nghẹn trân châu",
-      desc: "Heimlich — đẩy bụng tống dị vật ra",
-      type: "thrust",
-      char: "👽",
-      lesson: "Hóc dị vật (người lớn/trẻ &gt;1 tuổi): xen kẽ 5 lần vỗ lưng giữa hai bả vai và 5 lần đẩy bụng (Heimlich) đến khi bật ra. Còn ho được thì cứ để họ ho mạnh."
+      id: "choke", emoji: "👽", type: "thrust", char: "👽",
+      title: { vi: "Người ngoài hành tinh nghẹn trân châu", en: "Alien choking on boba" },
+      desc: { vi: "Heimlich — vỗ lưng & đẩy bụng", en: "Heimlich — back blows & abdominal thrusts" },
+      lesson: { vi: "Hóc dị vật (người lớn/trẻ >1 tuổi): xen kẽ 5 lần vỗ lưng giữa hai bả vai và 5 lần đẩy bụng (Heimlich) đến khi bật ra. Còn ho được thì cứ để họ ho mạnh.",
+                en: "Choking (adult/child >1y): alternate 5 back blows between shoulder blades and 5 abdominal thrusts (Heimlich) until it pops out. If they can cough, let them cough hard." }
     },
     {
-      id: "burn",
-      emoji: "🔥",
-      title: "Cứu anh đầu bếp bị bỏng",
-      desc: "Xả nước mát lên vết bỏng cho đủ lâu",
-      type: "hose",
-      char: "🧑‍🍳",
-      lesson: "Bỏng: xả nước mát (KHÔNG dùng đá) 20 phút. Không bôi kem đánh răng, bơ, nước mắm gì cả!"
+      id: "infant_cpr", emoji: "👶", type: "rhythm", char: "👶",
+      title: { vi: "CPR cho em bé Bông", en: "CPR for Baby Cotton" },
+      desc: { vi: "Ép tim trẻ sơ sinh — hai ngón cái, nông hơn", en: "Infant CPR — two thumbs, shallower" },
+      lesson: { vi: "CPR trẻ sơ sinh (<1 tuổi): ép giữa ngực bằng HAI NGÓN CÁI ôm quanh ngực (hoặc gót một bàn tay), sâu ~4cm (1/3 lồng ngực), nhịp 100–120/phút. KHÔNG ép sâu như người lớn.",
+                en: "Infant CPR (<1y): compress center of chest with TWO THUMBS encircling the chest (or heel of one hand), ~4cm deep (1/3 of chest), 100–120/min. Do NOT push as deep as for adults." }
     },
     {
-      id: "bleed",
-      emoji: "🩸",
-      title: "Cầm máu cho Zombie hậu đậu",
-      desc: "Đặt gạc đúng chỗ & giữ ép cầm máu",
-      type: "press",
-      char: "🧟",
-      lesson: "Chảy máu: ép trực tiếp lên vết thương bằng gạc sạch, nâng cao chi, giữ ép liên tục."
+      id: "infant_choke", emoji: "🍼", type: "quiz", char: "👶",
+      title: { vi: "Bé Bông hóc dị vật", en: "Baby Cotton is choking" },
+      desc: { vi: "Trẻ sơ sinh: vỗ lưng + ấn ngực, KHÔNG đẩy bụng", en: "Infant: back blows + chest thrusts, NO abdominal thrusts" },
+      lesson: { vi: "Hóc dị vật ở trẻ sơ sinh (<1 tuổi): úp sấp vỗ lưng 5 lần giữa hai bả vai, rồi lật ngửa ẤN NGỰC 5 lần bằng 2 ngón. TUYỆT ĐỐI KHÔNG đẩy bụng cho trẻ sơ sinh.",
+                en: "Infant choking (<1y): face-down 5 back blows between shoulder blades, then face-up 5 CHEST thrusts with 2 fingers. NEVER do abdominal thrusts on an infant." }
     },
     {
-      id: "drown",
-      emoji: "🌊",
-      title: "Vớt chú cá vàng đuối nước",
-      desc: "Xử lý đuối nước đúng trình tự",
-      type: "quiz",
-      char: "🐠",
-      lesson: "Đuối nước: đảm bảo an toàn cho mình trước, đưa nạn nhân lên cạn, gọi 115, kiểm tra thở & CPR nếu cần."
+      id: "burn", emoji: "🔥", type: "hose", char: "🧑‍🍳",
+      title: { vi: "Cứu anh đầu bếp bị bỏng", en: "Save the burnt chef" },
+      desc: { vi: "Xả nước mát lên vết bỏng cho đủ lâu", en: "Cool the burn under running water long enough" },
+      lesson: { vi: "Bỏng: xả nước mát (KHÔNG dùng đá) 20 phút. Không bôi kem đánh răng, bơ, nước mắm gì cả!",
+                en: "Burns: cool under running water (NOT ice) for 20 min. No toothpaste, butter or sauces!" }
     },
     {
-      id: "electric",
-      emoji: "⚡",
-      title: "Robot bị điện giật",
-      desc: "Ngắt nguồn trước khi cứu!",
-      type: "quiz",
-      char: "🤖",
-      lesson: "Điện giật: NGẮT nguồn điện trước. Tuyệt đối không chạm vào nạn nhân khi còn dòng điện."
+      id: "bleed", emoji: "🩸", type: "press", char: "🧟",
+      title: { vi: "Cầm máu cho Zombie hậu đậu", en: "Stop the clumsy Zombie's bleeding" },
+      desc: { vi: "Đặt gạc đúng chỗ & giữ ép cầm máu", en: "Place gauze on the wound & hold pressure" },
+      lesson: { vi: "Chảy máu: ép trực tiếp lên vết thương bằng gạc sạch, nâng cao chi, giữ ép liên tục.",
+                en: "Bleeding: press directly on the wound with clean gauze, raise the limb, keep steady pressure." }
     },
     {
-      id: "seizure",
-      emoji: "🌀",
-      title: "Bạch tuộc lên cơn co giật",
-      desc: "Bảo vệ, đừng giữ chặt",
-      type: "quiz",
-      char: "🐙",
-      lesson: "Co giật: dọn vật nguy hiểm, lót đầu mềm, KHÔNG giữ chặt, KHÔNG nhét gì vào miệng, canh giờ cơn giật."
+      id: "drown", emoji: "🌊", type: "quiz", char: "🐠",
+      title: { vi: "Vớt chú cá vàng đuối nước", en: "Rescue the drowning goldfish" },
+      desc: { vi: "Xử lý đuối nước đúng trình tự", en: "Handle drowning in the right order" },
+      lesson: { vi: "Đuối nước: đảm bảo an toàn cho mình trước, đưa nạn nhân lên cạn, gọi 115, kiểm tra thở & CPR nếu cần.",
+                en: "Drowning: keep yourself safe first, get them to land, call emergency, check breathing & do CPR if needed." }
     },
     {
-      id: "anaphylaxis",
-      emoji: "🐝",
-      title: "Ong vò vẽ bị... dị ứng ong",
-      desc: "Sốc phản vệ — tiêm adrenaline & gọi 115",
-      type: "quiz",
-      char: "🐝",
-      lesson: "Sốc phản vệ: dùng bút tiêm adrenaline (EpiPen) vào đùi ngoài ngay, gọi 115, cho nằm kê chân cao."
+      id: "electric", emoji: "⚡", type: "quiz", char: "🤖",
+      title: { vi: "Robot bị điện giật", en: "Robot got electrocuted" },
+      desc: { vi: "Ngắt nguồn trước khi cứu!", en: "Cut the power before helping!" },
+      lesson: { vi: "Điện giật: NGẮT nguồn điện trước. Tuyệt đối không chạm vào nạn nhân khi còn dòng điện.",
+                en: "Electric shock: CUT the power first. Never touch the victim while current is still flowing." }
     },
     {
-      id: "fracture",
-      emoji: "🦴",
-      title: "Khủng long gãy chân",
-      desc: "Cố định, đừng nắn xương",
-      type: "quiz",
-      char: "🦖",
-      lesson: "Gãy xương: cố định nguyên tư thế, KHÔNG nắn, chườm lạnh giảm sưng, đưa đi viện."
+      id: "seizure", emoji: "🌀", type: "quiz", char: "🐙",
+      title: { vi: "Bạch tuộc lên cơn co giật", en: "Octopus having a seizure" },
+      desc: { vi: "Bảo vệ, đừng giữ chặt", en: "Protect them, don't restrain" },
+      lesson: { vi: "Co giật: dọn vật nguy hiểm, lót đầu mềm, KHÔNG giữ chặt, KHÔNG nhét gì vào miệng, canh giờ cơn giật.",
+                en: "Seizure: clear hazards, cushion the head, do NOT restrain, do NOT put anything in the mouth, time the seizure." }
     },
     {
-      id: "snakebite",
-      emoji: "🐍",
-      title: "Rắn cắn nhầm... cao bồi",
-      desc: "Bất động & tới viện, đừng hút nọc",
-      type: "quiz",
-      char: "🤠",
-      lesson: "Rắn cắn: giữ nạn nhân bất động, vùng bị cắn để ngang hoặc thấp hơn tim, tháo đồ chật. KHÔNG rạch, hút nọc, garô chặt hay chườm đá. Đến viện gấp."
+      id: "anaphylaxis", emoji: "🐝", type: "quiz", char: "🐝",
+      title: { vi: "Ong vò vẽ bị... dị ứng ong", en: "Wasp... allergic to bees" },
+      desc: { vi: "Sốc phản vệ — tiêm adrenaline & gọi 115", en: "Anaphylaxis — adrenaline & call emergency" },
+      lesson: { vi: "Sốc phản vệ: dùng bút tiêm adrenaline (EpiPen) vào đùi ngoài ngay, gọi 115, cho nằm kê chân cao.",
+                en: "Anaphylaxis: use the adrenaline auto-injector (EpiPen) in the outer thigh now, call emergency, lay them down with legs raised." }
+    },
+    {
+      id: "fracture", emoji: "🦴", type: "quiz", char: "🦖",
+      title: { vi: "Khủng long gãy chân", en: "Dinosaur with a broken leg" },
+      desc: { vi: "Cố định, đừng nắn xương", en: "Immobilize, don't realign the bone" },
+      lesson: { vi: "Gãy xương: cố định nguyên tư thế, KHÔNG nắn, chườm lạnh giảm sưng, đưa đi viện.",
+                en: "Fracture: immobilize as-is, do NOT realign, ice to reduce swelling, get to hospital." }
+    },
+    {
+      id: "snakebite", emoji: "🐍", type: "quiz", char: "🤠",
+      title: { vi: "Rắn cắn nhầm... cao bồi", en: "Snake bit a... cowboy" },
+      desc: { vi: "Bất động & tới viện, đừng hút nọc", en: "Immobilize & get to hospital, don't suck venom" },
+      lesson: { vi: "Rắn cắn: giữ nạn nhân bất động, vùng bị cắn để ngang hoặc thấp hơn tim, tháo đồ chật. KHÔNG rạch, hút nọc, garô chặt hay chườm đá. Đến viện gấp.",
+                en: "Snakebite: keep the victim still, bite area level with or below the heart, remove tight items. Do NOT cut, suck venom, apply a tight tourniquet or ice. Get to hospital fast." }
     }
   ];
 
@@ -227,7 +277,7 @@
       card.className = "level-card";
       card.innerHTML = `
         <div class="lv-emoji">${lv.emoji}</div>
-        <div class="lv-info"><h3>${lv.title}</h3><p>${lv.desc}</p></div>
+        <div class="lv-info"><h3>${t(lv.title)}</h3><p>${t(lv.desc)}</p></div>
         <div class="lv-stars">${stars}</div>`;
       card.addEventListener("click", () => startGame(lv));
       list.appendChild(card);
@@ -238,16 +288,16 @@
     const el = document.getElementById("streak-banner");
     if (!el) return;
     const s = loadStats();
-    const t = todayStr();
-    const active = s.streak.last && daysBetween(s.streak.last, t) <= 1 && s.streak.count > 0;
+    const today = todayStr();
+    const active = s.streak.last && daysBetween(s.streak.last, today) <= 1 && s.streak.count > 0;
+    el.className = "streak-banner";
     if (active) {
-      const playedToday = s.streak.last === t;
-      el.className = "streak-banner";
-      el.innerHTML = `🔥 Chuỗi <b>${s.streak.count} ngày</b>` +
-        (playedToday ? " — giữ phong độ nhé!" : " — chơi 1 màn hôm nay để nối chuỗi!");
+      const playedToday = s.streak.last === today;
+      const tail = playedToday ? t(UI.streak_active_today) : t(UI.streak_active_due);
+      const word = LANG === "en" ? "day streak" : "ngày";
+      el.innerHTML = `🔥 ${LANG === "en" ? "" : "Chuỗi "}<b>${s.streak.count} ${word}</b> ${tail}`;
     } else {
-      el.className = "streak-banner";
-      el.innerHTML = "🔥 Chơi mỗi ngày để xây chuỗi ôn tập. Bắt đầu hôm nay!";
+      el.innerHTML = t(UI.streak_none);
     }
   }
 
@@ -261,22 +311,22 @@
       const on = s.badges.includes(b.id);
       return `<div class="badge ${on ? "unlocked" : ""}">
         <div class="b-emoji">${on ? b.emoji : "🔒"}</div>
-        <div class="b-name">${b.name}</div>
-        <div class="b-desc">${b.desc}</div>
+        <div class="b-name">${t(b.name)}</div>
+        <div class="b-desc">${t(b.desc)}</div>
       </div>`;
     }).join("");
     body.innerHTML = `
       <div class="ach-stats">
-        <div class="ach-stat"><div class="num">${totalStars()}</div><div class="lbl">⭐ Tổng sao</div></div>
-        <div class="ach-stat"><div class="num">${threeStar}/${LEVELS.length}</div><div class="lbl">🏆 Màn 3 sao</div></div>
-        <div class="ach-stat"><div class="num">${s.streak.count}</div><div class="lbl">🔥 Chuỗi ngày</div></div>
+        <div class="ach-stat"><div class="num">${totalStars()}</div><div class="lbl">${t(UI.st_total_stars)}</div></div>
+        <div class="ach-stat"><div class="num">${threeStar}/${LEVELS.length}</div><div class="lbl">${t(UI.st_three)}</div></div>
+        <div class="ach-stat"><div class="num">${s.streak.count}</div><div class="lbl">${t(UI.st_streak)}</div></div>
       </div>
       <div class="ach-stats">
-        <div class="ach-stat"><div class="num">${s.totalWins}</div><div class="lbl">💪 Lượt cứu sống</div></div>
-        <div class="ach-stat"><div class="num">x${s.best.cpr || 0}</div><div class="lbl">🎯 Combo CPR tốt nhất</div></div>
-        <div class="ach-stat"><div class="num">${s.badges.length}/${BADGES.length}</div><div class="lbl">🏅 Huy hiệu</div></div>
+        <div class="ach-stat"><div class="num">${s.totalWins}</div><div class="lbl">${t(UI.st_wins)}</div></div>
+        <div class="ach-stat"><div class="num">x${s.best.cpr || 0}</div><div class="lbl">${t(UI.st_combo)}</div></div>
+        <div class="ach-stat"><div class="num">${s.badges.length}/${BADGES.length}</div><div class="lbl">${t(UI.st_badges)}</div></div>
       </div>
-      <div class="ach-section-title">🏅 Huy hiệu</div>
+      <div class="ach-section-title">${t(UI.badges_title)}</div>
       <div class="badge-grid">${badgeCards}</div>`;
   }
 
@@ -291,7 +341,7 @@
   function startGame(lv) {
     if (window.Sfx) { Sfx.unlock(); Sfx.startMusic(); }
     go("screen-game");
-    document.getElementById("game-title").textContent = lv.title;
+    document.getElementById("game-title").textContent = t(lv.title);
     document.getElementById("game-hp").textContent = 100;
     stage.innerHTML = "";
     controls.innerHTML = "";
@@ -312,24 +362,34 @@
   const TUT_KEY = "capcuu101_tut";
   const TUTORIALS = {
     rhythm: {
-      emoji: "❤️", title: "Ép tim đúng nhịp",
-      text: "Chạm nút <b>ÉP TIM</b> khớp với vòng tròn vàng nảy ra (nhịp ~110/phút). Đúng nhịp sẽ cộng <b>combo</b>, sai thì mất combo. Có tiếng tách & rung dẫn nhịp cho bạn."
+      emoji: "❤️",
+      title: { vi: "Ép tim đúng nhịp", en: "Compress on the beat" },
+      text: { vi: "Chạm nút <b>ÉP TIM</b> khớp với vòng tròn vàng nảy ra (nhịp ~110/phút). Đúng nhịp sẽ cộng <b>combo</b>, sai thì mất combo. Có tiếng tách & rung dẫn nhịp cho bạn.",
+              en: "Tap the <b>COMPRESS</b> button in time with the bouncing yellow ring (~110/min). On-beat builds <b>combo</b>, off-beat resets it. A tick & vibration guide the rhythm." }
     },
     thrust: {
-      emoji: "🤜", title: "Đẩy bụng Heimlich",
-      text: "<b>Nghiêng điện thoại về trước</b> dứt khoát để đẩy bụng (máy không có cảm biến thì <b>nhấn giữ rồi thả mạnh</b>). Đẩy đủ số lần là dị vật bật ra!"
+      emoji: "🤜",
+      title: { vi: "Đẩy bụng Heimlich", en: "Heimlich thrusts" },
+      text: { vi: "<b>Nghiêng điện thoại về trước</b> dứt khoát để đẩy bụng (máy không có cảm biến thì <b>nhấn giữ rồi thả mạnh</b>). Đẩy đủ số lần là dị vật bật ra!",
+              en: "<b>Tilt the phone forward</b> firmly to thrust (no sensor? <b>press, hold and release hard</b>). Enough strong thrusts and the object pops out!" }
     },
     hose: {
-      emoji: "🚿", title: "Xả nước chữa bỏng",
-      text: "Đặt ngón tay & <b>rê vòi nước</b> đè lên nhân vật, <b>giữ yên đủ lâu</b> cho mát. Nhấc tay ra là vết bỏng <b>nóng lại</b> ngay đấy!"
+      emoji: "🚿",
+      title: { vi: "Xả nước chữa bỏng", en: "Cool the burn" },
+      text: { vi: "Đặt ngón tay & <b>rê vòi nước</b> đè lên nhân vật, <b>giữ yên đủ lâu</b> cho mát. Nhấc tay ra là vết bỏng <b>nóng lại</b> — và có thể lan sang chỗ khác!",
+              en: "Hold & <b>drag the water</b> over the character, <b>keep it there</b> to cool. Let go and the burn <b>heats up</b> — and may flare to a new spot!" }
     },
     press: {
-      emoji: "🩹", title: "Đặt gạc & ép cầm máu",
-      text: "<b>Bước 1:</b> kéo miếng gạc 🩹 vào đúng vòng tròn vết thương. <b>Bước 2:</b> nhấn giữ để ép, giữ thanh lực trong <b>vùng xanh</b> đủ lâu."
+      emoji: "🩹",
+      title: { vi: "Đặt gạc & ép cầm máu", en: "Place gauze & hold pressure" },
+      text: { vi: "<b>Bước 1:</b> kéo miếng gạc 🩹 vào đúng vòng tròn vết thương. <b>Bước 2:</b> nhấn giữ để ép, giữ thanh lực trong <b>vùng xanh đang di chuyển</b>.",
+              en: "<b>Step 1:</b> drag the gauze 🩹 onto the wound circle. <b>Step 2:</b> press & hold, keeping the force bar inside the <b>moving green zone</b>." }
     },
     quiz: {
-      emoji: "🧠", title: "Chọn đáp án đúng",
-      text: "Đọc tình huống rồi <b>chọn cách xử lý đúng</b>. Trả lời sai sẽ mất nhiều HP — hết HP là nhân vật <b>đăng xuất khỏi cuộc đời</b>!"
+      emoji: "🧠",
+      title: { vi: "Chọn đáp án đúng", en: "Pick the right answer" },
+      text: { vi: "Đọc tình huống rồi <b>chọn cách xử lý đúng</b>. Trả lời sai sẽ mất nhiều HP — hết HP là nhân vật <b>đăng xuất khỏi cuộc đời</b>!",
+              en: "Read the situation, then <b>pick the correct action</b>. Wrong answers cost a lot of HP — at zero HP the character <b>logs out of life</b>!" }
     }
   };
   function tutorialSeen(type) {
@@ -343,14 +403,15 @@
     localStorage.setItem(TUT_KEY, JSON.stringify(o));
   }
   function showTutorial(lv, onStart) {
-    const t = TUTORIALS[lv.type];
-    if (!t) { onStart(); return; }
+    const tut = TUTORIALS[lv.type];
+    if (!tut) { onStart(); return; }
     const modal = document.getElementById("tutorial");
-    document.getElementById("tut-emoji").textContent = t.emoji;
-    document.getElementById("tut-title").textContent = t.title;
-    document.getElementById("tut-text").innerHTML = t.text;
+    document.getElementById("tut-emoji").textContent = tut.emoji;
+    document.getElementById("tut-title").textContent = t(tut.title);
+    document.getElementById("tut-text").innerHTML = t(tut.text);
     modal.classList.remove("hidden");
     const btn = document.getElementById("tut-start");
+    btn.textContent = t(UI.tut_start);
     const handler = () => {
       btn.removeEventListener("click", handler);
       modal.classList.add("hidden");
@@ -386,17 +447,17 @@
     const newBadges = success ? checkBadges() : [];
     const starStr = success ? "★".repeat(stars) + "☆".repeat(3 - stars) : "";
     const badgeNote = newBadges.length
-      ? `<div class="lesson-box" style="border-left-color:var(--accent2)">🏅 Mở khoá huy hiệu: <b>${newBadges.join(", ")}</b></div>`
+      ? `<div class="lesson-box" style="border-left-color:var(--accent2)">${t(UI.unlock_badge)} <b>${newBadges.join(", ")}</b></div>`
       : "";
     ov.innerHTML = `
       <div class="r-emoji">${success ? "🎉" : "💀"}</div>
-      <h2>${success ? "CỨU SỐNG RỒI!" : "ĐĂNG XUẤT KHỎI CUỘC ĐỜI 😵"}</h2>
+      <h2>${success ? t(UI.win_title) : t(UI.lose_title)}</h2>
       ${success ? `<div class="result-stars">${starStr}</div>` : ""}
       <p>${extra || ""}</p>
-      <div class="lesson-box">💡 <b>Đời thực:</b> ${lv.lesson}</div>
+      <div class="lesson-box">${t(UI.real_life)} ${t(lv.lesson)}</div>
       ${badgeNote}
-      <button class="btn btn-play" id="r-retry">🔁 Chơi lại</button>
-      <button class="btn btn-ghost" id="r-back">← Danh sách</button>`;
+      <button class="btn btn-play" id="r-retry">${t(UI.retry)}</button>
+      <button class="btn btn-ghost" id="r-back">${t(UI.back_list)}</button>`;
     stage.appendChild(ov);
     ov.querySelector("#r-retry").addEventListener("click", () => startGame(lv));
     ov.querySelector("#r-back").addEventListener("click", () => go("screen-levels"));
@@ -414,8 +475,10 @@
       <div class="beat-ring go" id="ring"></div>
       <div class="combo-tag" id="combo"></div>
       <div class="character" id="char">${lv.char}</div>`;
-    instr.innerHTML = "Chạm <b>TIM</b> đúng theo vòng tròn nảy ra. Đừng nhanh quá, đừng chậm quá!";
-    controls.innerHTML = `<div class="tap-zone" id="tap">❤️ ÉP TIM</div>`;
+    instr.innerHTML = LANG === "en"
+      ? "Tap <b>HEART</b> in time with the bouncing ring. Not too fast, not too slow!"
+      : "Chạm <b>TIM</b> đúng theo vòng tròn nảy ra. Đừng nhanh quá, đừng chậm quá!";
+    controls.innerHTML = `<div class="tap-zone" id="tap">${LANG === "en" ? "❤️ COMPRESS" : "❤️ ÉP TIM"}</div>`;
 
     const ring = document.getElementById("ring");
     const charEl = document.getElementById("char");
@@ -458,8 +521,8 @@
       } else {
         combo = 0; comboEl.textContent = "";
         if (window.Sfx) Sfx.blip();
-        if (phase < interval / 2) floatText("Nhanh quá!", "#ffd23f");
-        else floatText("Chậm quá!", "#ff5d73");
+        if (phase < interval / 2) floatText(LANG === "en" ? "Too fast!" : "Nhanh quá!", "#ffd23f");
+        else floatText(LANG === "en" ? "Too slow!" : "Chậm quá!", "#ff5d73");
       }
 
       const pct = Math.min(100, (good / TARGET) * 100);
@@ -472,9 +535,11 @@
         charEl.classList.add("win");
         const acc = good / hits;
         const stars = acc > 0.9 ? 3 : acc > 0.7 ? 2 : 1;
-        saveBest("cpr", bestCombo);
-        setTimeout(() => showResult(lv, true, stars,
-          `Độ chính xác nhịp: ${Math.round(acc * 100)}% · Combo cao nhất: x${bestCombo}`), 700);
+        saveBest(lv.id, bestCombo);
+        const msg = LANG === "en"
+          ? `Beat accuracy: ${Math.round(acc * 100)}% · Best combo: x${bestCombo}`
+          : `Độ chính xác nhịp: ${Math.round(acc * 100)}% · Combo cao nhất: x${bestCombo}`;
+        setTimeout(() => showResult(lv, true, stars, msg), 700);
       }
     }
     tap.addEventListener("pointerdown", onTap);
@@ -505,20 +570,20 @@
       if (strong) {
         thrusts++;
         if (window.Sfx) { Sfx.correct(); Sfx.vibrate(60); }
-        floatText("ĐẨY! 🟣", "#3ddc97");
+        floatText(LANG === "en" ? "THRUST! 🟣" : "ĐẨY! 🟣", "#3ddc97");
         pf.style.width = (thrusts / NEED) * 100 + "%";
         document.getElementById("game-hp").textContent = Math.min(100, 50 + thrusts * 8);
         if (thrusts >= NEED) win();
       } else {
         if (window.Sfx) Sfx.blip();
-        floatText("Nhẹ quá!", "#ffd23f");
+        floatText(LANG === "en" ? "Too soft!" : "Nhẹ quá!", "#ffd23f");
       }
     }
     function win() {
       alive = false; cleanup();
-      charEl.textContent = "🧋"; floatText("BẬT RA RỒI!", "#3ddc97");
+      charEl.textContent = "🧋"; floatText(LANG === "en" ? "IT'S OUT!" : "BẬT RA RỒI!", "#3ddc97");
       setTimeout(() => { charEl.textContent = lv.char; charEl.classList.add("win"); }, 400);
-      setTimeout(() => showResult(lv, true, 3, "Trân châu bay ra ngoài quỹ đạo 🚀"), 900);
+      setTimeout(() => showResult(lv, true, 3, LANG === "en" ? "Boba launched into orbit 🚀" : "Trân châu bay ra ngoài quỹ đạo 🚀"), 900);
     }
 
     function useTiltMode() {
@@ -526,7 +591,9 @@
       const zone = document.getElementById("zone");
       const knob = document.getElementById("knob");
       zone.style.left = "65%"; zone.style.right = "0";
-      instr.innerHTML = "<b>Nghiêng điện thoại về phía trước</b> để đẩy bụng. Đưa chấm vàng vào vùng xanh!";
+      instr.innerHTML = LANG === "en"
+        ? "<b>Tilt the phone forward</b> to thrust the abdomen. Bring the yellow dot into the green zone!"
+        : "<b>Nghiêng điện thoại về phía trước</b> để đẩy bụng. Đưa chấm vàng vào vùng xanh!";
       let armed = true;
       listener = (e) => {
         const beta = e.beta || 0;            // -180..180, ngửa/cúi
@@ -539,18 +606,20 @@
     }
 
     function useTapMode() {
-      instr.innerHTML = "Thiết bị không có cảm biến nghiêng — <b>nhấn giữ rồi thả mạnh</b> để đẩy bụng!";
+      instr.innerHTML = LANG === "en"
+        ? "No tilt sensor — <b>press and hold, then release hard</b> to thrust the abdomen!"
+        : "Thiết bị không có cảm biến nghiêng — <b>nhấn giữ rồi thả mạnh</b> để đẩy bụng!";
       const btn = document.createElement("div");
       btn.className = "tap-zone";
       btn.id = "tap";
-      btn.textContent = "🤜 NHẤN GIỮ → THẢ";
+      btn.textContent = LANG === "en" ? "🤜 HOLD → RELEASE" : "🤜 NHẤN GIỮ → THẢ";
       controls.appendChild(btn);
       let downAt = 0;
-      btn.addEventListener("pointerdown", () => { downAt = performance.now(); btn.textContent = "💪 ...GIỮ..."; });
+      btn.addEventListener("pointerdown", () => { downAt = performance.now(); btn.textContent = LANG === "en" ? "💪 ...HOLD..." : "💪 ...GIỮ..."; });
       const up = () => {
         if (!downAt) return;
         const held = performance.now() - downAt;
-        downAt = 0; btn.textContent = "🤜 NHẤN GIỮ → THẢ";
+        downAt = 0; btn.textContent = LANG === "en" ? "🤜 HOLD → RELEASE" : "🤜 NHẤN GIỮ → THẢ";
         doThrust(held > 250);
       };
       btn.addEventListener("pointerup", up);
@@ -563,7 +632,7 @@
       instr.innerHTML = "";
       const ask = document.createElement("button");
       ask.className = "btn btn-play";
-      ask.textContent = "📱 Bật cảm biến nghiêng";
+      ask.textContent = LANG === "en" ? "📱 Enable tilt sensor" : "📱 Bật cảm biến nghiêng";
       controls.appendChild(ask);
       ask.addEventListener("click", async () => {
         try {
@@ -574,7 +643,7 @@
       });
       const skip = document.createElement("button");
       skip.className = "btn btn-ghost";
-      skip.textContent = "Không có cảm biến? Chơi kiểu chạm";
+      skip.textContent = LANG === "en" ? "No sensor? Play by tapping" : "Không có cảm biến? Chơi kiểu chạm";
       controls.appendChild(skip);
       skip.addEventListener("click", () => { controls.innerHTML = ""; useTapMode(); });
     } else if (DOE) {
@@ -601,13 +670,15 @@
 
   /* ---------- MINI-GAME 3: HOSE (xả nước chữa bỏng) ---------- */
   function initHose(lv) {
-    const NEED = 6000;          // ms "nước mát" cần tích đủ
+    const NEED = 6500;          // ms "nước mát" cần tích đủ
     stage.innerHTML = `
       <div class="progress-bar"><div class="progress-fill" id="pf"></div></div>
       <div class="wound" id="wound">${lv.char}</div>
       <div class="water-stream" id="stream">🚿</div>
-      <div class="cool-label" id="cool">Kéo vòi nước lên vết bỏng</div>`;
-    instr.innerHTML = "<b>Đặt ngón tay & rê vòi nước</b> đè lên nhân vật, giữ cho mát đủ lâu. Nhấc tay ra là nóng lại!";
+      <div class="cool-label" id="cool">${LANG === "en" ? "Drag the water onto the burn" : "Kéo vòi nước lên vết bỏng"}</div>`;
+    instr.innerHTML = LANG === "en"
+      ? "<b>Hold & drag the water</b> over the character, keep it cool long enough. Let go and it heats up — and the burn can <b>flare to a new spot!</b>"
+      : "<b>Đặt ngón tay & rê vòi nước</b> đè lên nhân vật, giữ cho mát đủ lâu. Nhấc tay ra là nóng lại — vết bỏng còn có thể <b>lan sang chỗ khác!</b>";
 
     const wound = document.getElementById("wound");
     const stream = document.getElementById("stream");
@@ -656,7 +727,7 @@
     stage.addEventListener("pointerup", onUp);
     stage.addEventListener("pointerleave", onUp);
 
-    let hotPlays = 0;
+    let hotPlays = 0, sinceFlare = 0;
     const loop = setInterval(() => {
       if (!alive) return;
       const now = performance.now();
@@ -664,13 +735,22 @@
       if (stream.classList.contains("on") && pointerInside) {
         cooled += dt;
         wound.style.filter = "saturate(.6) brightness(1)";
-        cool.textContent = `Đang làm mát… ${Math.round(cooled / NEED * 100)}%`;
+        cool.textContent = (LANG === "en" ? "Cooling… " : "Đang làm mát… ") + Math.round(cooled / NEED * 100) + "%";
         cool.style.color = "#3ddc97";
         if (Math.random() < 0.04 && window.Sfx) Sfx.blip();
+        // vết bỏng "lan": thỉnh thoảng nhảy sang vị trí mới khi đang xử lý
+        sinceFlare += dt;
+        if (sinceFlare > 2000 && cooled < NEED - 800) {
+          sinceFlare = 0;
+          place();
+          pointerInside = false;
+          if (window.Sfx) Sfx.wrong();
+          floatText(LANG === "en" ? "Flare! 🔥" : "Bỏng lan! 🔥", "#ff5d73");
+        }
       } else {
         cooled = Math.max(0, cooled - dt * 0.5);  // nóng lại nếu rời vòi
         wound.style.filter = "saturate(1.6) brightness(1.2)";
-        cool.textContent = "🔥 Đang nóng lại! Đưa vòi nước về!";
+        cool.textContent = LANG === "en" ? "🔥 Heating up! Bring the water back!" : "🔥 Đang nóng lại! Đưa vòi nước về!";
         cool.style.color = "#ff5d73";
       }
       pf.style.width = Math.min(100, cooled / NEED * 100) + "%";
@@ -681,8 +761,8 @@
         alive = false; clearInterval(loop); onUp();
         wound.style.filter = "none";
         wound.classList.add("character", "win");
-        floatText("MÁT RỒI! 💧", "#3ddc97");
-        setTimeout(() => showResult(lv, true, 3, "Hạ nhiệt vết bỏng đúng cách 👏"), 700);
+        floatText(LANG === "en" ? "COOLED! 💧" : "MÁT RỒI! 💧", "#3ddc97");
+        setTimeout(() => showResult(lv, true, 3, LANG === "en" ? "Burn cooled the right way 👏" : "Hạ nhiệt vết bỏng đúng cách 👏"), 700);
       }
     }, 60);
 
@@ -703,7 +783,9 @@
       <div class="character" id="char">${lv.char}</div>
       <div class="drop-target" id="target"></div>
       <div class="gauze" id="gauze">🩹</div>`;
-    instr.innerHTML = "<b>Bước 1:</b> Kéo miếng gạc 🩹 vào vòng tròn vết thương.";
+    instr.innerHTML = LANG === "en"
+      ? "<b>Step 1:</b> Drag the gauze 🩹 onto the wound circle."
+      : "<b>Bước 1:</b> Kéo miếng gạc 🩹 vào vòng tròn vết thương.";
 
     const charEl = document.getElementById("char");
     const target = document.getElementById("target");
@@ -746,11 +828,11 @@
         gauze.style.top = tcy - rr.top - 28 + "px";
         target.style.opacity = "0";
         if (window.Sfx) Sfx.correct();
-        floatText("ĐẶT CHUẨN!", "#3ddc97");
+        floatText(LANG === "en" ? "PERFECT PLACEMENT!" : "ĐẶT CHUẨN!", "#3ddc97");
         startHold();
       } else {
         if (window.Sfx) Sfx.blip();
-        floatText("Trượt rồi!", "#ffd23f");
+        floatText(LANG === "en" ? "Missed!" : "Trượt rồi!", "#ffd23f");
       }
     }
     gauze.addEventListener("pointerdown", gz);
@@ -759,22 +841,26 @@
 
     let holdLoop = null;
     function startHold() {
-      instr.innerHTML = "<b>Bước 2:</b> Nhấn giữ nút bên dưới để <b>ép cầm máu</b>. Giữ thanh lực trong vùng xanh đủ lâu!";
+      instr.innerHTML = LANG === "en"
+        ? "<b>Step 2:</b> Press & hold below to <b>apply pressure</b>. Keep the force bar inside the moving green zone!"
+        : "<b>Bước 2:</b> Nhấn giữ nút bên dưới để <b>ép cầm máu</b>. Giữ thanh lực trong vùng xanh đang di chuyển!";
       controls.innerHTML = `
         <div class="force-wrap">
           <div class="force-track">
-            <div class="force-good-zone"></div>
+            <div class="force-good-zone" id="fzone"></div>
             <div class="force-fill" id="ffill"></div>
           </div>
-          <div class="force-hint" id="fhint">Nhấn & GIỮ để tăng lực ép</div>
+          <div class="force-hint" id="fhint">${LANG === "en" ? "Press & HOLD to build pressure" : "Nhấn & GIỮ để tăng lực ép"}</div>
         </div>
-        <div class="tap-zone" id="presszone">✋ NHẤN GIỮ ÉP</div>`;
+        <div class="tap-zone" id="presszone">${LANG === "en" ? "✋ PRESS & HOLD" : "✋ NHẤN GIỮ ÉP"}</div>`;
       const fill = document.getElementById("ffill");
       const hint = document.getElementById("fhint");
+      const zoneEl = document.getElementById("fzone");
       const zone = document.getElementById("presszone");
 
       let force = 0, holding = false, inZone = 0;
-      const NEED_ZONE = 3000;     // ms phải giữ trong vùng xanh
+      const NEED_ZONE = 3500;     // ms phải giữ trong vùng xanh
+      let drift = 0, zW = 26;     // vùng xanh trôi để tăng độ khó
       zone.addEventListener("pointerdown", () => { holding = true; if (window.Sfx) Sfx.unlock(); });
       zone.addEventListener("pointerup", () => holding = false);
       zone.addEventListener("pointerleave", () => holding = false);
@@ -783,17 +869,25 @@
       holdLoop = setInterval(() => {
         if (!alive) return;
         const now = performance.now(); const dt = now - last; last = now;
+        drift += dt / 1000;
+        const zLo = 52 + Math.sin(drift * 0.9) * 16;   // dao động 36%..68%
+        const zHi = zLo + zW;
+        zoneEl.style.left = zLo + "%";
+        zoneEl.style.right = (100 - zHi) + "%";
+
         force += (holding ? 0.18 : -0.22) * (dt / 16);
         force = Math.max(0, Math.min(100, force));
         fill.style.width = force + "%";
         charEl.classList.toggle("pulse", holding);
-        // vùng xanh ~ 55%..92%
-        if (force >= 55 && force <= 92) {
+
+        if (force >= zLo && force <= zHi) {
           inZone += dt;
-          hint.textContent = `Giữ ổn định… ${Math.round(inZone / NEED_ZONE * 100)}%`;
+          hint.textContent = (LANG === "en" ? "Hold steady… " : "Giữ ổn định… ") + Math.round(inZone / NEED_ZONE * 100) + "%";
           hint.style.color = "#3ddc97";
         } else {
-          hint.textContent = force > 92 ? "Mạnh quá, nới một chút!" : "Ép mạnh hơn!";
+          hint.textContent = force > zHi
+            ? (LANG === "en" ? "Too hard, ease off!" : "Mạnh quá, nới một chút!")
+            : (LANG === "en" ? "Press harder!" : "Ép mạnh hơn!");
           hint.style.color = "#ffd23f";
         }
         document.getElementById("game-hp").textContent =
@@ -803,8 +897,8 @@
           alive = false; clearInterval(holdLoop);
           charEl.classList.add("win");
           if (window.Sfx) Sfx.win();
-          floatText("CẦM MÁU OK! 🩸✋", "#3ddc97");
-          setTimeout(() => showResult(lv, true, 3, "Ép đúng lực, đúng chỗ. Giỏi!"), 700);
+          floatText(LANG === "en" ? "BLEEDING STOPPED! 🩸✋" : "CẦM MÁU OK! 🩸✋", "#3ddc97");
+          setTimeout(() => showResult(lv, true, 3, LANG === "en" ? "Right pressure, right spot. Nice!" : "Ép đúng lực, đúng chỗ. Giỏi!"), 700);
         }
       }, 60);
     }
@@ -820,6 +914,38 @@
 
   /* ---------- MINI-GAME 5+: QUIZ ---------- */
   const QUIZZES = {
+    infant_choke: [
+      {
+        q: "🍼 Bé 6 tháng tuổi hóc, mặt tím, không khóc được. Làm gì?",
+        options: [
+          { t: "Úp sấp trên cẳng tay, vỗ lưng 5 lần giữa hai bả vai", ok: true },
+          { t: "Đẩy bụng (Heimlich) như người lớn", ok: false },
+          { t: "Móc họng mò dị vật", ok: false },
+          { t: "Dốc ngược lắc mạnh", ok: false }
+        ],
+        wrongMsg: "TUYỆT ĐỐI không đẩy bụng cho trẻ sơ sinh (dễ tổn thương nội tạng). Bắt đầu bằng vỗ lưng."
+      },
+      {
+        q: "Vỗ lưng 5 lần chưa ra. Bước tiếp theo cho bé sơ sinh?",
+        options: [
+          { t: "Lật ngửa, ấn ngực 5 lần bằng 2 ngón", ok: true },
+          { t: "Đẩy bụng 5 lần", ok: false },
+          { t: "Cho bú nước cho trôi", ok: false },
+          { t: "Vác chạy đi viện ngay, không làm gì", ok: false }
+        ],
+        wrongMsg: "Trẻ sơ sinh: xen kẽ 5 vỗ lưng và 5 ẤN NGỰC (2 ngón giữa ngực), không đẩy bụng."
+      },
+      {
+        q: "Đang sơ cứu thì bé lịm đi, bất tỉnh. Làm gì?",
+        options: [
+          { t: "Gọi 115 & bắt đầu CPR cho trẻ sơ sinh", ok: true },
+          { t: "Tiếp tục vỗ lưng mãi", ok: false },
+          { t: "Lay gọi cho tỉnh rồi chờ", ok: false },
+          { t: "Cho uống siro ho", ok: false }
+        ],
+        wrongMsg: "Bé bất tỉnh: gọi 115 và CPR ngay (ép ngực bằng 2 ngón cái, sâu ~4cm, nhịp 100–120)."
+      }
+    ],
     drown: [
       {
         q: "🌊 Thấy người đang chới với dưới nước. Việc ĐẦU TIÊN?",
@@ -1014,8 +1140,235 @@
     ]
   };
 
+  const QUIZZES_EN = {
+    infant_choke: [
+      {
+        q: "🍼 A 6-month-old is choking, turning blue, can't cry. What do you do?",
+        options: [
+          { t: "Face-down on your forearm, 5 back blows between the shoulder blades", ok: true },
+          { t: "Abdominal thrusts (Heimlich) like an adult", ok: false },
+          { t: "Sweep blindly in the mouth for the object", ok: false },
+          { t: "Hold upside down and shake hard", ok: false }
+        ],
+        wrongMsg: "NEVER do abdominal thrusts on an infant (organ injury risk). Start with back blows."
+      },
+      {
+        q: "5 back blows didn't work. Next step for an infant?",
+        options: [
+          { t: "Turn face-up, 5 chest thrusts with 2 fingers", ok: true },
+          { t: "5 abdominal thrusts", ok: false },
+          { t: "Feed water to wash it down", ok: false },
+          { t: "Just run to hospital, do nothing", ok: false }
+        ],
+        wrongMsg: "Infant: alternate 5 back blows and 5 CHEST thrusts (2 fingers, center of chest), no abdominal thrusts."
+      },
+      {
+        q: "During first aid the baby goes limp, unconscious. What now?",
+        options: [
+          { t: "Call emergency & start infant CPR", ok: true },
+          { t: "Keep doing back blows forever", ok: false },
+          { t: "Shake to wake them, then wait", ok: false },
+          { t: "Give cough syrup", ok: false }
+        ],
+        wrongMsg: "Unconscious infant: call emergency and start CPR (two thumbs, ~4cm deep, 100–120/min)."
+      }
+    ],
+    drown: [
+      {
+        q: "🌊 You see someone struggling in the water. FIRST thing?",
+        options: [
+          { t: "Shout for help, throw a float/rope to grab", ok: true },
+          { t: "Jump straight in to save them", ok: false },
+          { t: "Film a video to alert family", ok: false },
+          { t: "Watch to see if they can swim out", ok: false }
+        ],
+        wrongMsg: "Jumping in untrained = a second victim. Prioritize reach/throw rescue & call lifeguards."
+      },
+      {
+        q: "You get them to shore, unconscious and not breathing. Do what?",
+        options: [
+          { t: "Call emergency & start CPR", ok: true },
+          { t: "Hold them upside down to drain water", ok: false },
+          { t: "Roll them back and forth to wake up", ok: false },
+          { t: "Give them ginger tea", ok: false }
+        ],
+        wrongMsg: "Draining water is a myth and delays care. Not breathing = CPR now + call emergency."
+      },
+      {
+        q: "Victim is breathing but drowsy. Best position?",
+        options: [
+          { t: "Recovery position (on their side), keep warm", ok: true },
+          { t: "Sit them up to eat and drink", ok: false },
+          { t: "Face-down flat", ok: false },
+          { t: "Leave them to sleep", ok: false }
+        ],
+        wrongMsg: "The recovery position prevents choking if they vomit. Keep monitoring & keep them warm."
+      }
+    ],
+    electric: [
+      {
+        q: "⚡ Someone is shocked and still touching the wire. FIRST?",
+        options: [
+          { t: "Switch off the breaker / power source", ok: true },
+          { t: "Pull their arm away right now", ok: false },
+          { t: "Splash water to free them", ok: false },
+          { t: "Shout their name", ok: false }
+        ],
+        wrongMsg: "Touching/splashing while live = you get shocked too. CUT THE POWER first!"
+      },
+      {
+        q: "Can't cut power immediately. How to separate the victim?",
+        options: [
+          { t: "Use a dry, non-conductive object (wood, plastic) to push the wire away", ok: true },
+          { t: "Pull with bare hands", ok: false },
+          { t: "Use a metal rod to push", ok: false },
+          { t: "Stand in a puddle and pull", ok: false }
+        ],
+        wrongMsg: "Only use a DRY, insulating object. Metal/water both conduct electricity — very dangerous."
+      },
+      {
+        q: "It's safe now, victim unconscious and not breathing. Do what?",
+        options: [
+          { t: "Call emergency & CPR now", ok: true },
+          { t: "Rub oil on the electrical burn", ok: false },
+          { t: "Give them water", ok: false },
+          { t: "Wait for them to wake up", ok: false }
+        ],
+        wrongMsg: "Electric shock can stop the heart. Not breathing = CPR now + call emergency."
+      }
+    ],
+    seizure: [
+      {
+        q: "🌀 Someone suddenly convulses and falls. What do you do?",
+        options: [
+          { t: "Clear hard/dangerous objects around them", ok: true },
+          { t: "Hold their limbs down to stop the shaking", ok: false },
+          { t: "Put a towel/spoon in their mouth", ok: false },
+          { t: "Slap them awake", ok: false }
+        ],
+        wrongMsg: "Do NOT restrain, do NOT put anything in the mouth (broken teeth, choking). Just protect from impact."
+      },
+      {
+        q: "During the seizure, what about their head?",
+        options: [
+          { t: "Cushion something soft under the head", ok: true },
+          { t: "Lift the head up high", ok: false },
+          { t: "Press the head to the floor", ok: false },
+          { t: "Shake the head to wake them", ok: false }
+        ],
+        wrongMsg: "Cushion under the head to avoid injury. Don't press, don't shake."
+      },
+      {
+        q: "When MUST you call emergency for a seizure?",
+        options: [
+          { t: "Lasts over 5 minutes or repeats back-to-back", ok: true },
+          { t: "Only if they ask you to", ok: false },
+          { t: "Never needed", ok: false },
+          { t: "After filming enough clips", ok: false }
+        ],
+        wrongMsg: "Over 5 min, repeated, first-ever or with injury -> call emergency. Time the seizure!"
+      }
+    ],
+    anaphylaxis: [
+      {
+        q: "🐝 Bee sting, face swelling fast, rapid trouble breathing. This is?",
+        options: [
+          { t: "Anaphylaxis — a medical emergency", ok: true },
+          { t: "A common cold", ok: false },
+          { t: "Just itching, rub some balm", ok: false },
+          { t: "Hunger", ok: false }
+        ],
+        wrongMsg: "Facial swelling + breathing trouble after an allergen = anaphylaxis, can kill fast."
+      },
+      {
+        q: "An adrenaline auto-injector (EpiPen) is available. Do what?",
+        options: [
+          { t: "Inject into the outer thigh & call emergency", ok: true },
+          { t: "Wait to see if it gets better", ok: false },
+          { t: "Give sugar water", ok: false },
+          { t: "Inject into the buttock", ok: false }
+        ],
+        wrongMsg: "Adrenaline IM in the outer thigh is life-saving. Inject now, then call emergency."
+      },
+      {
+        q: "While waiting for the ambulance, how should they lie?",
+        options: [
+          { t: "On their back, legs raised (sit up if breathing is hard)", ok: true },
+          { t: "Stand up and walk it off", ok: false },
+          { t: "Face-down", ok: false },
+          { t: "Squatting", ok: false }
+        ],
+        wrongMsg: "Lying with legs raised supports circulation; if breathing is hard, let them sit. Never let them stand/walk suddenly."
+      }
+    ],
+    fracture: [
+      {
+        q: "🦴 You fall, your shin is deformed and very painful. You should?",
+        options: [
+          { t: "Immobilize as-is, avoid extra movement", ok: true },
+          { t: "Pull it straight again", ok: false },
+          { t: "Stand up and test it", ok: false },
+          { t: "Massage to ease the pain", ok: false }
+        ],
+        wrongMsg: "NEVER realign a bone — it can damage vessels and nerves. Immobilize as found."
+      },
+      {
+        q: "Splinting a fracture — how far should the splint reach?",
+        options: [
+          { t: "Across the joints above & below the break", ok: true },
+          { t: "Just at the break point", ok: false },
+          { t: "Tie it super tight for rigidity", ok: false },
+          { t: "No need to immobilize", ok: false }
+        ],
+        wrongMsg: "A splint must immobilize the joint above and below the break, tied snugly (not too tight)."
+      },
+      {
+        q: "There's an open wound with bone showing. Do what?",
+        options: [
+          { t: "Cover with clean gauze, don't push the bone in", ok: true },
+          { t: "Push the bone back in", ok: false },
+          { t: "Scrub hard with alcohol", ok: false },
+          { t: "Leave it open to air", ok: false }
+        ],
+        wrongMsg: "Don't push the bone back. Cover with clean gauze, gently control bleeding, get to hospital."
+      }
+    ],
+    snakebite: [
+      {
+        q: "🐍 Bitten by a snake on the leg. The right thing to do is?",
+        options: [
+          { t: "Keep still, keep the leg level/below heart, go to hospital", ok: true },
+          { t: "Cut the bite and squeeze venom out", ok: false },
+          { t: "Suck the venom out by mouth", ok: false },
+          { t: "Tie a very tight tourniquet above it", ok: false }
+        ],
+        wrongMsg: "Cutting/sucking/tight tourniquet all cause harm. Stay still to slow venom, get to hospital now."
+      },
+      {
+        q: "Why keep the victim STILL?",
+        options: [
+          { t: "Movement spreads venom faster", ok: true },
+          { t: "To save energy", ok: false },
+          { t: "To pass the time", ok: false },
+          { t: "No reason", ok: false }
+        ],
+        wrongMsg: "Movement pumps venom through lymph/blood faster. Keep still & immobilize the limb."
+      },
+      {
+        q: "What info is USEFUL for the doctor?",
+        options: [
+          { t: "The snake's look/color (if safe to note)", ok: true },
+          { t: "Catch the snake by hand to bring along", ok: false },
+          { t: "Chase the snake for revenge", ok: false },
+          { t: "Nothing needed", ok: false }
+        ],
+        wrongMsg: "Remembering the snake's appearance helps pick antivenom, but NEVER risk catching it."
+      }
+    ]
+  };
+
   function initQuiz(lv) {
-    const qs = QUIZZES[lv.id];
+    const qs = (LANG === "en" && QUIZZES_EN[lv.id]) ? QUIZZES_EN[lv.id] : QUIZZES[lv.id];
     let idx = 0, hp = 100, alive = true;
     stage.innerHTML = `<div class="character" id="char">${lv.char}</div>`;
     const charEl = document.getElementById("char");
@@ -1025,15 +1378,15 @@
         alive = false;
         charEl.classList.add("win");
         const stars = hp >= 100 ? 3 : hp >= 60 ? 2 : 1;
-        setTimeout(() => showResult(lv, true, stars, `Còn ${hp} HP. Xử lý chuẩn bài!`), 500);
+        const msg = LANG === "en" ? `${hp} HP left. Textbook handling!` : `Còn ${hp} HP. Xử lý chuẩn bài!`;
+        setTimeout(() => showResult(lv, true, stars, msg), 500);
         return;
       }
       const item = qs[idx];
-      instr.textContent = `Câu ${idx + 1}/${qs.length}`;
+      instr.textContent = `${t(UI.q_label)} ${idx + 1}/${qs.length}`;
       controls.innerHTML = `<div style="text-align:center;font-weight:700;font-size:16px;margin-bottom:6px">${item.q}</div>`;
       const grid = document.createElement("div");
       grid.className = "choice-grid";
-      // xáo trộn đáp án
       const opts = item.options.map((o, i) => ({ ...o, i })).sort(() => Math.random() - 0.5);
       opts.forEach(o => {
         const b = document.createElement("button");
@@ -1052,7 +1405,7 @@
       if (opt.ok) {
         btn.classList.add("correct");
         if (window.Sfx) { Sfx.correct(); Sfx.vibrate(40); }
-        floatText("ĐÚNG! ✅", "#3ddc97");
+        floatText(t(UI.correct), "#3ddc97");
         charEl.classList.remove("pulse"); void charEl.offsetWidth; charEl.classList.add("pulse");
         idx++;
         setTimeout(render, 750);
@@ -1082,6 +1435,31 @@
      PANIC MODE — đọc to từng bước
      ============================================================ */
   const PANIC = {
+    infant_cpr: {
+      title: "👶 CPR cho trẻ sơ sinh (<1 tuổi)",
+      metronome: true,
+      steps: [
+        "Kiểm tra phản ứng: búng nhẹ vào gan bàn chân bé. Không phản ứng.",
+        "Nhờ người gọi một một năm ngay. Đặt bé nằm ngửa trên mặt phẳng cứng.",
+        "Đặt hai ngón cái lên giữa ngực, ngay dưới đường nối hai núm vú.",
+        "Ép xuống sâu khoảng bốn centimet, theo nhịp đang đếm.",
+        "Ép ba mươi cái, rồi thổi nhẹ hai hơi nếu biết.",
+        "Thổi nhẹ thôi, vừa đủ thấy ngực bé nhô lên.",
+        "Tiếp tục ba mươi ép hai thổi cho đến khi cấp cứu tới."
+      ]
+    },
+    infant_choke: {
+      title: "🍼 Trẻ sơ sinh hóc dị vật",
+      steps: [
+        "Bé không khóc, không ho, tím tái: bắt đầu sơ cứu ngay.",
+        "Úp bé sấp dọc theo cẳng tay, đầu thấp hơn thân, đỡ lấy hàm.",
+        "Vỗ năm cái vào giữa hai bả vai bằng gót bàn tay.",
+        "Chưa ra: lật bé nằm ngửa.",
+        "Ấn ngực năm lần bằng hai ngón, giữa ngực, dứt khoát.",
+        "Tuyệt đối không đẩy bụng cho trẻ sơ sinh.",
+        "Xen kẽ năm vỗ lưng và năm ấn ngực. Bé lịm đi thì gọi một một năm và bắt đầu ép tim."
+      ]
+    },
     cpr: {
       title: "💔 Ngừng tim / Bất tỉnh",
       metronome: true,
@@ -1206,6 +1584,156 @@
     }
   };
 
+  const PANIC_EN = {
+    infant_cpr: {
+      title: "👶 Infant CPR (under 1 year)",
+      metronome: true,
+      steps: [
+        "Check response: flick the sole of the baby's foot. No response.",
+        "Have someone call emergency services now. Place the baby on a firm flat surface.",
+        "Place two thumbs on the center of the chest, just below the nipple line.",
+        "Press down about four centimeters, in time with the beat.",
+        "Give thirty compressions, then two gentle breaths if you can.",
+        "Breathe gently, just enough to see the chest rise.",
+        "Continue thirty compressions and two breaths until help arrives."
+      ]
+    },
+    infant_choke: {
+      title: "🍼 Infant choking",
+      steps: [
+        "Baby can't cry, cough, or breathe, turning blue: start first aid now.",
+        "Lay the baby face-down along your forearm, head lower than body, support the jaw.",
+        "Give five back blows between the shoulder blades with the heel of your hand.",
+        "Not out yet: turn the baby face-up.",
+        "Give five chest thrusts with two fingers, center of the chest, firm.",
+        "Never do abdominal thrusts on an infant.",
+        "Alternate five back blows and five chest thrusts. If the baby goes limp, call emergency services and start CPR."
+      ]
+    },
+    cpr: {
+      title: "💔 Cardiac arrest / Unconscious",
+      metronome: true,
+      steps: [
+        "Check the scene is safe. Shout: can you hear me?",
+        "No response. Have someone call emergency services now.",
+        "Lay the person on their back on a firm surface.",
+        "Place the heel of one hand in the center of the chest, the other hand on top.",
+        "Press straight down, about five centimeters, in time with the beat.",
+        "Give thirty compressions without stopping.",
+        "If trained, give two rescue breaths. If not, keep compressing.",
+        "Continue until the ambulance arrives or the person breathes again."
+      ]
+    },
+    choke: {
+      title: "🫁 Choking",
+      steps: [
+        "Ask: are you choking? If they can cough, encourage hard coughing.",
+        "If they can't cough, speak, or breathe: call emergency services now.",
+        "Stand behind, lean them forward. Give five firm back blows between the shoulder blades.",
+        "Not out yet: switch to abdominal thrusts. Wrap your arms around the upper abdomen.",
+        "One fist, the other hand over it, thrust inward and upward five times.",
+        "Alternate five back blows and five abdominal thrusts until it comes out.",
+        "If they become unconscious, lay them down, call emergency services and start CPR."
+      ]
+    },
+    burn: {
+      title: "🔥 Burns",
+      steps: [
+        "Move the person away from the heat source.",
+        "Cool the burn under running cool water for at least twenty minutes.",
+        "Do not use ice, toothpaste, butter or sauces.",
+        "Remove rings, watches, clothing around the burn before swelling.",
+        "Do not pop the blisters.",
+        "Cover the burn with clean, non-stick gauze.",
+        "Severe, large, or facial burns: call emergency services now."
+      ]
+    },
+    bleed: {
+      title: "🩸 Severe bleeding",
+      steps: [
+        "Wear gloves if available. Have the person sit or lie down.",
+        "Press clean gauze or cloth directly on the wound.",
+        "Press firmly and continuously, don't lift to peek.",
+        "Raise the injured part above heart level if possible.",
+        "If blood soaks through, add more gauze, don't remove the old layer.",
+        "Keep the person warm and reassure them.",
+        "If bleeding won't stop: call emergency services now."
+      ]
+    },
+    drown: {
+      title: "🌊 Drowning",
+      steps: [
+        "Make sure you are safe first.",
+        "Throw a float, rope, or pole for them to grab. Don't jump in unless you're a trained rescuer.",
+        "Once on land, call emergency services now.",
+        "Check whether they are breathing.",
+        "Not breathing: start compressions, give rescue breaths if you can.",
+        "Do not hold them upside down to drain water.",
+        "Breathing but drowsy: place in the recovery position, keep warm."
+      ]
+    },
+    electric: {
+      title: "⚡ Electric shock",
+      steps: [
+        "Do not touch the victim while the current is on.",
+        "Switch off the breaker or unplug the source now.",
+        "Can't cut it: use a dry insulating object to push the wire away.",
+        "Only approach once it's safe. Call emergency services.",
+        "Check breathing. Not breathing: start CPR now.",
+        "Look for burns where the current entered and exited.",
+        "Keep monitoring until help arrives."
+      ]
+    },
+    seizure: {
+      title: "🌀 Seizure",
+      steps: [
+        "Stay calm. Time the seizure with a clock.",
+        "Clear hard, sharp objects around the person.",
+        "Cushion something soft under their head.",
+        "Do not restrain their limbs.",
+        "Do not put anything in their mouth.",
+        "When it stops, place them in the recovery position.",
+        "Over five minutes or repeated seizures: call emergency services."
+      ]
+    },
+    anaphylaxis: {
+      title: "🐝 Anaphylaxis",
+      steps: [
+        "Suspect anaphylaxis: swelling of face and lips, trouble breathing, hives after an allergen.",
+        "If an adrenaline auto-injector is available, inject it into the outer thigh now.",
+        "Call emergency services immediately.",
+        "Lay them on their back with legs raised. If breathing is hard, let them sit.",
+        "If vomiting, place them on their side.",
+        "If still severe after five to ten minutes, a second dose may be given.",
+        "Watch closely until help arrives."
+      ]
+    },
+    fracture: {
+      title: "🦴 Fracture",
+      steps: [
+        "Keep the person still and reassure them.",
+        "Do not try to realign the bone.",
+        "Immobilize with a splint, locking the joints above and below the break.",
+        "Open wound: cover with clean gauze, don't push the bone in.",
+        "Apply cold around the swelling to ease pain.",
+        "No food or drink in case surgery is needed.",
+        "Get to medical care. For major breaks or suspected spine injury, call emergency services."
+      ]
+    },
+    snakebite: {
+      title: "🐍 Snakebite",
+      steps: [
+        "Move the person away from the snake, keep them calm.",
+        "Have them stay still, limit movement of the bitten area.",
+        "Keep the bitten area immobile, level with or below the heart.",
+        "Remove rings, bracelets, and tight items near the bite before swelling.",
+        "Do not cut, suck venom, apply a tight tourniquet, or use ice.",
+        "Note the snake's appearance if safe, but don't catch it.",
+        "Get to hospital as fast as possible. Call emergency services."
+      ]
+    }
+  };
+
   let panicCtx = null;
 
   document.querySelectorAll(".panic-card").forEach(c =>
@@ -1222,9 +1750,9 @@
   });
 
   function openPanic(key) {
-    const data = PANIC[key];
+    const data = (LANG === "en" && PANIC_EN[key]) ? PANIC_EN[key] : PANIC[key];
     if (!data) return;
-    panicCtx = { data, step: 0 };
+    panicCtx = { data, step: 0, key };
     document.getElementById("panic-pick").classList.add("hidden");
     document.getElementById("panic-steps").classList.remove("hidden");
     const ring = document.getElementById("metronome-ring");
@@ -1239,10 +1767,12 @@
     document.getElementById("panic-step-text").textContent =
       `${step + 1}. ` + data.steps[step].replace("một một năm", "115")
                                           .replace("năm centimet", "5cm")
+                                          .replace("bốn centimet", "4cm")
                                           .replace("đánh quận răng", "đánh răng");
     document.getElementById("panic-prev").disabled = step === 0;
+    document.getElementById("panic-prev").textContent = t(UI.prev);
     const next = document.getElementById("panic-next");
-    next.textContent = step === data.steps.length - 1 ? "✓ Xong" : "Bước tiếp ▶";
+    next.textContent = step === data.steps.length - 1 ? t(UI.done) : t(UI.next);
     speakStep();
   }
 
@@ -1258,11 +1788,12 @@
     renderPanicStep();
   }
 
-  /* ---- Text-to-speech (đọc tiếng Việt) ---- */
-  let viVoice = null;
+  /* ---- Text-to-speech (đọc theo ngôn ngữ) ---- */
+  let viVoice = null, enVoice = null;
   function pickVoice() {
     const voices = speechSynthesis.getVoices();
     viVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("vi")) || null;
+    enVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en")) || null;
   }
   if ("speechSynthesis" in window) {
     pickVoice();
@@ -1273,8 +1804,13 @@
     speechSynthesis.cancel();
     const raw = panicCtx.data.steps[panicCtx.step];
     const u = new SpeechSynthesisUtterance(raw);
-    u.lang = "vi-VN";
-    if (viVoice) u.voice = viVoice;
+    if (LANG === "en") {
+      u.lang = "en-US";
+      if (enVoice) u.voice = enVoice;
+    } else {
+      u.lang = "vi-VN";
+      if (viVoice) u.voice = viVoice;
+    }
     u.rate = 0.95;
     u.pitch = 1;
     speechSynthesis.speak(u);
@@ -1326,7 +1862,41 @@
     sync();
   })();
 
+  /* ---------- APPLY LANGUAGE ---------- */
+  function applyLang() {
+    document.body.classList.toggle("lang-en", LANG === "en");
+    document.documentElement.lang = LANG;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const k = el.dataset.i18n;
+      if (UI[k]) el.textContent = t(UI[k]);
+    });
+    // nhãn thẻ tình huống Panic lấy từ tiêu đề dữ liệu
+    document.querySelectorAll(".panic-card").forEach(card => {
+      const key = card.dataset.emergency;
+      const data = (LANG === "en" && PANIC_EN[key]) ? PANIC_EN[key] : PANIC[key];
+      if (data) card.textContent = data.title;
+    });
+    // trạng thái nút chọn ngôn ngữ
+    document.querySelectorAll(".lang-opt").forEach(b =>
+      b.classList.toggle("active", b.dataset.lang === LANG)
+    );
+  }
+
+  function setLang(lang) {
+    if (lang === LANG) return;
+    LANG = lang;
+    localStorage.setItem("capcuu101_lang", lang);
+    applyLang();
+    if (current === "screen-levels") renderLevels();
+    if (current === "screen-achievements") renderAchievements();
+  }
+
+  document.querySelectorAll(".lang-opt").forEach(b =>
+    b.addEventListener("click", () => { setLang(b.dataset.lang); if (window.Sfx) Sfx.blip(); })
+  );
+
   /* ---------- INIT ---------- */
+  applyLang();
   // Ẩn splash sau khi tải xong (tối thiểu ~1.4s cho đẹp)
   (function hideSplash() {
     const splash = document.getElementById("splash");

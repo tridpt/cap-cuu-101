@@ -44,31 +44,23 @@
       </header>
 
       <div class="home-menu">
-        <button class="btn btn-play" data-goto="screen-levels">
-          <span class="btn-emoji">🎮</span> CHƠI &amp; HỌC
-        </button>
-        <button class="btn btn-panic" data-goto="screen-panic">
-          <span class="btn-emoji">🆘</span> CHẾ ĐỘ HOẢNG LOẠN
-        </button>
+        <button class="btn btn-play" data-goto="screen-levels" data-i18n="play">🎮 CHƠI & HỌC</button>
+        <button class="btn btn-panic" data-goto="screen-panic" data-i18n="panic_btn">🆘 CHẾ ĐỘ HOẢNG LOẠN</button>
         <div class="home-row">
-          <button class="btn btn-ghost" data-goto="screen-achievements">
-            <span class="btn-emoji">🏆</span> Thành tích
-          </button>
-          <button class="btn btn-ghost" data-goto="screen-about">
-            <span class="btn-emoji">❓</span> Giới thiệu
-          </button>
+          <button class="btn btn-ghost" data-goto="screen-achievements" data-i18n="ach_btn">🏆 Thành tích</button>
+          <button class="btn btn-ghost" data-goto="screen-about" data-i18n="about_btn">❓ Giới thiệu</button>
         </div>
       </div>
 
-      <button class="settings-gear" id="open-settings" aria-label="Cài đặt">⚙️</button>
-      <p class="disclaimer-mini">⚠️ Game giải trí. Việc thật hãy gọi <b>115</b>.</p>
+      <button class="settings-gear" id="open-settings" aria-label="Settings">⚙️</button>
+      <p class="disclaimer-mini" data-i18n="disclaimer">⚠️ Game giải trí. Việc thật hãy gọi <b>115</b>.</p>
     </section>
 
     <!-- ===== CHỌN MÀN ===== -->
     <section id="screen-levels" class="screen">
       <header class="topbar">
         <button class="icon-btn" data-goto="screen-home">←</button>
-        <h2>Chọn thử thách</h2>
+        <h2 data-i18n="levels_title">Chọn thử thách</h2>
         <div class="score-pill">⭐ <span id="total-stars">0</span></div>
       </header>
       <div id="streak-banner" class="streak-banner"></div>
@@ -91,14 +83,16 @@
     <section id="screen-panic" class="screen panic-screen">
       <header class="topbar panic-topbar">
         <button class="icon-btn" data-goto="screen-home">←</button>
-        <h2>🆘 HOẢNG LOẠN</h2>
+        <h2 data-i18n="panic_title">🆘 HOẢNG LOẠN</h2>
         <button class="icon-btn" id="stop-voice">🔇</button>
       </header>
 
       <div id="panic-pick" class="panic-pick">
-        <p class="panic-lead">Hít một hơi. Chọn tình huống. App sẽ đọc từng bước cho bạn.</p>
+        <p class="panic-lead" data-i18n="panic_lead">Hít một hơi. Chọn tình huống. App sẽ đọc từng bước cho bạn.</p>
         <button class="panic-card" data-emergency="cpr">💔 Ngừng tim / Bất tỉnh</button>
+        <button class="panic-card" data-emergency="infant_cpr">👶 CPR trẻ sơ sinh</button>
         <button class="panic-card" data-emergency="choke">🫁 Hóc nghẹn dị vật</button>
+        <button class="panic-card" data-emergency="infant_choke">🍼 Trẻ sơ sinh hóc dị vật</button>
         <button class="panic-card" data-emergency="burn">🔥 Bỏng</button>
         <button class="panic-card" data-emergency="bleed">🩸 Chảy máu nhiều</button>
         <button class="panic-card" data-emergency="drown">🌊 Đuối nước</button>
@@ -107,18 +101,18 @@
         <button class="panic-card" data-emergency="anaphylaxis">🐝 Sốc phản vệ</button>
         <button class="panic-card" data-emergency="fracture">🦴 Gãy xương</button>
         <button class="panic-card" data-emergency="snakebite">🐍 Rắn cắn</button>
-        <a class="panic-call" href="tel:115">📞 GỌI 115 NGAY</a>
+        <a class="panic-call" href="tel:115" data-i18n="call_115">📞 GỌI 115 NGAY</a>
       </div>
 
       <div id="panic-steps" class="panic-steps hidden">
         <div class="metronome-ring" id="metronome-ring"><span id="metronome-count">●</span></div>
         <div class="panic-step-text" id="panic-step-text">...</div>
         <div class="panic-nav">
-          <button class="btn btn-ghost" id="panic-prev">◀ Lùi</button>
-          <button class="btn btn-play" id="panic-next">Bước tiếp ▶</button>
+          <button class="btn btn-ghost" id="panic-prev" data-i18n="prev">◀ Lùi</button>
+          <button class="btn btn-play" id="panic-next" data-i18n="next">Bước tiếp ▶</button>
         </div>
-        <button class="btn btn-replay" id="panic-replay">🔊 Đọc lại</button>
-        <button class="btn btn-ghost" id="panic-back-pick">↺ Đổi tình huống</button>
+        <button class="btn btn-replay" id="panic-replay" data-i18n="replay">🔊 Đọc lại</button>
+        <button class="btn btn-ghost" id="panic-back-pick" data-i18n="change_sit">↺ Đổi tình huống</button>
         <a class="panic-call small" href="tel:115">📞 115</a>
       </div>
     </section>
@@ -127,20 +121,33 @@
     <section id="screen-about" class="screen">
       <header class="topbar">
         <button class="icon-btn" data-goto="screen-home">←</button>
-        <h2>Đây là cái gì?</h2>
+        <h2 data-i18n="about_title">Đây là cái gì?</h2>
         <div></div>
       </header>
       <div class="about-body">
-        <p>👋 <b>Cấp Cứu 101</b> dạy bạn kỹ năng sơ cứu sinh tử qua các mini-game châm biếm kiểu <i>Dumb Ways to Die</i>.</p>
-        <p>🎮 Vuốt đúng nhịp ép tim cho chú gấu. Nghiêng điện thoại thông đường thở cho người ngoài hành tinh. Làm sai? Nhân vật "đăng xuất" cực buồn cười.</p>
-        <p>🧠 Mục tiêu: nhồi kỹ năng vào đầu bạn một cách vô thức, để khi gặp chuyện thật tay chân tự biết làm gì.</p>
-        <p>🆘 Gặp chuyện thật? Bật <b>Chế độ Hoảng loạn</b> — app đọc to từng bước ngắn gọn, bình tĩnh để bạn làm theo.</p>
-        <div class="about-warn">
-          ⚠️ <b>Quan trọng:</b> Đây KHÔNG thay thế khoá học sơ cứu chính quy hay nhân viên y tế.
-          Trong tình huống thật, việc đầu tiên luôn là <b>gọi 115</b>.
+        <div class="only-vi">
+          <p>👋 <b>Cấp Cứu 101</b> dạy bạn kỹ năng sơ cứu sinh tử qua các mini-game châm biếm kiểu <i>Dumb Ways to Die</i>.</p>
+          <p>🎮 Vuốt đúng nhịp ép tim cho chú gấu. Nghiêng điện thoại thông đường thở cho người ngoài hành tinh. Làm sai? Nhân vật "đăng xuất" cực buồn cười.</p>
+          <p>🧠 Mục tiêu: nhồi kỹ năng vào đầu bạn một cách vô thức, để khi gặp chuyện thật tay chân tự biết làm gì.</p>
+          <p>🆘 Gặp chuyện thật? Bật <b>Chế độ Hoảng loạn</b> — app đọc to từng bước ngắn gọn, bình tĩnh để bạn làm theo.</p>
+          <div class="about-warn">
+            ⚠️ <b>Quan trọng:</b> Đây KHÔNG thay thế khoá học sơ cứu chính quy hay nhân viên y tế.
+            Trong tình huống thật, việc đầu tiên luôn là <b>gọi 115</b>.
+          </div>
+          <p style="margin-top:14px">Nội dung sơ cứu được đối chiếu với hướng dẫn của các tổ chức y tế uy tín.</p>
         </div>
-        <p style="margin-top:14px">Nội dung sơ cứu được đối chiếu với hướng dẫn của các tổ chức y tế uy tín.</p>
-        <button class="btn btn-ghost" data-goto="screen-sources" style="width:100%;margin-top:6px">
+        <div class="only-en">
+          <p>👋 <b>First Aid 101</b> teaches life-saving first aid through dark-humor mini-games in the spirit of <i>Dumb Ways to Die</i>.</p>
+          <p>🎮 Tap the beat to compress a bear's chest. Tilt the phone to clear an alien's airway. Mess up? The character "logs out" hilariously.</p>
+          <p>🧠 The goal: drill the skills into your head so your hands know what to do when it's real.</p>
+          <p>🆘 Real emergency? Open <b>Panic Mode</b> — the app reads short, calm steps aloud for you to follow.</p>
+          <div class="about-warn">
+            ⚠️ <b>Important:</b> This does NOT replace a proper first-aid course or medical professionals.
+            In a real situation, the first thing is always to <b>call emergency services</b>.
+          </div>
+          <p style="margin-top:14px">First-aid content is checked against guidance from reputable medical organizations.</p>
+        </div>
+        <button class="btn btn-ghost" data-goto="screen-sources" data-i18n="sources_btn" style="width:100%;margin-top:6px">
           📚 Nguồn tham khảo
         </button>
       </div>
@@ -150,11 +157,12 @@
     <section id="screen-sources" class="screen">
       <header class="topbar">
         <button class="icon-btn" data-goto="screen-about">←</button>
-        <h2>📚 Nguồn tham khảo</h2>
+        <h2 data-i18n="sources_title">📚 Nguồn tham khảo</h2>
         <div></div>
       </header>
       <div class="about-body">
-        <p>Các bước sơ cứu trong app được biên soạn dựa trên hướng dẫn phổ thông của những tổ chức sau. Nội dung được rút gọn cho dễ nhớ — vẫn nên học một khoá thực hành có người hướng dẫn.</p>
+        <p class="only-vi">Các bước sơ cứu trong app được biên soạn dựa trên hướng dẫn phổ thông của những tổ chức sau. Nội dung được rút gọn cho dễ nhớ — vẫn nên học một khoá thực hành có người hướng dẫn.</p>
+        <p class="only-en">The first-aid steps in this app are based on the general guidance of the organizations below. Content is condensed for memorability — still take a hands-on course with an instructor.</p>
 
         <div class="src-item">
           <h3>❤️ Hồi sinh tim phổi (CPR)</h3>
@@ -188,9 +196,13 @@
           <a href="https://www.redcross.org/take-a-class/first-aid" target="_blank" rel="noopener">American Red Cross ↗</a>
         </div>
 
-        <div class="about-warn">
+        <div class="about-warn only-vi">
           🩺 Hướng dẫn sơ cứu có thể được cập nhật theo thời gian. Lần đối chiếu gần nhất: <b>06/2026</b>.
           Khi có khác biệt, hãy tin tưởng hướng dẫn của cơ quan y tế và tổng đài 115.
+        </div>
+        <div class="about-warn only-en">
+          🩺 First-aid guidance can change over time. Last checked: <b>06/2026</b>.
+          When in doubt, trust your local medical authorities and emergency number.
         </div>
       </div>
     </section>
@@ -199,7 +211,7 @@
     <section id="screen-achievements" class="screen">
       <header class="topbar">
         <button class="icon-btn" data-goto="screen-home">←</button>
-        <h2>🏆 Thành tích</h2>
+        <h2 data-i18n="ach_title">🏆 Thành tích</h2>
         <div></div>
       </header>
       <div class="ach-body" id="ach-body"></div>
@@ -208,20 +220,27 @@
     <!-- ===== CÀI ĐẶT (overlay) ===== -->
     <div id="settings-modal" class="modal hidden">
       <div class="modal-card">
-        <h2>⚙️ Cài đặt</h2>
+        <h2 data-i18n="settings_title">⚙️ Cài đặt</h2>
         <label class="toggle-row">
-          <span>🔊 Âm thanh hiệu ứng</span>
+          <span data-i18n="set_sound">🔊 Âm thanh hiệu ứng</span>
           <input type="checkbox" id="set-sound" />
         </label>
         <label class="toggle-row">
-          <span>🎵 Nhạc nền 8-bit</span>
+          <span data-i18n="set_music">🎵 Nhạc nền 8-bit</span>
           <input type="checkbox" id="set-music" />
         </label>
         <label class="toggle-row">
-          <span>📳 Rung</span>
+          <span data-i18n="set_vibrate">📳 Rung</span>
           <input type="checkbox" id="set-vibrate" />
         </label>
-        <button class="btn btn-play" id="close-settings">Xong</button>
+        <div class="toggle-row">
+          <span data-i18n="set_lang">🌐 Ngôn ngữ</span>
+          <div class="lang-switch">
+            <button class="lang-opt" data-lang="vi">VI</button>
+            <button class="lang-opt" data-lang="en">EN</button>
+          </div>
+        </div>
+        <button class="btn btn-play" id="close-settings" data-i18n="set_done">Xong</button>
       </div>
     </div>
 
