@@ -36,6 +36,13 @@ Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo
 - **8 huy hiệu** mở khoá dần (Lính mới, Bậc thầy CPR, Tay nhịp vàng, Cứu tinh, Kiên trì...)
 - **Chuỗi ngày** (streak): chơi mỗi ngày để nối chuỗi ôn tập
 
+## ✨ Trải nghiệm
+
+- **Splash screen** khi mở app
+- **Hướng dẫn nhanh** hiện lần đầu chơi mỗi kiểu mini-game (chỉ 1 lần, lưu localStorage)
+- Nhân vật **lắc lư sống động**, hiệu ứng chuyển màn & nảy thẻ mượt
+- **Screenshot** trong manifest → nút "Install" của trình duyệt hiển thị đẹp hơn
+
 ## 🆘 Chế độ Hoảng loạn (Panic Mode)
 
 Khi sự cố xảy ra thật:
@@ -97,8 +104,10 @@ cap-cuu-101/
 ├─ manifest.json# khai báo PWA (tên, icon, shortcut Hoảng loạn)
 ├─ sw.js        # service worker: precache app shell -> chạy offline
 ├─ gen_icons.py # script tạo icon PNG (chạy 1 lần, cần Pillow)
+├─ gen_screens.py # script tạo ảnh screenshot cho manifest (cần Pillow)
 ├─ icon.svg
 ├─ icons/       # icon-192.png, icon-512.png
+├─ screenshots/ # home.png, game.png (cho prompt Install)
 └─ README.md
 ```
 

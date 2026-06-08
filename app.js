@@ -296,11 +296,69 @@
     stage.innerHTML = "";
     controls.innerHTML = "";
     instr.textContent = "";
+    if (tutorialSeen(lv.type)) runGame(lv);
+    else showTutorial(lv, () => runGame(lv));
+  }
+
+  function runGame(lv) {
     if (lv.type === "rhythm") initRhythm(lv);
     else if (lv.type === "thrust") initThrust(lv);
     else if (lv.type === "hose") initHose(lv);
     else if (lv.type === "press") initPress(lv);
     else if (lv.type === "quiz") initQuiz(lv);
+  }
+
+  /* ---------- TUTORIAL (hướng dẫn nhanh lần đầu) ---------- */
+  const TUT_KEY = "capcuu101_tut";
+  const TUTORIALS = {
+    rhythm: {
+      emoji: "❤️", title: "Ép tim đúng nhịp",
+      text: "Chạm nút <b>ÉP TIM</b> khớp với vòng tròn vàng nảy ra (nhịp ~110/phút). Đúng nhịp sẽ cộng <b>combo</b>, sai thì mất combo. Có tiếng tách & rung dẫn nhịp cho bạn."
+    },
+    thrust: {
+      emoji: "🤜", title: "Đẩy bụng Heimlich",
+      text: "<b>Nghiêng điện thoại về trước</b> dứt khoát để đẩy bụng (máy không có cảm biến thì <b>nhấn giữ rồi thả mạnh</b>). Đẩy đủ số lần là dị vật bật ra!"
+    },
+    hose: {
+      emoji: "🚿", title: "Xả nước chữa bỏng",
+      text: "Đặt ngón tay & <b>rê vòi nước</b> đè lên nhân vật, <b>giữ yên đủ lâu</b> cho mát. Nhấc tay ra là vết bỏng <b>nóng lại</b> ngay đấy!"
+    },
+    press: {
+      emoji: "🩹", title: "Đặt gạc & ép cầm máu",
+      text: "<b>Bước 1:</b> kéo miếng gạc 🩹 vào đúng vòng tròn vết thương. <b>Bước 2:</b> nhấn giữ để ép, giữ thanh lực trong <b>vùng xanh</b> đủ lâu."
+    },
+    quiz: {
+      emoji: "🧠", title: "Chọn đáp án đúng",
+      text: "Đọc tình huống rồi <b>chọn cách xử lý đúng</b>. Trả lời sai sẽ mất nhiều HP — hết HP là nhân vật <b>đăng xuất khỏi cuộc đời</b>!"
+    }
+  };
+  function tutorialSeen(type) {
+    try { return !!(JSON.parse(localStorage.getItem(TUT_KEY)) || {})[type]; }
+    catch { return false; }
+  }
+  function markTutorial(type) {
+    let o = {};
+    try { o = JSON.parse(localStorage.getItem(TUT_KEY)) || {}; } catch { o = {}; }
+    o[type] = true;
+    localStorage.setItem(TUT_KEY, JSON.stringify(o));
+  }
+  function showTutorial(lv, onStart) {
+    const t = TUTORIALS[lv.type];
+    if (!t) { onStart(); return; }
+    const modal = document.getElementById("tutorial");
+    document.getElementById("tut-emoji").textContent = t.emoji;
+    document.getElementById("tut-title").textContent = t.title;
+    document.getElementById("tut-text").innerHTML = t.text;
+    modal.classList.remove("hidden");
+    const btn = document.getElementById("tut-start");
+    const handler = () => {
+      btn.removeEventListener("click", handler);
+      modal.classList.add("hidden");
+      markTutorial(lv.type);
+      if (window.Sfx) Sfx.blip();
+      onStart();
+    };
+    btn.addEventListener("click", handler);
   }
 
   function stopGame() {
@@ -1269,6 +1327,21 @@
   })();
 
   /* ---------- INIT ---------- */
+  // Ẩn splash sau khi tải xong (tối thiểu ~1.4s cho đẹp)
+  (function hideSplash() {
+    const splash = document.getElementById("splash");
+    if (!splash) return;
+    const start = performance.now();
+    const finish = () => {
+      const wait = Math.max(0, 1400 - (performance.now() - start));
+      setTimeout(() => {
+        splash.classList.add("gone");
+        setTimeout(() => splash.remove(), 600);
+      }, wait);
+    };
+    if (document.readyState === "complete") finish();
+    else window.addEventListener("load", finish);
+  })();
   // Mở thẳng Chế độ Hoảng loạn khi vào từ shortcut ?panic=1
   const params = new URLSearchParams(location.search);
   if (params.get("panic") === "1") {

@@ -39,5 +39,21 @@
       "url": "./?panic=1",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/home.png",
+      "sizes": "540x1080",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Màn hình chính"
+    },
+    {
+      "src": "screenshots/game.png",
+      "sizes": "540x1080",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mini-game ép tim CPR"
+    }
   ]
 }
