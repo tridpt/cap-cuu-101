@@ -266,6 +266,34 @@
       desc: { vi: "Bất động & tới viện, đừng hút nọc", en: "Immobilize & get to hospital, don't suck venom" },
       lesson: { vi: "Rắn cắn: giữ nạn nhân bất động, vùng bị cắn để ngang hoặc thấp hơn tim, tháo đồ chật. KHÔNG rạch, hút nọc, garô chặt hay chườm đá. Đến viện gấp.",
                 en: "Snakebite: keep the victim still, bite area level with or below the heart, remove tight items. Do NOT cut, suck venom, apply a tight tourniquet or ice. Get to hospital fast." }
+    },
+    {
+      id: "stroke", emoji: "🧠", type: "quiz", char: "👴",
+      title: { vi: "Ông cụ nghi đột quỵ", en: "Grandpa might be having a stroke" },
+      desc: { vi: "Nhận biết FAST & gọi 115 trong 'giờ vàng'", en: "Spot FAST & call within the golden hour" },
+      lesson: { vi: "Đột quỵ — nhớ FAST: F (Face) méo miệng, A (Arm) yếu một tay, S (Speech) nói đớ, T (Time) gọi 115 NGAY. Ghi giờ khởi phát, không cho ăn uống.",
+                en: "Stroke — remember FAST: F (Face) droop, A (Arm) one weak arm, S (Speech) slurred, T (Time) call emergency NOW. Note the onset time, no food or drink." }
+    },
+    {
+      id: "hypo", emoji: "🍬", type: "quiz", char: "🧑",
+      title: { vi: "Cô bạn tụt đường huyết", en: "Friend with low blood sugar" },
+      desc: { vi: "Còn tỉnh thì cho đường nhanh", en: "If conscious, give fast sugar" },
+      lesson: { vi: "Hạ đường huyết (run, vã mồ hôi, lú lẫn): còn tỉnh thì cho đường hấp thu nhanh (nước ngọt thường, kẹo, glucose). Bất tỉnh thì KHÔNG cho gì vào miệng, gọi 115.",
+                en: "Low blood sugar (shaky, sweating, confused): if conscious, give fast-acting sugar (regular soda, candy, glucose). If unconscious, put NOTHING in the mouth, call emergency." }
+    },
+    {
+      id: "heatstroke", emoji: "🥵", type: "quiz", char: "🥵",
+      title: { vi: "Vận động viên sốc nhiệt", en: "Athlete with heat stroke" },
+      desc: { vi: "Làm mát tích cực, đây là cấp cứu", en: "Cool aggressively — it's an emergency" },
+      lesson: { vi: "Sốc nhiệt (da nóng, lú lẫn, có thể ngất): chuyển vào chỗ mát, cởi bớt đồ, làm mát tích cực (nước mát, quạt, chườm đá ở nách/bẹn/cổ), gọi 115.",
+                en: "Heat stroke (hot skin, confusion, may faint): move to a cool place, remove excess clothing, cool aggressively (cool water, fan, ice packs to armpits/groin/neck), call emergency." }
+    },
+    {
+      id: "poison", emoji: "☠️", type: "quiz", char: "🤢",
+      title: { vi: "Mèo con nuốt nhầm hoá chất", en: "Kitten swallowed a chemical" },
+      desc: { vi: "Đừng tự gây nôn — gọi chống độc", en: "Don't induce vomiting — call poison control" },
+      lesson: { vi: "Ngộ độc: gọi 115 / trung tâm chống độc, KHÔNG tự gây nôn (trừ khi được hướng dẫn). Giữ lại bao bì/chất nghi ngộ độc để bác sĩ biết.",
+                en: "Poisoning: call emergency / poison control, do NOT induce vomiting (unless instructed). Keep the packaging/substance for the doctor." }
     }
   ];
 
@@ -994,6 +1022,134 @@
 
   /* ---------- MINI-GAME 5+: QUIZ ---------- */
   const QUIZZES = {
+    stroke: [
+      {
+        q: "👴 Ông cụ đột nhiên méo miệng, yếu một tay, nói đớ. Nghĩ ngay đến?",
+        options: [
+          { t: "Đột quỵ — gọi 115 ngay", ok: true },
+          { t: "Trúng gió, cạo gió là khỏi", ok: false },
+          { t: "Mệt thường, để nghỉ tí", ok: false },
+          { t: "Đói, cho ăn cháo", ok: false }
+        ],
+        wrongMsg: "Méo miệng + yếu tay + nói đớ = dấu hiệu đột quỵ (FAST). Cạo gió/chờ đợi làm mất 'giờ vàng'."
+      },
+      {
+        q: "Bài kiểm tra nhanh FAST gồm kiểm tra gì?",
+        options: [
+          { t: "Mặt (méo), Tay (yếu), Lời nói (đớ), Thời gian", ok: true },
+          { t: "Mắt, Mũi, Miệng, Tai", ok: false },
+          { t: "Mạch, huyết áp, đường huyết", ok: false },
+          { t: "Chỉ cần hỏi họ có đau không", ok: false }
+        ],
+        wrongMsg: "FAST = Face (mặt), Arm (tay), Speech (lời nói), Time (thời gian gọi cấp cứu)."
+      },
+      {
+        q: "Trong khi chờ cấp cứu, nên làm gì?",
+        options: [
+          { t: "Nằm nghỉ đầu hơi cao, ghi giờ khởi phát, không cho ăn uống", ok: true },
+          { t: "Cho uống thuốc hạ huyết áp ngay", ok: false },
+          { t: "Cho ăn uống để có sức", ok: false },
+          { t: "Bấm huyệt nhân trung, cạo gió", ok: false }
+        ],
+        wrongMsg: "Không cho ăn/uống (dễ sặc nếu liệt cơ nuốt). Giữ yên, ghi giờ khởi phát, gọi 115."
+      }
+    ],
+    hypo: [
+      {
+        q: "🍬 Người tiểu đường bỗng run, vã mồ hôi, lú lẫn nhưng còn tỉnh. Làm gì?",
+        options: [
+          { t: "Cho ăn/uống đường hấp thu nhanh (nước ngọt, kẹo)", ok: true },
+          { t: "Cho uống thật nhiều nước lọc", ok: false },
+          { t: "Tiêm thêm insulin", ok: false },
+          { t: "Để nằm nghỉ, không cần gì", ok: false }
+        ],
+        wrongMsg: "Còn tỉnh: cho đường nhanh ngay. Tiêm insulin sẽ tụt đường nguy hiểm hơn."
+      },
+      {
+        q: "Thứ nào KHÔNG dùng để nâng đường nhanh?",
+        options: [
+          { t: "Nước ngọt 'ăn kiêng' không đường", ok: true },
+          { t: "Nước ngọt thường", ok: false },
+          { t: "Kẹo/viên glucose", ok: false },
+          { t: "Nước trái cây", ok: false }
+        ],
+        wrongMsg: "Đồ 'không đường/ăn kiêng' vô tác dụng. Cần đường thật: nước ngọt thường, kẹo, nước trái cây."
+      },
+      {
+        q: "Người hạ đường huyết bất tỉnh. Làm gì?",
+        options: [
+          { t: "Không cho gì vào miệng, đặt nằm nghiêng, gọi 115", ok: true },
+          { t: "Đổ nước đường vào miệng", ok: false },
+          { t: "Nhét kẹo vào má", ok: false },
+          { t: "Tát cho tỉnh rồi cho ăn", ok: false }
+        ],
+        wrongMsg: "Bất tỉnh mà cho ăn/uống dễ sặc, ngạt. Đặt nằm nghiêng an toàn & gọi 115."
+      }
+    ],
+    heatstroke: [
+      {
+        q: "🥵 Trời nắng gắt, người bạn lả đi, da nóng ran, lú lẫn. Việc đầu tiên?",
+        options: [
+          { t: "Đưa vào chỗ mát/bóng râm & gọi 115", ok: true },
+          { t: "Cho uống cà phê cho tỉnh", ok: false },
+          { t: "Để ngồi ngoài nắng nghỉ tí", ok: false },
+          { t: "Đắp chăn cho ra mồ hôi", ok: false }
+        ],
+        wrongMsg: "Sốc nhiệt là cấp cứu. Đưa vào chỗ mát và gọi 115 ngay."
+      },
+      {
+        q: "Cách làm mát đúng là?",
+        options: [
+          { t: "Cởi bớt đồ, lau/xịt nước mát, quạt, chườm đá ở nách/bẹn/cổ", ok: true },
+          { t: "Quấn kín chăn cho toát mồ hôi", ok: false },
+          { t: "Cho uống rượu cho ấm người", ok: false },
+          { t: "Phơi tiếp ngoài nắng", ok: false }
+        ],
+        wrongMsg: "Làm mát tích cực: cởi đồ, nước mát + quạt, chườm đá ở nách/bẹn/cổ. Quấn chăn/rượu làm nặng thêm."
+      },
+      {
+        q: "Nạn nhân sốc nhiệt còn tỉnh. Có nên cho uống nước?",
+        options: [
+          { t: "Tỉnh & nuốt tốt thì cho nhấp nước mát từng ít", ok: true },
+          { t: "Đổ thật nhiều nước một lúc", ok: false },
+          { t: "Cho uống khi đang lơ mơ/nôn", ok: false },
+          { t: "Tuyệt đối không cho uống gì", ok: false }
+        ],
+        wrongMsg: "Còn tỉnh & nuốt tốt thì nhấp nước mát từng ít. Lơ mơ/nôn thì KHÔNG cho uống (sặc)."
+      }
+    ],
+    poison: [
+      {
+        q: "☠️ Trẻ nuốt nhầm nước tẩy rửa. Việc nên làm?",
+        options: [
+          { t: "Gọi 115/trung tâm chống độc ngay, giữ lại vỏ chai", ok: true },
+          { t: "Móc họng cho nôn ra hết", ok: false },
+          { t: "Cho uống thật nhiều sữa rồi thôi", ok: false },
+          { t: "Chờ xem có sao không", ok: false }
+        ],
+        wrongMsg: "KHÔNG tự gây nôn (hoá chất ăn mòn trào lên gây bỏng thêm). Gọi cấp cứu, mang theo vỏ chai."
+      },
+      {
+        q: "Vì sao thường KHÔNG nên tự gây nôn khi ngộ độc?",
+        options: [
+          { t: "Chất ăn mòn/dầu trào lên gây hại thêm, dễ sặc vào phổi", ok: true },
+          { t: "Vì nôn rất mệt", ok: false },
+          { t: "Vì tốn thời gian", ok: false },
+          { t: "Không có lý do, cứ gây nôn", ok: false }
+        ],
+        wrongMsg: "Gây nôn có thể bỏng lại thực quản hoặc sặc vào phổi. Chỉ làm khi nhân viên y tế hướng dẫn."
+      },
+      {
+        q: "Thông tin nào quan trọng cần báo cho cấp cứu?",
+        options: [
+          { t: "Chất gì, lượng bao nhiêu, lúc nào, tuổi/cân nặng", ok: true },
+          { t: "Màu quần áo nạn nhân", ok: false },
+          { t: "Không cần gì", ok: false },
+          { t: "Chỉ cần nói 'ngộ độc'", ok: false }
+        ],
+        wrongMsg: "Cho biết chất gì, bao nhiêu, khi nào, tuổi/cân nặng — giúp xử trí đúng. Mang theo vỏ bao bì."
+      }
+    ],
     infant_choke: [
       {
         q: "🍼 Bé 6 tháng tuổi hóc, mặt tím, không khóc được. Làm gì?",
@@ -1221,6 +1377,134 @@
   };
 
   const QUIZZES_EN = {
+    stroke: [
+      {
+        q: "👴 An elderly man suddenly has a drooping face, one weak arm, slurred speech. Think of?",
+        options: [
+          { t: "Stroke — call emergency now", ok: true },
+          { t: "Just 'caught a chill', scrape the skin", ok: false },
+          { t: "Normal tiredness, let him rest", ok: false },
+          { t: "Hunger, feed him porridge", ok: false }
+        ],
+        wrongMsg: "Face droop + weak arm + slurred speech = stroke signs (FAST). Waiting wastes the 'golden hour'."
+      },
+      {
+        q: "The quick FAST check looks at what?",
+        options: [
+          { t: "Face (droop), Arm (weak), Speech (slurred), Time", ok: true },
+          { t: "Eyes, Nose, Mouth, Ears", ok: false },
+          { t: "Pulse, blood pressure, blood sugar", ok: false },
+          { t: "Just ask if they're in pain", ok: false }
+        ],
+        wrongMsg: "FAST = Face, Arm, Speech, Time (time to call emergency)."
+      },
+      {
+        q: "While waiting for the ambulance, what should you do?",
+        options: [
+          { t: "Rest with head slightly raised, note onset time, no food/drink", ok: true },
+          { t: "Give blood-pressure pills right away", ok: false },
+          { t: "Give food and drink for energy", ok: false },
+          { t: "Press pressure points, scrape the skin", ok: false }
+        ],
+        wrongMsg: "No food/drink (choking risk if swallowing is impaired). Keep still, note onset time, call emergency."
+      }
+    ],
+    hypo: [
+      {
+        q: "🍬 A diabetic suddenly gets shaky, sweaty, confused but still conscious. Do what?",
+        options: [
+          { t: "Give fast-acting sugar (regular soda, candy)", ok: true },
+          { t: "Make them drink lots of plain water", ok: false },
+          { t: "Inject more insulin", ok: false },
+          { t: "Just let them rest, do nothing", ok: false }
+        ],
+        wrongMsg: "Conscious: give fast sugar now. Insulin would drop their sugar even more dangerously."
+      },
+      {
+        q: "Which is NOT used to raise blood sugar fast?",
+        options: [
+          { t: "Sugar-free 'diet' soda", ok: true },
+          { t: "Regular soda", ok: false },
+          { t: "Candy / glucose tablets", ok: false },
+          { t: "Fruit juice", ok: false }
+        ],
+        wrongMsg: "'Diet/sugar-free' is useless here. You need real sugar: regular soda, candy, juice."
+      },
+      {
+        q: "A person with low blood sugar is unconscious. Do what?",
+        options: [
+          { t: "Nothing in the mouth, recovery position, call emergency", ok: true },
+          { t: "Pour sugar water into their mouth", ok: false },
+          { t: "Tuck candy into their cheek", ok: false },
+          { t: "Slap them awake then feed them", ok: false }
+        ],
+        wrongMsg: "Feeding an unconscious person risks choking. Recovery position & call emergency."
+      }
+    ],
+    heatstroke: [
+      {
+        q: "🥵 Blazing sun, your friend collapses, skin hot, confused. First thing?",
+        options: [
+          { t: "Move to a cool/shaded place & call emergency", ok: true },
+          { t: "Give coffee to wake them up", ok: false },
+          { t: "Let them rest out in the sun", ok: false },
+          { t: "Wrap in a blanket to sweat it out", ok: false }
+        ],
+        wrongMsg: "Heat stroke is an emergency. Move to a cool place and call emergency now."
+      },
+      {
+        q: "The correct way to cool them?",
+        options: [
+          { t: "Remove clothing, cool water + fan, ice packs to armpits/groin/neck", ok: true },
+          { t: "Wrap tightly in a blanket to sweat", ok: false },
+          { t: "Give alcohol to warm up", ok: false },
+          { t: "Keep them out in the sun", ok: false }
+        ],
+        wrongMsg: "Cool aggressively: remove clothing, cool water + fan, ice packs to armpits/groin/neck. Blankets/alcohol make it worse."
+      },
+      {
+        q: "The heat-stroke victim is still conscious. Give water?",
+        options: [
+          { t: "Conscious & swallowing well: small sips of cool water", ok: true },
+          { t: "Pour in lots of water at once", ok: false },
+          { t: "Give water while drowsy/vomiting", ok: false },
+          { t: "Never give any water", ok: false }
+        ],
+        wrongMsg: "If conscious & swallowing well, small sips of cool water. Drowsy/vomiting = NO drink (choking)."
+      }
+    ],
+    poison: [
+      {
+        q: "☠️ A child swallowed cleaning fluid. What to do?",
+        options: [
+          { t: "Call emergency/poison control now, keep the bottle", ok: true },
+          { t: "Make them vomit it all out", ok: false },
+          { t: "Just give lots of milk and stop there", ok: false },
+          { t: "Wait and see if anything happens", ok: false }
+        ],
+        wrongMsg: "Do NOT induce vomiting (corrosive coming back up burns again). Call emergency, bring the bottle."
+      },
+      {
+        q: "Why usually NOT induce vomiting in poisoning?",
+        options: [
+          { t: "Corrosives/oils coming up cause more harm, can be inhaled", ok: true },
+          { t: "Because vomiting is tiring", ok: false },
+          { t: "Because it wastes time", ok: false },
+          { t: "No reason, just induce it", ok: false }
+        ],
+        wrongMsg: "Vomiting can re-burn the throat or be inhaled into the lungs. Only do it if a medical pro tells you to."
+      },
+      {
+        q: "What info matters most for emergency services?",
+        options: [
+          { t: "What substance, how much, when, age/weight", ok: true },
+          { t: "The victim's clothing color", ok: false },
+          { t: "Nothing needed", ok: false },
+          { t: "Just say 'poisoning'", ok: false }
+        ],
+        wrongMsg: "Tell them what, how much, when, age/weight — it guides treatment. Bring the packaging."
+      }
+    ],
     infant_choke: [
       {
         q: "🍼 A 6-month-old is choking, turning blue, can't cry. What do you do?",
@@ -1515,6 +1799,55 @@
      PANIC MODE — đọc to từng bước
      ============================================================ */
   const PANIC = {
+    stroke: {
+      title: "🧠 Đột quỵ",
+      steps: [
+        "Nhận biết bằng FAST. Mặt: có méo một bên không?",
+        "Tay: nhờ giơ hai tay, có tay nào yếu rơi xuống không?",
+        "Lời nói: nhờ nói một câu, có bị đớ hay khó hiểu không?",
+        "Có bất kỳ dấu hiệu nào: gọi một một năm ngay.",
+        "Ghi lại thời điểm bắt đầu có triệu chứng.",
+        "Cho nằm nghỉ, đầu và vai hơi nâng cao. Trấn an họ.",
+        "Không cho ăn, uống hay dùng thuốc gì.",
+        "Theo dõi nhịp thở đến khi cấp cứu tới."
+      ]
+    },
+    hypo: {
+      title: "🍬 Hạ đường huyết",
+      steps: [
+        "Dấu hiệu: run, vã mồ hôi, da tái, lú lẫn, đói cồn cào.",
+        "Còn tỉnh và nuốt được: cho uống nước đường hoặc ăn kẹo, bánh ngọt.",
+        "Dùng đường thật, không dùng đồ ăn kiêng không đường.",
+        "Chờ mười lăm phút. Chưa đỡ thì cho thêm một lần nữa.",
+        "Đỡ rồi cho ăn thêm bữa có tinh bột.",
+        "Nếu bất tỉnh: không cho gì vào miệng.",
+        "Đặt nằm nghiêng an toàn và gọi một một năm."
+      ]
+    },
+    heatstroke: {
+      title: "🥵 Sốc nhiệt / say nắng",
+      steps: [
+        "Đưa nạn nhân vào chỗ mát, bóng râm hoặc phòng có điều hoà.",
+        "Gọi một một năm. Sốc nhiệt là cấp cứu.",
+        "Cởi bớt quần áo ngoài.",
+        "Làm mát nhanh: lau nước mát, quạt, chườm đá ở nách, bẹn, cổ.",
+        "Còn tỉnh và nuốt tốt thì cho nhấp nước mát từng ngụm nhỏ.",
+        "Lơ mơ, nôn hoặc bất tỉnh thì không cho uống.",
+        "Bất tỉnh: đặt nằm nghiêng, theo dõi thở đến khi cấp cứu tới."
+      ]
+    },
+    poison: {
+      title: "☠️ Ngộ độc",
+      steps: [
+        "Đưa nạn nhân tránh xa nguồn độc. Đảm bảo an toàn cho bạn.",
+        "Gọi một một năm hoặc trung tâm chống độc ngay.",
+        "Không tự gây nôn trừ khi được nhân viên y tế hướng dẫn.",
+        "Giữ lại bao bì, chai lọ hoặc mẫu chất nghi ngộ độc.",
+        "Nếu dính da hoặc mắt: rửa nhiều nước sạch.",
+        "Bất tỉnh nhưng còn thở: đặt nằm nghiêng an toàn.",
+        "Ngừng thở: bắt đầu ép tim. Báo cấp cứu chất gì, bao nhiêu, khi nào."
+      ]
+    },
     infant_cpr: {
       title: "👶 CPR cho trẻ sơ sinh (<1 tuổi)",
       metronome: true,
@@ -1665,6 +1998,55 @@
   };
 
   const PANIC_EN = {
+    stroke: {
+      title: "🧠 Stroke",
+      steps: [
+        "Use FAST. Face: is one side drooping?",
+        "Arms: ask them to raise both arms, does one drift down?",
+        "Speech: ask them to say a sentence, is it slurred or confused?",
+        "Any of these signs: call emergency services now.",
+        "Note the time the symptoms started.",
+        "Let them rest with head and shoulders slightly raised. Reassure them.",
+        "Do not give any food, drink, or medication.",
+        "Watch their breathing until help arrives."
+      ]
+    },
+    hypo: {
+      title: "🍬 Low blood sugar",
+      steps: [
+        "Signs: shaking, sweating, pale skin, confusion, intense hunger.",
+        "Conscious and able to swallow: give a sugary drink or candy/sweets.",
+        "Use real sugar, not sugar-free 'diet' products.",
+        "Wait fifteen minutes. If no better, give another dose.",
+        "Once better, give a snack with starch.",
+        "If unconscious: put nothing in the mouth.",
+        "Place in the recovery position and call emergency services."
+      ]
+    },
+    heatstroke: {
+      title: "🥵 Heat stroke",
+      steps: [
+        "Move the person to a cool, shaded or air-conditioned place.",
+        "Call emergency services. Heat stroke is an emergency.",
+        "Remove excess outer clothing.",
+        "Cool quickly: cool water, fan, ice packs to armpits, groin, neck.",
+        "If conscious and swallowing well, give small sips of cool water.",
+        "If drowsy, vomiting or unconscious, give no drink.",
+        "If unconscious: recovery position, watch breathing until help arrives."
+      ]
+    },
+    poison: {
+      title: "☠️ Poisoning",
+      steps: [
+        "Move the person away from the poison. Keep yourself safe.",
+        "Call emergency services or poison control now.",
+        "Do not induce vomiting unless a medical professional tells you to.",
+        "Keep the packaging, bottle, or a sample of the suspected substance.",
+        "If on skin or eyes: rinse with plenty of clean water.",
+        "Unconscious but breathing: place in the recovery position.",
+        "Not breathing: start CPR. Tell responders what, how much, when."
+      ]
+    },
     infant_cpr: {
       title: "👶 Infant CPR (under 1 year)",
       metronome: true,

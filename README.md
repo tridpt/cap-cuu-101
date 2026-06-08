@@ -21,7 +21,7 @@ Gặp chuyện thật? Bật **Chế độ Hoảng loạn** để app đọc to 
 | 🍼 **Bé Bông hóc dị vật** | Trẻ sơ sinh: vỗ lưng + ấn ngực, KHÔNG đẩy bụng | Trả lời nhanh các tình huống |
 | 🧑‍🍳 **Cứu đầu bếp bị bỏng** | Xả nước mát chữa bỏng | Rê vòi nước 🚿 đè lên vết bỏng, giữ đủ lâu — vết bỏng còn **lan sang chỗ khác** |
 | 🧟 **Cầm máu cho Zombie** | Đặt gạc & ép cầm máu | Kéo gạc vào vết thương, giữ thanh lực trong **vùng xanh đang di chuyển** |
-| 🌊 **Đuối nước** · ⚡ **Điện giật** · 🌀 **Co giật** · 🐝 **Sốc phản vệ** · 🦴 **Gãy xương** · 🐍 **Rắn cắn** | Xử lý đúng trình tự | Trả lời nhanh các tình huống sinh tử |
+| 🌊 **Đuối nước** · ⚡ **Điện giật** · 🌀 **Co giật** · 🐝 **Sốc phản vệ** · 🦴 **Gãy xương** · 🐍 **Rắn cắn** · 🧠 **Đột quỵ (FAST)** · 🍬 **Hạ đường huyết** · 🥵 **Sốc nhiệt** · ☠️ **Ngộ độc** | Xử lý đúng trình tự | Trả lời nhanh các tình huống sinh tử |
 
 Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo đời thực sau khi chơi.
 
@@ -65,7 +65,7 @@ Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo
 
 Khi sự cố xảy ra thật:
 1. Mở app → **CHẾ ĐỘ HOẢNG LOẠN**
-2. Chọn tình huống — **10 loại**: ngừng tim, hóc nghẹn, bỏng, chảy máu, đuối nước, điện giật, co giật, sốc phản vệ, gãy xương, rắn cắn
+2. Chọn tình huống — **16 loại**: ngừng tim, CPR trẻ sơ sinh, hóc nghẹn, trẻ sơ sinh hóc, bỏng, chảy máu, đuối nước, điện giật, co giật, sốc phản vệ, gãy xương, rắn cắn, đột quỵ, hạ đường huyết, sốc nhiệt, ngộ độc
 3. App **đọc to từng bước** ngắn gọn, bình tĩnh — bấm "Bước tiếp" để đi tiếp
 4. Riêng CPR có **nhịp metronome 100/phút** kèm rung để ép tim đúng nhịp
 5. Nút **📞 GỌI 115** luôn hiện sẵn (nhạc nền tự tắt khi vào chế độ này)
@@ -143,6 +143,10 @@ vẫn nên học một khoá sơ cứu thực hành có người hướng dẫn 
 | Hóc dị vật | Xen kẽ **5 vỗ lưng + 5 đẩy bụng** (người lớn & trẻ >1 tuổi); trẻ sơ sinh: **5 vỗ lưng + 5 ấn ngực, KHÔNG đẩy bụng** | [Mayo Clinic](https://www.mayoclinic.org/first-aid/first-aid-choking/basics/art-20056637), [AHA 2025](https://newsroom.heart.org/news/updated-cpr-guidelines-tackle-choking-response-opioid-related-emergencies-and-a-revised-chain-of-survival) |
 | Sốc phản vệ | Adrenaline tiêm mặt ngoài đùi, gọi cấp cứu, nằm kê chân cao | [NHS inform](https://www.nhsinform.scot/illnesses-and-conditions/immune-system/anaphylaxis) |
 | Rắn cắn | Bất động, không garô chặt/rạch/hút nọc, tới viện gấp | [WHO](https://www.who.int/news-room/fact-sheets/detail/snakebite-envenoming) |
+| Đột quỵ | Nhận biết **FAST/BE-FAST**, gọi cấp cứu ngay, không cho ăn uống, ghi giờ khởi phát | [Cleveland Clinic](https://health.clevelandclinic.org/be-fast-stroke), [American Stroke Assoc.](https://www.stroke.org/) |
+| Hạ đường huyết | Còn tỉnh: cho đường nhanh; bất tỉnh: không cho gì vào miệng + gọi cấp cứu | [NHS](https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) |
+| Sốc nhiệt | Làm mát tích cực (nước/quạt/đá ở nách-bẹn-cổ), gọi cấp cứu | [American Stroke Assoc.](https://www.stroke.org/en/professionals/stroke-resource-library/prevention/heat-stroke-vs-stroke), [OSHA](https://www.osha.gov/heat-exposure/heat-illness) |
+| Ngộ độc | KHÔNG tự gây nôn, gọi chống độc, giữ lại bao bì chất độc | [Mayo Clinic](https://www.mayoclinic.org/first-aid/first-aid-poisoning/basics/art-20056657) |
 | Bỏng, chảy máu, gãy xương, co giật, đuối nước, điện giật | Sơ cứu phổ thông | [WHO](https://www.who.int/), [American Red Cross](https://www.redcross.org/take-a-class/first-aid) |
 
 > 🩺 Hướng dẫn sơ cứu có thể thay đổi theo thời gian. Khi có khác biệt, hãy tin tưởng hướng
