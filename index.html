@@ -62,6 +62,7 @@
         <button class="btn btn-play" data-goto="screen-levels" data-i18n="play">🎮 CHƠI & HỌC</button>
         <button class="btn btn-panic" data-goto="screen-panic" data-i18n="panic_btn">🆘 CHẾ ĐỘ HOẢNG LOẠN</button>
         <button class="btn btn-tools" data-goto="screen-emergency" data-i18n="tools_btn">🧰 CÔNG CỤ KHẨN CẤP</button>
+        <button class="btn btn-ghost" data-goto="screen-handbook" data-i18n="handbook_btn">📖 Cẩm nang sơ cứu</button>
         <div class="home-row">
           <button class="btn btn-ghost" data-goto="screen-achievements" data-i18n="ach_btn">🏆 Thành tích</button>
           <button class="btn btn-ghost" data-goto="screen-about" data-i18n="about_btn">❓ Giới thiệu</button>
@@ -256,6 +257,17 @@
         <div></div>
       </header>
       <div class="ach-body" id="ach-body"></div>
+    </section>
+
+    <!-- ===== CẨM NANG SƠ CỨU ===== -->
+    <section id="screen-handbook" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-home">←</button>
+        <h2 data-i18n="handbook_title">📖 Cẩm nang sơ cứu</h2>
+        <div></div>
+      </header>
+      <p class="hb-lead" data-i18n="handbook_lead">Bấm vào một tình huống để xem nhanh các bước. Cần đọc to từng bước thì dùng Chế độ Hoảng loạn.</p>
+      <div id="handbook-list" class="handbook-list"></div>
     </section>
 
     <!-- ===== CÔNG CỤ KHẨN CẤP ===== -->

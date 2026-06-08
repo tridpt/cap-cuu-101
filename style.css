@@ -567,3 +567,19 @@ body.mode-serious .character.dead { animation: seriousFade .8s forwards; }
   border-radius: 10px; padding: 11px 12px; font-size: 15px; font-family: inherit; resize: vertical;
 }
 .medcard-form .btn { margin-top: 6px; }
+
+/* ===== HANDBOOK (cẩm nang tra cứu) ===== */
+.hb-lead { color: var(--muted); font-size: 13.5px; line-height: 1.45; margin: 0 0 14px; }
+.handbook-list { overflow-y: auto; padding-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+.hb-item { background: var(--card); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+.hb-head {
+  width: 100%; text-align: left; background: transparent; border: none; color: var(--text);
+  font-size: 16px; font-weight: 800; padding: 15px 16px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.hb-head .hb-arrow { color: var(--muted); transition: transform .2s; flex: none; }
+.hb-item.open .hb-head .hb-arrow { transform: rotate(90deg); }
+.hb-steps { padding: 0 18px 14px 22px; margin: 0; display: none; }
+.hb-item.open .hb-steps { display: block; animation: fadeIn .2s ease; }
+.hb-steps li { margin: 0 0 8px; line-height: 1.5; font-size: 14.5px; }
+.hb-steps li::marker { color: var(--accent2); font-weight: 800; }

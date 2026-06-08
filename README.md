@@ -152,6 +152,10 @@ Nút **🧰 CÔNG CỤ KHẨN CẤP** ở trang chủ (có cả PWA shortcut `?t
 
 > Thẻ y tế lưu bằng `localStorage` trên thiết bị, không gửi đi đâu cả.
 
+## 📖 Cẩm nang tra cứu nhanh
+
+Nút **📖 Cẩm nang sơ cứu** ở trang chủ: danh sách 17 tình huống dạng gập/mở, bấm vào là xem ngay các bước chính để **đọc lướt** bất cứ lúc nào (không cần chơi, không cần giọng đọc). Tái dùng đúng nội dung của Chế độ Hoảng loạn, song ngữ VI/EN.
+
 ## 📂 Cấu trúc
 
 ```

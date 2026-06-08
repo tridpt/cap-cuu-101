@@ -108,7 +108,10 @@
     mc_save: { vi: "💾 Lưu thẻ", en: "💾 Save card" },
     mc_saved: { vi: "Đã lưu thẻ y tế", en: "Medical card saved" },
     mc_empty: { vi: "Chưa có thông tin. Bấm Chỉnh sửa để thêm — hữu ích cho người cứu hộ khi bạn gặp nạn.", en: "No info yet. Tap Edit to add — useful for first responders if something happens to you." },
-    mc_call: { vi: "📞 Gọi người thân", en: "📞 Call contact" }
+    mc_call: { vi: "📞 Gọi người thân", en: "📞 Call contact" },
+    handbook_btn: { vi: "📖 Cẩm nang sơ cứu", en: "📖 First-aid handbook" },
+    handbook_title: { vi: "📖 Cẩm nang sơ cứu", en: "📖 First-aid handbook" },
+    handbook_lead: { vi: "Bấm vào một tình huống để xem nhanh các bước. Cần đọc to từng bước thì dùng Chế độ Hoảng loạn.", en: "Tap a situation to see the steps. For step-by-step audio, use Panic Mode." }
   };
 
   /* ---------- NAVIGATION ---------- */
@@ -131,6 +134,7 @@
     if (id === "screen-levels") renderLevels();
     if (id === "screen-achievements") renderAchievements();
     if (id === "screen-emergency" && emergRender) emergRender();
+    if (id === "screen-handbook") renderHandbook();
   }
   document.querySelectorAll("[data-goto]").forEach(btn =>
     btn.addEventListener("click", () => go(btn.dataset.goto))
@@ -448,6 +452,40 @@
         shareCard(big, sub);
       });
     }
+  }
+
+  /* ---------- HANDBOOK (cẩm nang tra cứu) ---------- */
+  const HANDBOOK_ORDER = ["cpr", "heartattack", "infant_cpr", "choke", "infant_choke",
+    "burn", "bleed", "drown", "electric", "seizure", "anaphylaxis", "fracture",
+    "snakebite", "stroke", "hypo", "heatstroke", "poison"];
+  function formatStepText(s) {
+    return s.replace("một một năm", "115")
+            .replace("năm centimet", "5cm")
+            .replace("bốn centimet", "4cm")
+            .replace("đánh quận răng", "đánh răng");
+  }
+  function renderHandbook() {
+    const list = document.getElementById("handbook-list");
+    if (!list) return;
+    const src = (LANG === "en") ? PANIC_EN : PANIC;
+    list.innerHTML = "";
+    HANDBOOK_ORDER.forEach(key => {
+      const data = src[key] || PANIC[key];
+      if (!data) return;
+      const item = document.createElement("div");
+      item.className = "hb-item";
+      const steps = data.steps.map(s => `<li>${formatStepText(s)}</li>`).join("");
+      item.innerHTML =
+        `<button class="hb-head" aria-expanded="false"><span>${data.title}</span><span class="hb-arrow">▶</span></button>` +
+        `<ol class="hb-steps">${steps}</ol>`;
+      const head = item.querySelector(".hb-head");
+      head.addEventListener("click", () => {
+        const open = item.classList.toggle("open");
+        head.setAttribute("aria-expanded", open ? "true" : "false");
+        if (open && window.Sfx) Sfx.blip();
+      });
+      list.appendChild(item);
+    });
   }
 
   /* ============================================================
@@ -2889,6 +2927,7 @@
     applyLang();
     if (current === "screen-levels") renderLevels();
     if (current === "screen-achievements") renderAchievements();
+    if (current === "screen-handbook") renderHandbook();
   }
 
   document.querySelectorAll(".lang-opt").forEach(b =>
