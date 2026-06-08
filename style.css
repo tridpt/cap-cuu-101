@@ -344,7 +344,7 @@ body {
   position: absolute; width: 90px; height: 90px; margin: -45px 0 0 -45px;
   border: 3px dashed var(--good); border-radius: 50%; opacity: .8;
 }
-.force-wrap { position: absolute; bottom: 14px; left: 12px; right: 12px; }
+.force-wrap { margin-bottom: 12px; }
 .force-track { height: 26px; background: rgba(255,255,255,.1); border-radius: 999px; overflow: hidden; position: relative; }
 .force-good-zone { position: absolute; top: 0; bottom: 0; left: 55%; right: 8%; background: rgba(61,220,151,.3); }
 .force-fill { height: 100%; width: 0; background: var(--accent); transition: width .06s linear; }
