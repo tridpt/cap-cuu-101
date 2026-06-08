@@ -2,12 +2,17 @@
 
 Học sơ cứu kiểu *Dumb Ways to Die* — vui, châm biếm, nhưng kiến thức thì thật.
 
+**▶️ Chơi ngay (demo):** https://tridpt.github.io/cap-cuu-101/
+
 Một web app dạy kỹ năng sơ cứu sinh tử (CPR, hóc dị vật, bỏng, cầm máu) thông qua
 mini-game hoạt hình hài hước. Làm sai? Nhân vật "đăng xuất khỏi cuộc đời" cực buồn cười.
 Gặp chuyện thật? Bật **Chế độ Hoảng loạn** để app đọc to từng bước cho bạn làm theo.
 
+100% HTML/CSS/JS thuần — không khung, không build, chạy offline (PWA). Song ngữ 🇻🇳/🇬🇧.
+
 > ⚠️ Đây là sản phẩm giải trí + ghi nhớ. Nó **không** thay thế khoá sơ cứu chính quy
-> hay nhân viên y tế. Việc thật: **gọi 115 trước tiên.**
+> hay nhân viên y tế. Việc thật: **gọi 115 trước tiên.** Xem `MEDICAL_REVIEW.md` cho
+> checklist rà soát nội dung bởi nhân viên y tế.
 
 ---
 

@@ -460,7 +460,7 @@
 
     const PER = 9000;           // ms cho mỗi câu
     let idx = 0, score = 0, combo = 0, alive = true;
-    let rafId = null, qStart = 0;
+    let rafId = null, qStart = 0, lastBeep = -1;
 
     stage.innerHTML = `
       <div class="progress-bar"><div class="progress-fill" id="tfill" style="background:var(--accent2)"></div></div>
@@ -476,6 +476,11 @@
       const pct = Math.max(0, left / PER * 100);
       tfill.style.width = pct + "%";
       tfill.style.background = pct < 30 ? "var(--accent)" : "var(--accent2)";
+      // tiếng tích tắc cảnh báo 3 giây cuối
+      if (left < 3000) {
+        const sec = Math.ceil(left / 1000);
+        if (sec !== lastBeep) { lastBeep = sec; if (window.Sfx) Sfx.tick(); }
+      }
       if (left <= 0) { timeout(); return; }
       rafId = requestAnimationFrame(tickTimer);
     }
@@ -498,6 +503,7 @@
       });
       controls.appendChild(grid);
       qStart = performance.now();
+      lastBeep = -1;
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(tickTimer);
     }
@@ -2073,7 +2079,7 @@
       steps: [
         "Đưa nạn nhân tránh xa nguồn gây bỏng.",
         "Xả vết bỏng dưới nước mát trong ít nhất hai mươi phút.",
-        "Không dùng đá, kem đánh quận răng, bơ hay nước mắm.",
+        "Không dùng đá, kem đánh răng, bơ hay nước mắm.",
         "Tháo nhẫn, đồng hồ, quần áo quanh vùng bỏng trước khi sưng.",
         "Không chọc vỡ bọng nước.",
         "Che vết bỏng bằng gạc sạch, không dính.",
@@ -2626,6 +2632,10 @@
   /* ---------- INIT ---------- */
   applyLang();
   applyPrefs();
+  // Ẩn các màn không hiển thị khỏi trình đọc màn hình
+  Object.keys(screens).forEach(id => {
+    if (id !== current) screens[id].setAttribute("aria-hidden", "true");
+  });
   // Ẩn splash sau khi tải xong (tối thiểu ~1.4s cho đẹp)
   (function hideSplash() {
     const splash = document.getElementById("splash");
