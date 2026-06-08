@@ -344,6 +344,13 @@
       desc: { vi: "Đừng tự gây nôn — gọi chống độc", en: "Don't induce vomiting — call poison control" },
       lesson: { vi: "Ngộ độc: gọi 115 / trung tâm chống độc, KHÔNG tự gây nôn (trừ khi được hướng dẫn). Giữ lại bao bì/chất nghi ngộ độc để bác sĩ biết.",
                 en: "Poisoning: call emergency / poison control, do NOT induce vomiting (unless instructed). Keep the packaging/substance for the doctor." }
+    },
+    {
+      id: "heartattack", emoji: "❤️‍🩹", type: "quiz", char: "🧓",
+      title: { vi: "Bác hàng xóm đau tim", en: "Neighbor having a heart attack" },
+      desc: { vi: "Nhận biết sớm & gọi 115 ngay", en: "Spot it early & call emergency now" },
+      lesson: { vi: "Nhồi máu cơ tim: đau/tức nặng giữa ngực (có thể lan tay, hàm, lưng), khó thở, vã mồ hôi. Gọi 115 NGAY, cho ngồi nghỉ, nhai 1 viên aspirin nếu không dị ứng. Ngừng thở thì CPR.",
+                en: "Heart attack: pressure/pain in the center of the chest (may spread to arm, jaw, back), shortness of breath, cold sweat. Call emergency NOW, have them rest, chew one aspirin if not allergic. If not breathing, do CPR." }
     }
   ];
 
@@ -1236,6 +1243,38 @@
 
   /* ---------- MINI-GAME 5+: QUIZ ---------- */
   const QUIZZES = {
+    heartattack: [
+      {
+        q: "🧓 Bác lớn tuổi đau tức nặng giữa ngực, lan ra tay trái & hàm, vã mồ hôi, khó thở. Nghĩ tới?",
+        options: [
+          { t: "Nhồi máu cơ tim — gọi 115 ngay", ok: true },
+          { t: "Đau dạ dày, uống thuốc dạ dày", ok: false },
+          { t: "Mệt do trời nóng, nghỉ tí", ok: false },
+          { t: "Căng cơ, xoa dầu là hết", ok: false }
+        ],
+        wrongMsg: "Đau ngực kiểu đè ép lan tay/hàm + vã mồ hôi + khó thở là dấu hiệu nhồi máu cơ tim. Chậm trễ = chết cơ tim."
+      },
+      {
+        q: "Việc QUAN TRỌNG NHẤT cần làm ngay?",
+        options: [
+          { t: "Gọi 115 ngay lập tức", ok: true },
+          { t: "Tự chạy xe máy chở tới viện", ok: false },
+          { t: "Đợi xem có đỡ không", ok: false },
+          { t: "Cho uống thật nhiều nước", ok: false }
+        ],
+        wrongMsg: "Gọi 115 ngay — xe cấp cứu xử trí được trên đường & báo viện chuẩn bị. Tự chạy xe rất nguy hiểm nếu ngất giữa đường."
+      },
+      {
+        q: "Trong khi chờ cấp cứu, nên làm gì?",
+        options: [
+          { t: "Cho ngồi nghỉ, trấn an, nới đồ chật; nhai 1 viên aspirin nếu không dị ứng", ok: true },
+          { t: "Bắt đi lại cho 'giãn gân cốt'", ok: false },
+          { t: "Cho nằm sấp", ok: false },
+          { t: "Cho ăn thật no để có sức", ok: false }
+        ],
+        wrongMsg: "Cho ngồi nghỉ, trấn an, nới đồ chật. Có thể nhai aspirin nếu không dị ứng/không chống chỉ định. Không bắt vận động."
+      }
+    ],
     stroke: [
       {
         q: "👴 Ông cụ đột nhiên méo miệng, yếu một tay, nói đớ. Nghĩ ngay đến?",
@@ -1591,6 +1630,38 @@
   };
 
   const QUIZZES_EN = {
+    heartattack: [
+      {
+        q: "🧓 An older neighbor has heavy pressure in the center of the chest, spreading to the left arm & jaw, sweating, short of breath. Think of?",
+        options: [
+          { t: "Heart attack — call emergency now", ok: true },
+          { t: "Stomach ache, take antacids", ok: false },
+          { t: "Tired from the heat, just rest", ok: false },
+          { t: "Muscle strain, rub some balm", ok: false }
+        ],
+        wrongMsg: "Crushing chest pain spreading to arm/jaw + sweating + breathlessness = heart attack signs. Delay = dying heart muscle."
+      },
+      {
+        q: "The MOST important thing to do right now?",
+        options: [
+          { t: "Call emergency services immediately", ok: true },
+          { t: "Drive them on a motorbike to hospital yourself", ok: false },
+          { t: "Wait to see if it eases", ok: false },
+          { t: "Give them lots of water", ok: false }
+        ],
+        wrongMsg: "Call emergency now — the ambulance can treat en route & alert the hospital. Driving yourself is dangerous if they collapse."
+      },
+      {
+        q: "While waiting for the ambulance, what should you do?",
+        options: [
+          { t: "Have them sit & rest, reassure, loosen tight clothing; chew 1 aspirin if not allergic", ok: true },
+          { t: "Make them walk around to 'loosen up'", ok: false },
+          { t: "Lay them face-down", ok: false },
+          { t: "Feed them a big meal for energy", ok: false }
+        ],
+        wrongMsg: "Sit & rest, reassure, loosen tight clothing. Aspirin may be chewed if not allergic/no contraindication. Don't make them exert."
+      }
+    ],
     stroke: [
       {
         q: "👴 An elderly man suddenly has a drooping face, one weak arm, slurred speech. Think of?",
@@ -2013,6 +2084,19 @@
      PANIC MODE — đọc to từng bước
      ============================================================ */
   const PANIC = {
+    heartattack: {
+      title: "❤️‍🩹 Nhồi máu cơ tim (đau tim)",
+      steps: [
+        "Dấu hiệu: đau hoặc tức nặng giữa ngực, có thể lan ra tay, hàm, lưng; khó thở, vã mồ hôi, buồn nôn.",
+        "Gọi một một năm ngay. Nói rõ là nghi ngờ nhồi máu cơ tim.",
+        "Cho nạn nhân ngồi nghỉ, tựa lưng, đầu gối hơi co. Trấn an, giữ bình tĩnh.",
+        "Nới lỏng quần áo chật.",
+        "Nếu họ có thuốc tim được bác sĩ kê, giúp họ dùng.",
+        "Nếu không dị ứng aspirin và còn tỉnh: cho nhai một viên aspirin.",
+        "Nếu bất tỉnh và ngừng thở: bắt đầu ép tim ngay.",
+        "Ở bên cạnh theo dõi đến khi cấp cứu tới."
+      ]
+    },
     stroke: {
       title: "🧠 Đột quỵ",
       steps: [
@@ -2212,6 +2296,19 @@
   };
 
   const PANIC_EN = {
+    heartattack: {
+      title: "❤️‍🩹 Heart attack",
+      steps: [
+        "Signs: pain or heavy pressure in the center of the chest, may spread to arm, jaw, back; shortness of breath, cold sweat, nausea.",
+        "Call emergency services now. Say you suspect a heart attack.",
+        "Have them sit and rest, leaning back, knees slightly bent. Reassure and keep them calm.",
+        "Loosen any tight clothing.",
+        "If they have heart medication prescribed by a doctor, help them take it.",
+        "If not allergic to aspirin and still conscious: have them chew one aspirin.",
+        "If unconscious and not breathing: start CPR immediately.",
+        "Stay with them and monitor until help arrives."
+      ]
+    },
     stroke: {
       title: "🧠 Stroke",
       steps: [

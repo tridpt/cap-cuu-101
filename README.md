@@ -70,7 +70,7 @@ Mỗi màn cho tối đa **3 sao** (lưu trong trình duyệt), kèm một mẹo
 
 Khi sự cố xảy ra thật:
 1. Mở app → **CHẾ ĐỘ HOẢNG LOẠN**
-2. Chọn tình huống — **16 loại**: ngừng tim, CPR trẻ sơ sinh, hóc nghẹn, trẻ sơ sinh hóc, bỏng, chảy máu, đuối nước, điện giật, co giật, sốc phản vệ, gãy xương, rắn cắn, đột quỵ, hạ đường huyết, sốc nhiệt, ngộ độc
+2. Chọn tình huống — **17 loại**: ngừng tim, nhồi máu cơ tim, CPR trẻ sơ sinh, hóc nghẹn, trẻ sơ sinh hóc, bỏng, chảy máu, đuối nước, điện giật, co giật, sốc phản vệ, gãy xương, rắn cắn, đột quỵ, hạ đường huyết, sốc nhiệt, ngộ độc
 3. App **đọc to từng bước** ngắn gọn, bình tĩnh — bấm "Bước tiếp" để đi tiếp
 4. Riêng CPR có **nhịp metronome 100/phút** kèm rung để ép tim đúng nhịp
 5. Nút **📞 GỌI 115** luôn hiện sẵn (nhạc nền tự tắt khi vào chế độ này)
@@ -181,6 +181,7 @@ vẫn nên học một khoá sơ cứu thực hành có người hướng dẫn 
 | Chủ đề | Điểm chính | Nguồn |
 |--------|-----------|-------|
 | CPR | 100–120 nhịp/phút, sâu ~5–6cm, giữa ngực; chưa đào tạo thì ép tim liên tục | [AHA](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines) |
+| Nhồi máu cơ tim | Đau tức giữa ngực lan tay/hàm, khó thở, vã mồ hôi → gọi cấp cứu ngay, ngồi nghỉ, nhai aspirin nếu không dị ứng | [AHA](https://www.heart.org/en/health-topics/heart-attack/warning-signs-of-a-heart-attack) |
 | CPR trẻ sơ sinh | Hai ngón cái ôm ngực, sâu ~4cm (1/3 lồng ngực), 100–120/phút | [AHA Pediatric BLS](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support) |
 | Hóc dị vật | Xen kẽ **5 vỗ lưng + 5 đẩy bụng** (người lớn & trẻ >1 tuổi); trẻ sơ sinh: **5 vỗ lưng + 5 ấn ngực, KHÔNG đẩy bụng** | [Mayo Clinic](https://www.mayoclinic.org/first-aid/first-aid-choking/basics/art-20056637), [AHA 2025](https://newsroom.heart.org/news/updated-cpr-guidelines-tackle-choking-response-opioid-related-emergencies-and-a-revised-chain-of-survival) |
 | Sốc phản vệ | Adrenaline tiêm mặt ngoài đùi, gọi cấp cứu, nằm kê chân cao | [NHS inform](https://www.nhsinform.scot/illnesses-and-conditions/immune-system/anaphylaxis) |
