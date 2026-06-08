@@ -493,3 +493,15 @@ body.a11y-large .lesson-box { font-size: 16px; }
 /* Chế độ nghiêm túc: bỏ animation "đăng xuất" quay lộn, thay bằng mờ dần nhẹ */
 body.mode-serious .character.dead { animation: seriousFade .8s forwards; }
 @keyframes seriousFade { to { opacity: .25; filter: grayscale(1); } }
+
+/* ===== SURVIVAL MODE ===== */
+.survival-card {
+  background: linear-gradient(100deg, rgba(255,210,63,.16), rgba(255,93,115,.16));
+  border: 1.5px solid var(--accent2);
+}
+.survival-card .lv-stars { color: var(--accent2); font-size: 22px; }
+.surv-score {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -160%);
+  font-size: 64px; font-weight: 900; color: var(--accent2);
+  text-shadow: 0 3px 0 rgba(0,0,0,.3);
+}

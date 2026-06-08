@@ -61,6 +61,14 @@
     st_badges: { vi: "🏅 Huy hiệu", en: "🏅 Badges" },
     badges_title: { vi: "🏅 Huy hiệu", en: "🏅 Badges" },
     share: { vi: "📤 Chia sẻ", en: "📤 Share" },
+    survival: { vi: "🏁 Thi đấu Survival", en: "🏁 Survival Mode" },
+    survival_desc: { vi: "Trả lời liên tục, 1 lần sai là hết. Kỷ lục:", en: "Answer non-stop, one mistake ends it. Best:" },
+    survival_score: { vi: "Điểm", en: "Score" },
+    survival_over: { vi: "HẾT LƯỢT!", en: "GAME OVER!" },
+    survival_clear: { vi: "HOÀN HẢO! Trả lời hết!", en: "PERFECT! All cleared!" },
+    survival_best: { vi: "Kỷ lục", en: "Best" },
+    survival_new_best: { vi: "🎉 Kỷ lục mới!", en: "🎉 New best!" },
+    time_up: { vi: "Hết giờ!", en: "Time's up!" },
     share_ach: { vi: "📤 Khoe thành tích", en: "📤 Share progress" },
     copied: { vi: "Đã chép link!", en: "Link copied!" },
     set_reminder: { vi: "🔔 Nhắc ôn tập", en: "🔔 Practice reminders" },
@@ -171,7 +179,9 @@
     { id: "streak3", emoji: "🔥", name: { vi: "Chăm chỉ", en: "Diligent" }, desc: { vi: "Chuỗi 3 ngày liên tiếp", en: "3-day streak" },
       test: (s) => s.streak.count >= 3 },
     { id: "streak7", emoji: "🏅", name: { vi: "Kiên trì", en: "Persistent" }, desc: { vi: "Chuỗi 7 ngày liên tiếp", en: "7-day streak" },
-      test: (s) => s.streak.count >= 7 }
+      test: (s) => s.streak.count >= 7 },
+    { id: "survivor", emoji: "🏁", name: { vi: "Cao thủ Survival", en: "Survivor" }, desc: { vi: "Đạt 10 điểm chế độ Survival", en: "Score 10 in Survival mode" },
+      test: (s) => (s.best.survival || 0) >= 10 }
   ];
 
   // trả về tên các huy hiệu MỚI mở khoá
@@ -312,6 +322,22 @@
     const saved = loadStars();
     const list = document.getElementById("level-list");
     list.innerHTML = "";
+
+    // Thẻ Thi đấu Survival
+    const best = loadStats().best.survival || 0;
+    const sv = document.createElement("div");
+    sv.className = "level-card survival-card";
+    sv.setAttribute("role", "button");
+    sv.setAttribute("tabindex", "0");
+    sv.innerHTML = `
+      <div class="lv-emoji">🏁</div>
+      <div class="lv-info"><h3>${t(UI.survival)}</h3><p>${t(UI.survival_desc)} <b>${best}</b></p></div>
+      <div class="lv-stars">▶</div>`;
+    const launch = () => startSurvival();
+    sv.addEventListener("click", launch);
+    sv.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); launch(); } });
+    list.appendChild(sv);
+
     LEVELS.forEach(lv => {
       const got = saved[lv.id] || 0;
       const stars = "★".repeat(got) + "☆".repeat(3 - got);
@@ -411,6 +437,138 @@
     else if (lv.type === "hose") initHose(lv);
     else if (lv.type === "press") initPress(lv);
     else if (lv.type === "quiz") initQuiz(lv);
+  }
+
+  /* ---------- SURVIVAL MODE (gauntlet trắc nghiệm tính giờ) ---------- */
+  function startSurvival() {
+    if (window.Sfx) { Sfx.unlock(); Sfx.startMusic(); }
+    go("screen-game");
+    document.getElementById("game-title").textContent = t(UI.survival);
+    document.getElementById("game-hp").textContent = "0";
+    stage.innerHTML = "";
+    controls.innerHTML = "";
+    instr.textContent = "";
+    initSurvival();
+  }
+
+  function initSurvival() {
+    // gom toàn bộ câu hỏi từ mọi tình huống (theo ngôn ngữ hiện tại)
+    const src = (LANG === "en") ? QUIZZES_EN : QUIZZES;
+    const pool = [];
+    Object.keys(src).forEach(id => src[id].forEach(q => pool.push(q)));
+    pool.sort(() => Math.random() - 0.5);
+
+    const PER = 9000;           // ms cho mỗi câu
+    let idx = 0, score = 0, combo = 0, alive = true;
+    let rafId = null, qStart = 0;
+
+    stage.innerHTML = `
+      <div class="progress-bar"><div class="progress-fill" id="tfill" style="background:var(--accent2)"></div></div>
+      <div class="surv-score" id="sscore">0</div>
+      <div class="character" id="char">🏁</div>`;
+    const tfill = document.getElementById("tfill");
+    const sEl = document.getElementById("sscore");
+    const charEl = document.getElementById("char");
+
+    function tickTimer() {
+      if (!alive) return;
+      const left = PER - (performance.now() - qStart);
+      const pct = Math.max(0, left / PER * 100);
+      tfill.style.width = pct + "%";
+      tfill.style.background = pct < 30 ? "var(--accent)" : "var(--accent2)";
+      if (left <= 0) { timeout(); return; }
+      rafId = requestAnimationFrame(tickTimer);
+    }
+
+    function ask() {
+      if (!alive) return;
+      if (idx >= pool.length) { end(true); return; }
+      const item = pool[idx];
+      instr.innerHTML = `${t(UI.survival_score)}: <b>${score}</b>${combo >= 3 ? ` · 🔥x${combo}` : ""}`;
+      controls.innerHTML = `<div style="text-align:center;font-weight:700;font-size:16px;margin-bottom:6px">${item.q}</div>`;
+      const grid = document.createElement("div");
+      grid.className = "choice-grid";
+      const opts = item.options.map(o => ({ ...o })).sort(() => Math.random() - 0.5);
+      opts.forEach(o => {
+        const b = document.createElement("button");
+        b.className = "choice";
+        b.textContent = o.t;
+        b.addEventListener("click", () => choose(b, o, item), { once: true });
+        grid.appendChild(b);
+      });
+      controls.appendChild(grid);
+      qStart = performance.now();
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(tickTimer);
+    }
+
+    function lockChoices() {
+      controls.querySelectorAll(".choice").forEach(b => (b.style.pointerEvents = "none"));
+    }
+
+    function choose(btn, opt, item) {
+      if (!alive) return;
+      cancelAnimationFrame(rafId);
+      lockChoices();
+      if (opt.ok) {
+        btn.classList.add("correct");
+        score++; combo++;
+        sEl.textContent = score;
+        document.getElementById("game-hp").textContent = score;
+        if (window.Sfx) { Sfx.correct(); Sfx.vibrate(30); }
+        charEl.classList.remove("pulse"); void charEl.offsetWidth; charEl.classList.add("pulse");
+        idx++;
+        setTimeout(ask, 450);
+      } else {
+        btn.classList.add("wrong");
+        controls.querySelectorAll(".choice").forEach(b => { if (b.textContent === item.options.find(o => o.ok).t) b.classList.add("correct"); });
+        if (window.Sfx) { Sfx.wrong(); Sfx.vibrate(150); }
+        end(false);
+      }
+    }
+
+    function timeout() {
+      if (!alive) return;
+      cancelAnimationFrame(rafId);
+      lockChoices();
+      const item = pool[idx];
+      controls.querySelectorAll(".choice").forEach(b => { if (b.textContent === item.options.find(o => o.ok).t) b.classList.add("correct"); });
+      if (window.Sfx) { Sfx.wrong(); Sfx.vibrate(150); }
+      floatText(t(UI.time_up), "#ff5d73");
+      end(false);
+    }
+
+    function end(cleared) {
+      alive = false;
+      cancelAnimationFrame(rafId);
+      const prevBest = loadStats().best.survival || 0;
+      saveBest("survival", score);
+      const isNew = score > prevBest;
+      checkBadges();
+      if (window.Sfx) cleared || score > 0 ? Sfx.win() : Sfx.logout();
+      charEl.classList.add(cleared ? "win" : "dead");
+      const ov = document.createElement("div");
+      ov.className = "result-overlay";
+      ov.innerHTML = `
+        <div class="r-emoji">${cleared ? "🏆" : (PREFS.serious ? "⏱️" : "🏁")}</div>
+        <h2>${cleared ? t(UI.survival_clear) : t(UI.survival_over)}</h2>
+        <div class="result-stars">${t(UI.survival_score)}: ${score}</div>
+        <p>${t(UI.survival_best)}: ${Math.max(prevBest, score)} ${isNew ? "· " + t(UI.survival_new_best) : ""}</p>
+        <button class="btn btn-replay" id="s-share">${t(UI.share)}</button>
+        <button class="btn btn-play" id="s-retry">${t(UI.retry)}</button>
+        <button class="btn btn-ghost" id="s-back">${t(UI.back_list)}</button>`;
+      stage.appendChild(ov);
+      ov.querySelector("#s-retry").addEventListener("click", () => startSurvival());
+      ov.querySelector("#s-back").addEventListener("click", () => go("screen-levels"));
+      ov.querySelector("#s-share").addEventListener("click", () => {
+        const big = LANG === "en" ? `Survival: ${score} correct in a row` : `Survival: trả lời đúng ${score} câu liên tiếp`;
+        const sub = LANG === "en" ? "Can you beat my first-aid streak?" : "Bạn phá được kỷ lục sơ cứu của mình không?";
+        shareCard(big, sub);
+      });
+    }
+
+    gameState = { cleanup() { alive = false; cancelAnimationFrame(rafId); } };
+    ask();
   }
 
   /* ---------- TUTORIAL (hướng dẫn nhanh lần đầu) ---------- */
