@@ -84,18 +84,44 @@
     voice_auto: { vi: "Tự động", en: "Auto" },
     voice_off: { vi: "Tắt giọng đọc", en: "Voice off" },
     voice_test: { vi: "🔊 Thử giọng đọc", en: "🔊 Test voice" },
-    voice_warn_vi: { vi: "⚠️ Máy chưa có giọng tiếng Việt nên giọng đọc sẽ KHÔNG chuẩn. Cách khắc phục: Windows → Settings → Time & Language → Language → thêm Tiếng Việt + gói giọng nói (Speech). Hoặc chọn 'Tắt giọng đọc' và làm theo chữ.", en: "⚠️ No Vietnamese voice installed, so speech won't sound right. Add a Vietnamese speech voice in your OS settings, or choose 'Voice off' and follow the on-screen text." }
+    voice_warn_vi: { vi: "⚠️ Máy chưa có giọng tiếng Việt nên giọng đọc sẽ KHÔNG chuẩn. Cách khắc phục: Windows → Settings → Time & Language → Language → thêm Tiếng Việt + gói giọng nói (Speech). Hoặc chọn 'Tắt giọng đọc' và làm theo chữ.", en: "⚠️ No Vietnamese voice installed, so speech won't sound right. Add a Vietnamese speech voice in your OS settings, or choose 'Voice off' and follow the on-screen text." },
+    tools_btn: { vi: "🧰 CÔNG CỤ KHẨN CẤP", en: "🧰 EMERGENCY TOOLKIT" },
+    tools_title: { vi: "🧰 Công cụ khẩn cấp", en: "🧰 Emergency toolkit" },
+    metro_title: { vi: "🥁 Máy đếm nhịp CPR", en: "🥁 CPR metronome" },
+    metro_sub: { vi: "Ép theo nhịp này: 110 lần/phút, sâu 5–6cm, giữa ngực.", en: "Compress to this beat: 110/min, 5–6cm deep, center of chest." },
+    metro_start: { vi: "▶ Bắt đầu ép tim", en: "▶ Start compressions" },
+    metro_stop: { vi: "⏹ Dừng", en: "⏹ Stop" },
+    numbers_title: { vi: "🆘 Gọi khẩn cấp", en: "🆘 Emergency call" },
+    num_115: { vi: "Cấp cứu y tế", en: "Ambulance" },
+    num_113: { vi: "Công an", en: "Police" },
+    num_114: { vi: "Cứu hoả / cứu nạn", en: "Fire / rescue" },
+    num_111: { vi: "Bảo vệ trẻ em", en: "Child protection" },
+    medcard_title: { vi: "🪪 Thẻ y tế của tôi", en: "🪪 My medical card" },
+    medcard_edit: { vi: "✏️ Chỉnh sửa", en: "✏️ Edit" },
+    medcard_edit_title: { vi: "🪪 Sửa thẻ y tế", en: "🪪 Edit medical card" },
+    mc_name: { vi: "Họ tên", en: "Full name" },
+    mc_blood: { vi: "Nhóm máu", en: "Blood type" },
+    mc_allergy: { vi: "Dị ứng", en: "Allergies" },
+    mc_cond: { vi: "Bệnh nền / thuốc đang dùng", en: "Conditions / medications" },
+    mc_contact: { vi: "Người liên hệ khẩn cấp", en: "Emergency contact" },
+    mc_phone: { vi: "Số điện thoại liên hệ", en: "Contact phone" },
+    mc_save: { vi: "💾 Lưu thẻ", en: "💾 Save card" },
+    mc_saved: { vi: "Đã lưu thẻ y tế", en: "Medical card saved" },
+    mc_empty: { vi: "Chưa có thông tin. Bấm Chỉnh sửa để thêm — hữu ích cho người cứu hộ khi bạn gặp nạn.", en: "No info yet. Tap Edit to add — useful for first responders if something happens to you." },
+    mc_call: { vi: "📞 Gọi người thân", en: "📞 Call contact" }
   };
 
   /* ---------- NAVIGATION ---------- */
   const screens = {};
   document.querySelectorAll(".screen").forEach(s => (screens[s.id] = s));
   let current = "screen-home";
+  let emergStop = null, emergRender = null;   // gán bởi initEmergency
 
   function go(id) {
     if (!screens[id]) return;
     if (current === "screen-game") stopGame();
     if (current === "screen-panic") stopPanic();
+    if (current === "screen-emergency" && emergStop) emergStop();
     if (id === "screen-panic" && window.Sfx) Sfx.stopMusic();
     screens[current].classList.remove("active");
     screens[id].classList.add("active");
@@ -104,6 +130,7 @@
     current = id;
     if (id === "screen-levels") renderLevels();
     if (id === "screen-achievements") renderAchievements();
+    if (id === "screen-emergency" && emergRender) emergRender();
   }
   document.querySelectorAll("[data-goto]").forEach(btn =>
     btn.addEventListener("click", () => go(btn.dataset.goto))
@@ -2651,6 +2678,84 @@
     sync();
   })();
 
+  /* ---------- EMERGENCY TOOLKIT (metronome + thẻ y tế) ---------- */
+  (function initEmergency() {
+    /* máy đếm nhịp CPR độc lập */
+    const BPM = 110, interval = 60000 / BPM;
+    const ring = document.getElementById("metro-ring2");
+    const cnt = document.getElementById("metro-count2");
+    const toggle = document.getElementById("metro-toggle");
+    let mTimer = null, beat = 0;
+
+    function startMetro() {
+      stopMetro();
+      beat = 0;
+      if (window.Sfx) Sfx.unlock();
+      mTimer = setInterval(() => {
+        beat = (beat % 30) + 1;
+        if (cnt) cnt.textContent = beat;
+        if (ring) { ring.classList.add("beat"); setTimeout(() => ring.classList.remove("beat"), 110); }
+        if (window.Sfx) { Sfx.tick(); Sfx.vibrate(45); }
+      }, interval);
+      if (toggle) toggle.textContent = t(UI.metro_stop);
+    }
+    function stopMetro() {
+      if (mTimer) { clearInterval(mTimer); mTimer = null; }
+      if (toggle) toggle.textContent = t(UI.metro_start);
+      if (cnt) cnt.textContent = "CPR";
+    }
+    if (toggle) toggle.addEventListener("click", () => (mTimer ? stopMetro() : startMetro()));
+    emergStop = stopMetro;
+
+    /* thẻ y tế cá nhân */
+    const MC_KEY = "capcuu101_medcard";
+    function loadMC() { try { return JSON.parse(localStorage.getItem(MC_KEY)) || {}; } catch { return {}; } }
+    function esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; }
+    function row(labelKey, val) { return `<div class="mc-row"><b>${t(labelKey)}</b><span>${val}</span></div>`; }
+
+    function renderMC() {
+      const mc = loadMC();
+      const view = document.getElementById("medcard-view");
+      if (!view) return;
+      const has = mc.name || mc.blood || mc.allergy || mc.cond || mc.contact || mc.phone;
+      if (!has) { view.innerHTML = `<p class="mc-empty">${t(UI.mc_empty)}</p>`; return; }
+      let h = "";
+      if (mc.name) h += row(UI.mc_name, esc(mc.name));
+      if (mc.blood) h += `<div class="mc-row"><b>${t(UI.mc_blood)}</b><span class="mc-blood">${esc(mc.blood)}</span></div>`;
+      if (mc.allergy) h += row(UI.mc_allergy, esc(mc.allergy));
+      if (mc.cond) h += row(UI.mc_cond, esc(mc.cond));
+      if (mc.contact) h += row(UI.mc_contact, esc(mc.contact));
+      if (mc.phone) {
+        const tel = String(mc.phone).replace(/[^\d+]/g, "");
+        h += `<a class="mc-call" href="tel:${tel}">${t(UI.mc_call)}</a>`;
+      }
+      view.innerHTML = h;
+    }
+    emergRender = renderMC;
+
+    const editBtn = document.getElementById("medcard-edit");
+    const form = document.getElementById("medcard-form");
+    function fillForm() {
+      const mc = loadMC();
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ""; };
+      set("mc-name", mc.name); set("mc-blood", mc.blood); set("mc-allergy", mc.allergy);
+      set("mc-cond", mc.cond); set("mc-contact", mc.contact); set("mc-phone", mc.phone);
+    }
+    if (editBtn) editBtn.addEventListener("click", () => { fillForm(); go("screen-medcard"); });
+    if (form) form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const val = (id) => (document.getElementById(id)?.value || "").trim();
+      const mc = {
+        name: val("mc-name"), blood: val("mc-blood"), allergy: val("mc-allergy"),
+        cond: val("mc-cond"), contact: val("mc-contact"), phone: val("mc-phone")
+      };
+      localStorage.setItem(MC_KEY, JSON.stringify(mc));
+      if (window.Sfx) Sfx.correct();
+      toast(t(UI.mc_saved));
+      go("screen-emergency");
+    });
+  })();
+
   /* ---------- APPLY LANGUAGE ---------- */
   function applyLang() {
     document.body.classList.toggle("lang-en", LANG === "en");
@@ -2719,6 +2824,8 @@
   const params = new URLSearchParams(location.search);
   if (params.get("panic") === "1") {
     go("screen-panic");
+  } else if (params.get("tools") === "1") {
+    go("screen-emergency");
   } else {
     go("screen-home");
   }

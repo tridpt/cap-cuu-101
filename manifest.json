@@ -38,6 +38,13 @@
       "description": "Mở thẳng hướng dẫn cấp cứu khẩn cấp",
       "url": "./?panic=1",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Công cụ khẩn cấp",
+      "short_name": "Công cụ",
+      "description": "Máy đếm nhịp CPR, số khẩn cấp, thẻ y tế",
+      "url": "./?tools=1",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [

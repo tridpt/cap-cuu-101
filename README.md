@@ -142,6 +142,16 @@ Thêm các hỗ trợ khác: nhãn ARIA cho nút biểu tượng, vùng `aria-li
 
 > Lưu ý: các mini-game thao tác bằng cảm ứng (kéo vòi nước, giữ ép, nghiêng máy) khó thao tác bằng bàn phím — phần trắc nghiệm & Panic Mode là kênh học tập tiếp cận đầy đủ cho mọi người.
 
+## 🧰 Công cụ khẩn cấp (dùng ngoài đời thật)
+
+Nút **🧰 CÔNG CỤ KHẨN CẤP** ở trang chủ (có cả PWA shortcut `?tools=1`):
+
+- **🥁 Máy đếm nhịp CPR** — bấm một nút là phát ngay nhịp **110/phút** (tiếng tách + rung + đếm 1–30) để ép tim đúng nhịp trong tình huống thật
+- **🆘 Gọi khẩn cấp 1 chạm** — 115 (cấp cứu), 113 (công an), 114 (cứu hoả/cứu nạn), 111 (bảo vệ trẻ em), mỗi số một nút gọi `tel:`
+- **🪪 Thẻ y tế cá nhân** — lưu nhóm máu, dị ứng, bệnh nền/thuốc, người liên hệ (offline, trong máy bạn). Hiển thị thẻ to rõ cho người cứu hộ đọc + nút **gọi người thân 1 chạm**
+
+> Thẻ y tế lưu bằng `localStorage` trên thiết bị, không gửi đi đâu cả.
+
 ## 📂 Cấu trúc
 
 ```

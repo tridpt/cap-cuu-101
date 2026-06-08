@@ -61,6 +61,7 @@
       <div class="home-menu">
         <button class="btn btn-play" data-goto="screen-levels" data-i18n="play">🎮 CHƠI & HỌC</button>
         <button class="btn btn-panic" data-goto="screen-panic" data-i18n="panic_btn">🆘 CHẾ ĐỘ HOẢNG LOẠN</button>
+        <button class="btn btn-tools" data-goto="screen-emergency" data-i18n="tools_btn">🧰 CÔNG CỤ KHẨN CẤP</button>
         <div class="home-row">
           <button class="btn btn-ghost" data-goto="screen-achievements" data-i18n="ach_btn">🏆 Thành tích</button>
           <button class="btn btn-ghost" data-goto="screen-about" data-i18n="about_btn">❓ Giới thiệu</button>
@@ -247,6 +248,70 @@
         <div></div>
       </header>
       <div class="ach-body" id="ach-body"></div>
+    </section>
+
+    <!-- ===== CÔNG CỤ KHẨN CẤP ===== -->
+    <section id="screen-emergency" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-home">←</button>
+        <h2 data-i18n="tools_title">🧰 Công cụ khẩn cấp</h2>
+        <div></div>
+      </header>
+      <div class="emerg-body">
+
+        <!-- Máy đếm nhịp CPR -->
+        <div class="emerg-card">
+          <h3 data-i18n="metro_title">🥁 Máy đếm nhịp CPR</h3>
+          <p class="emerg-sub" data-i18n="metro_sub">Ép theo nhịp này: 110 lần/phút, sâu 5–6cm, giữa ngực.</p>
+          <div class="metro-ring2" id="metro-ring2"><span id="metro-count2">CPR</span></div>
+          <button class="btn btn-play" id="metro-toggle" data-i18n="metro_start">▶ Bắt đầu ép tim</button>
+        </div>
+
+        <!-- Số khẩn cấp -->
+        <div class="emerg-card">
+          <h3 data-i18n="numbers_title">🆘 Gọi khẩn cấp</h3>
+          <div class="num-grid">
+            <a class="num-btn num-115" href="tel:115"><b>115</b><span data-i18n="num_115">Cấp cứu y tế</span></a>
+            <a class="num-btn" href="tel:113"><b>113</b><span data-i18n="num_113">Công an</span></a>
+            <a class="num-btn" href="tel:114"><b>114</b><span data-i18n="num_114">Cứu hoả / cứu nạn</span></a>
+            <a class="num-btn" href="tel:111"><b>111</b><span data-i18n="num_111">Bảo vệ trẻ em</span></a>
+          </div>
+        </div>
+
+        <!-- Thẻ y tế cá nhân -->
+        <div class="emerg-card">
+          <h3 data-i18n="medcard_title">🪪 Thẻ y tế của tôi</h3>
+          <div id="medcard-view"></div>
+          <button class="btn btn-ghost" id="medcard-edit" data-i18n="medcard_edit">✏️ Chỉnh sửa</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SỬA THẺ Y TẾ ===== -->
+    <section id="screen-medcard" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" data-goto="screen-emergency">←</button>
+        <h2 data-i18n="medcard_edit_title">🪪 Sửa thẻ y tế</h2>
+        <div></div>
+      </header>
+      <div class="emerg-body">
+        <form id="medcard-form" class="medcard-form" autocomplete="off">
+          <label><span data-i18n="mc_name">Họ tên</span><input type="text" id="mc-name" maxlength="60" /></label>
+          <label><span data-i18n="mc_blood">Nhóm máu</span>
+            <select id="mc-blood">
+              <option value="">—</option>
+              <option>O+</option><option>O−</option><option>A+</option><option>A−</option>
+              <option>B+</option><option>B−</option><option>AB+</option><option>AB−</option>
+            </select>
+          </label>
+          <label><span data-i18n="mc_allergy">Dị ứng</span><input type="text" id="mc-allergy" maxlength="120" /></label>
+          <label><span data-i18n="mc_cond">Bệnh nền / thuốc đang dùng</span><textarea id="mc-cond" rows="2" maxlength="200"></textarea></label>
+          <label><span data-i18n="mc_contact">Người liên hệ khẩn cấp</span><input type="text" id="mc-contact" maxlength="60" /></label>
+          <label><span data-i18n="mc_phone">Số điện thoại liên hệ</span><input type="tel" id="mc-phone" maxlength="20" inputmode="tel" /></label>
+          <button type="submit" class="btn btn-play" data-i18n="mc_save">💾 Lưu thẻ</button>
+        </form>
+      </div>
     </section>
 
     <!-- ===== CÀI ĐẶT (overlay) ===== -->
