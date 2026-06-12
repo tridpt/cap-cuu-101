@@ -14,9 +14,9 @@ Một web app dạy kỹ năng sơ cứu sinh tử (CPR, hóc dị vật, bỏng
 
 100% HTML/CSS/JS thuần — không khung, không build, **chạy offline (PWA)**. Song ngữ 🇻🇳/🇬🇧.
 
-| Màn hình chính | Mini-game CPR |
+| ▶️ Demo (minh hoạ) | Màn hình chính |
 |:--:|:--:|
-| ![Home](screenshots/home.png) | ![Game](screenshots/game.png) |
+| ![Demo](screenshots/demo.gif) | ![Home](screenshots/home.png) |
 
 > ⚠️ Đây là sản phẩm giải trí + ghi nhớ. Nó **không** thay thế khoá sơ cứu chính quy
 > hay nhân viên y tế. Việc thật: **gọi 115 trước tiên.** Xem `MEDICAL_REVIEW.md` cho
@@ -186,10 +186,11 @@ cap-cuu-101/
 ├─ gen_icons.py # script tạo icon PNG (chạy 1 lần, cần Pillow)
 ├─ gen_screens.py # script tạo ảnh screenshot cho manifest (cần Pillow)
 ├─ gen_og.py    # script tạo ảnh Open Graph 1200x630 cho link preview (cần Pillow)
+├─ gen_gif.py   # script tạo GIF demo minh hoạ cho README (cần Pillow)
 ├─ MEDICAL_REVIEW.md # checklist cho nhân viên y tế rà soát nội dung
 ├─ icon.svg
 ├─ icons/       # icon-192.png, icon-512.png
-├─ screenshots/ # home.png, game.png, og.png
+├─ screenshots/ # home.png, game.png, og.png, demo.gif
 └─ README.md
 ```
 
