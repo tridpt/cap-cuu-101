@@ -161,6 +161,8 @@ Nút **📖 Cẩm nang sơ cứu** ở trang chủ: danh sách 17 tình huống 
 - **`FEATURES.md`** — danh sách đầy đủ tính năng
 - **`DOCUMENTATION.md`** — kiến trúc, cấu trúc mã, mô hình dữ liệu, cách mở rộng
 - **`CONTRIBUTING.md`** — quy ước đóng góp & kiểm tra
+- **`HUONG_DAN_TEST.md`** — checklist test thủ công từng bước
+- **`CHANGELOG.md`** — lịch sử thay đổi theo phiên bản
 - **`MEDICAL_REVIEW.md`** — checklist cho nhân viên y tế rà soát nội dung
 
 ## 📂 Cấu trúc
