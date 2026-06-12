@@ -156,6 +156,13 @@ Nút **🧰 CÔNG CỤ KHẨN CẤP** ở trang chủ (có cả PWA shortcut `?t
 
 Nút **📖 Cẩm nang sơ cứu** ở trang chủ: danh sách 17 tình huống dạng gập/mở, bấm vào là xem ngay các bước chính để **đọc lướt** bất cứ lúc nào (không cần chơi, không cần giọng đọc). Tái dùng đúng nội dung của Chế độ Hoảng loạn, song ngữ VI/EN.
 
+## 📚 Tài liệu
+
+- **`FEATURES.md`** — danh sách đầy đủ tính năng
+- **`DOCUMENTATION.md`** — kiến trúc, cấu trúc mã, mô hình dữ liệu, cách mở rộng
+- **`CONTRIBUTING.md`** — quy ước đóng góp & kiểm tra
+- **`MEDICAL_REVIEW.md`** — checklist cho nhân viên y tế rà soát nội dung
+
 ## 📂 Cấu trúc
 
 ```
