@@ -1,14 +1,22 @@
 # 🚑 Cấp Cứu 101: Đừng Để Chết Nhảm
 
-Học sơ cứu kiểu *Dumb Ways to Die* — vui, châm biếm, nhưng kiến thức thì thật.
+![Cấp Cứu 101](screenshots/og.png)
 
-**▶️ Chơi ngay (demo):** https://tridpt.github.io/cap-cuu-101/
+[![Chơi ngay](https://img.shields.io/badge/▶️_Chơi_ngay-Demo-ff5d73?style=for-the-badge)](https://tridpt.github.io/cap-cuu-101/)
+[![PWA](https://img.shields.io/badge/PWA-offline-3ddc97)](https://tridpt.github.io/cap-cuu-101/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-ffd23f)](LICENSE)
+![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-no_deps-4ea1ff)
+![Song ngữ](https://img.shields.io/badge/🇻🇳_VI_%2F_EN_🇬🇧-blue)
 
-Một web app dạy kỹ năng sơ cứu sinh tử (CPR, hóc dị vật, bỏng, cầm máu) thông qua
-mini-game hoạt hình hài hước. Làm sai? Nhân vật "đăng xuất khỏi cuộc đời" cực buồn cười.
-Gặp chuyện thật? Bật **Chế độ Hoảng loạn** để app đọc to từng bước cho bạn làm theo.
+> Học sơ cứu kiểu *Dumb Ways to Die* — vui, châm biếm, nhưng kiến thức thì thật.
 
-100% HTML/CSS/JS thuần — không khung, không build, chạy offline (PWA). Song ngữ 🇻🇳/🇬🇧.
+Một web app dạy kỹ năng sơ cứu sinh tử (CPR, hóc dị vật, bỏng, cầm máu...) qua **mini-game hoạt hình hài hước**. Làm sai? Nhân vật "đăng xuất khỏi cuộc đời" cực buồn cười. Gặp chuyện thật? Bật **Chế độ Hoảng loạn** để app đọc to từng bước cho bạn làm theo.
+
+100% HTML/CSS/JS thuần — không khung, không build, **chạy offline (PWA)**. Song ngữ 🇻🇳/🇬🇧.
+
+| Màn hình chính | Mini-game CPR |
+|:--:|:--:|
+| ![Home](screenshots/home.png) | ![Game](screenshots/game.png) |
 
 > ⚠️ Đây là sản phẩm giải trí + ghi nhớ. Nó **không** thay thế khoá sơ cứu chính quy
 > hay nhân viên y tế. Việc thật: **gọi 115 trước tiên.** Xem `MEDICAL_REVIEW.md` cho
