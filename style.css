@@ -296,7 +296,20 @@ body {
 .modal-card {
   background: var(--card); border-radius: 20px; padding: 22px;
   width: 100%; max-width: 360px; box-shadow: var(--shadow);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* thanh cuộn theo tông terminal xanh phosphor */
+  scrollbar-width: thin;
+  scrollbar-color: var(--good) transparent;
 }
+.modal-card::-webkit-scrollbar { width: 8px; }
+.modal-card::-webkit-scrollbar-track { background: transparent; }
+.modal-card::-webkit-scrollbar-thumb {
+  background: var(--good); border-radius: 0;
+  box-shadow: 0 0 6px var(--good);
+}
+.modal-card::-webkit-scrollbar-thumb:hover { background: #6cff9f; }
 .modal-card h2 { margin: 0 0 16px; text-align: center; }
 .toggle-row {
   display: flex; align-items: center; justify-content: space-between;
