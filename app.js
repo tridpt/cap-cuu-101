@@ -624,7 +624,7 @@
       const item = pool[idx];
       controls.querySelectorAll(".choice").forEach(b => { if (b.textContent === item.options.find(o => o.ok).t) b.classList.add("correct"); });
       if (window.Sfx) { Sfx.wrong(); Sfx.vibrate(150); }
-      floatText(t(UI.time_up), "#ff5d73");
+      floatText(t(UI.time_up), "#ff5d5d");
       end(false);
     }
 
@@ -758,19 +758,23 @@
     c.width = 1080; c.height = 1080;
     const x = c.getContext("2d");
     const g = x.createLinearGradient(0, 0, 0, 1080);
-    g.addColorStop(0, "#1a1c3a"); g.addColorStop(1, "#0f1020");
+    g.addColorStop(0, "#08210f"); g.addColorStop(1, "#04120a");
     x.fillStyle = g; x.fillRect(0, 0, 1080, 1080);
-    // chữ thập
-    x.fillStyle = "#ff5d73"; x.beginPath(); x.arc(540, 300, 150, 0, Math.PI * 2); x.fill();
+    // scanline CRT
+    x.fillStyle = "rgba(0,0,0,.25)";
+    for (let y = 0; y < 1080; y += 3) x.fillRect(0, y, 1080, 1);
+    // chữ thập vuông pixel + viền phosphor
+    x.fillStyle = "#ff5d5d"; x.fillRect(540 - 150, 300 - 150, 300, 300);
+    x.strokeStyle = "#46f08a"; x.lineWidth = 10; x.strokeRect(540 - 150, 300 - 150, 300, 300);
     x.fillStyle = "#fff"; x.fillRect(540 - 32, 300 - 95, 64, 190); x.fillRect(540 - 95, 300 - 32, 190, 64);
     x.textAlign = "center";
-    x.fillStyle = "#f4f4ff"; x.font = "bold 92px Segoe UI, Arial, sans-serif";
+    x.fillStyle = "#7dffb0"; x.font = "bold 92px 'JetBrains Mono', 'Courier New', monospace";
     x.fillText("CẤP CỨU 101", 540, 580);
-    x.fillStyle = "#ffd23f"; x.font = "bold 62px Segoe UI, Arial, sans-serif";
+    x.fillStyle = "#ffe14d"; x.font = "bold 62px 'JetBrains Mono', 'Courier New', monospace";
     x.fillText(bigText, 540, 690);
-    x.fillStyle = "#9aa0c7"; x.font = "40px Segoe UI, Arial, sans-serif";
+    x.fillStyle = "#3f9d6e"; x.font = "40px 'JetBrains Mono', 'Courier New', monospace";
     (subText || "").split("\n").forEach((line, i) => x.fillText(line, 540, 800 + i * 56));
-    x.fillStyle = "#3ddc97"; x.font = "34px Segoe UI, Arial, sans-serif";
+    x.fillStyle = "#46f08a"; x.font = "34px 'JetBrains Mono', 'Courier New', monospace";
     x.fillText(SHARE_URL.replace("https://", ""), 540, 1000);
     return new Promise(res => c.toBlob(res, "image/png"));
   }
@@ -881,12 +885,12 @@
         comboEl.textContent = combo >= 3 ? "x" + combo : "";
         bumpCombo();
         if (window.Sfx) Sfx.correct();
-        floatText(combo >= 5 ? "PERFECT! 🔥" : "PERFECT!", "#3ddc97");
+        floatText(combo >= 5 ? "PERFECT! 🔥" : "PERFECT!", "#46f08a");
       } else {
         combo = 0; comboEl.textContent = "";
         if (window.Sfx) Sfx.blip();
-        if (phase < interval / 2) floatText(LANG === "en" ? "Too fast!" : "Nhanh quá!", "#ffd23f");
-        else floatText(LANG === "en" ? "Too slow!" : "Chậm quá!", "#ff5d73");
+        if (phase < interval / 2) floatText(LANG === "en" ? "Too fast!" : "Nhanh quá!", "#ffe14d");
+        else floatText(LANG === "en" ? "Too slow!" : "Chậm quá!", "#ff5d5d");
       }
 
       const pct = Math.min(100, (good / TARGET) * 100);
@@ -937,18 +941,18 @@
       if (strong) {
         thrusts++;
         if (window.Sfx) { Sfx.correct(); Sfx.vibrate(60); }
-        floatText(LANG === "en" ? "THRUST! 🟣" : "ĐẨY! 🟣", "#3ddc97");
+        floatText(LANG === "en" ? "THRUST! 🟣" : "ĐẨY! 🟣", "#46f08a");
         pf.style.width = (thrusts / NEED) * 100 + "%";
         document.getElementById("game-hp").textContent = Math.min(100, 50 + thrusts * 8);
         if (thrusts >= NEED) win();
       } else {
         if (window.Sfx) Sfx.blip();
-        floatText(LANG === "en" ? "Too soft!" : "Nhẹ quá!", "#ffd23f");
+        floatText(LANG === "en" ? "Too soft!" : "Nhẹ quá!", "#ffe14d");
       }
     }
     function win() {
       alive = false; cleanup();
-      charEl.textContent = "🧋"; floatText(LANG === "en" ? "IT'S OUT!" : "BẬT RA RỒI!", "#3ddc97");
+      charEl.textContent = "🧋"; floatText(LANG === "en" ? "IT'S OUT!" : "BẬT RA RỒI!", "#46f08a");
       setTimeout(() => { charEl.textContent = lv.char; charEl.classList.add("win"); }, 400);
       setTimeout(() => showResult(lv, true, 3, LANG === "en" ? "Boba launched into orbit 🚀" : "Trân châu bay ra ngoài quỹ đạo 🚀"), 900);
     }
@@ -1103,7 +1107,7 @@
         cooled += dt;
         wound.style.filter = "saturate(.6) brightness(1)";
         cool.textContent = (LANG === "en" ? "Cooling… " : "Đang làm mát… ") + Math.round(cooled / NEED * 100) + "%";
-        cool.style.color = "#3ddc97";
+        cool.style.color = "#46f08a";
         if (Math.random() < 0.04 && window.Sfx) Sfx.blip();
         // vết bỏng "lan": thỉnh thoảng nhảy sang vị trí mới khi đang xử lý
         sinceFlare += dt;
@@ -1112,13 +1116,13 @@
           place();
           pointerInside = false;
           if (window.Sfx) Sfx.wrong();
-          floatText(LANG === "en" ? "Flare! 🔥" : "Bỏng lan! 🔥", "#ff5d73");
+          floatText(LANG === "en" ? "Flare! 🔥" : "Bỏng lan! 🔥", "#ff5d5d");
         }
       } else {
         cooled = Math.max(0, cooled - dt * 0.5);  // nóng lại nếu rời vòi
         wound.style.filter = "saturate(1.6) brightness(1.2)";
         cool.textContent = LANG === "en" ? "🔥 Heating up! Bring the water back!" : "🔥 Đang nóng lại! Đưa vòi nước về!";
-        cool.style.color = "#ff5d73";
+        cool.style.color = "#ff5d5d";
       }
       pf.style.width = Math.min(100, cooled / NEED * 100) + "%";
       document.getElementById("game-hp").textContent =
@@ -1128,7 +1132,7 @@
         alive = false; clearInterval(loop); onUp();
         wound.style.filter = "none";
         wound.classList.add("character", "win");
-        floatText(LANG === "en" ? "COOLED! 💧" : "MÁT RỒI! 💧", "#3ddc97");
+        floatText(LANG === "en" ? "COOLED! 💧" : "MÁT RỒI! 💧", "#46f08a");
         setTimeout(() => showResult(lv, true, 3, LANG === "en" ? "Burn cooled the right way 👏" : "Hạ nhiệt vết bỏng đúng cách 👏"), 700);
       }
     }, 60);
@@ -1195,11 +1199,11 @@
         gauze.style.top = tcy - rr.top - 28 + "px";
         target.style.opacity = "0";
         if (window.Sfx) Sfx.correct();
-        floatText(LANG === "en" ? "PERFECT PLACEMENT!" : "ĐẶT CHUẨN!", "#3ddc97");
+        floatText(LANG === "en" ? "PERFECT PLACEMENT!" : "ĐẶT CHUẨN!", "#46f08a");
         startHold();
       } else {
         if (window.Sfx) Sfx.blip();
-        floatText(LANG === "en" ? "Missed!" : "Trượt rồi!", "#ffd23f");
+        floatText(LANG === "en" ? "Missed!" : "Trượt rồi!", "#ffe14d");
       }
     }
     gauze.addEventListener("pointerdown", gz);
@@ -1250,12 +1254,12 @@
         if (force >= zLo && force <= zHi) {
           inZone += dt;
           hint.textContent = (LANG === "en" ? "Hold steady… " : "Giữ ổn định… ") + Math.round(inZone / NEED_ZONE * 100) + "%";
-          hint.style.color = "#3ddc97";
+          hint.style.color = "#46f08a";
         } else {
           hint.textContent = force > zHi
             ? (LANG === "en" ? "Too hard, ease off!" : "Mạnh quá, nới một chút!")
             : (LANG === "en" ? "Press harder!" : "Ép mạnh hơn!");
-          hint.style.color = "#ffd23f";
+          hint.style.color = "#ffe14d";
         }
         document.getElementById("game-hp").textContent =
           Math.min(100, 40 + Math.round(inZone / NEED_ZONE * 60));
@@ -1264,7 +1268,7 @@
           alive = false; clearInterval(holdLoop);
           charEl.classList.add("win");
           if (window.Sfx) Sfx.win();
-          floatText(LANG === "en" ? "BLEEDING STOPPED! 🩸✋" : "CẦM MÁU OK! 🩸✋", "#3ddc97");
+          floatText(LANG === "en" ? "BLEEDING STOPPED! 🩸✋" : "CẦM MÁU OK! 🩸✋", "#46f08a");
           setTimeout(() => showResult(lv, true, 3, LANG === "en" ? "Right pressure, right spot. Nice!" : "Ép đúng lực, đúng chỗ. Giỏi!"), 700);
         }
       }, 60);
@@ -2092,7 +2096,7 @@
       if (opt.ok) {
         btn.classList.add("correct");
         if (window.Sfx) { Sfx.correct(); Sfx.vibrate(40); }
-        floatText(t(UI.correct), "#3ddc97");
+        floatText(t(UI.correct), "#46f08a");
         charEl.classList.remove("pulse"); void charEl.offsetWidth; charEl.classList.add("pulse");
         idx++;
         setTimeout(render, 750);
@@ -2102,7 +2106,7 @@
         all.forEach(b => { if (b.textContent === item.options.find(o => o.ok).t) b.classList.add("correct"); });
         hp -= 40;
         document.getElementById("game-hp").textContent = Math.max(0, hp);
-        floatText("-40 ❤️", "#ff5d73");
+        floatText("-40 ❤️", "#ff5d5d");
         if (hp <= 0) {
           alive = false;
           charEl.classList.add("dead");

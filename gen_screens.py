@@ -3,14 +3,15 @@ Vẽ mock UI bằng hình khối + chữ (không phụ thuộc font emoji)."""
 from PIL import Image, ImageDraw, ImageFont
 
 W, H = 540, 1080
-BG = (15, 16, 32)
-BG2 = (26, 28, 58)
-CARD = (35, 37, 68)
-ACCENT = (255, 93, 115)
-ACCENT2 = (255, 210, 63)
-GOOD = (61, 220, 151)
-TEXT = (244, 244, 255)
-MUTED = (154, 160, 199)
+# Theme Terminal/8-bit
+BG = (4, 18, 10)         # #04120a
+BG2 = (8, 33, 15)        # #08210f
+CARD = (10, 36, 20)      # #0a2414
+ACCENT = (255, 93, 93)   # #ff5d5d
+ACCENT2 = (255, 225, 77) # #ffe14d
+GOOD = (70, 240, 138)    # #46f08a
+TEXT = (125, 255, 176)   # #7dffb0
+MUTED = (63, 157, 110)   # #3f9d6e
 
 
 def font(size, bold=True):
@@ -28,15 +29,22 @@ def center_text(d, cx, y, txt, f, fill):
 
 
 def rrect(d, box, r, fill):
-    d.rounded_rectangle(box, radius=r, fill=fill)
+    # Góc vuông pixel + viền phosphor
+    d.rectangle(box, fill=fill, outline=GOOD, width=3)
 
 
 def cross(d, cx, cy, r, color):
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color)
-    t = r * 0.32
+    """Chữ thập vuông pixel thay vòng tròn."""
+    d.rectangle([cx - r, cy - r, cx + r, cy + r], fill=color, outline=GOOD, width=4)
+    t = r * 0.24
     a = r * 0.6
     d.rectangle([cx - t, cy - a, cx + t, cy + a], fill=(255, 255, 255))
     d.rectangle([cx - a, cy - t, cx + a, cy + t], fill=(255, 255, 255))
+
+
+def scanlines(d):
+    for y in range(0, H, 3):
+        d.line([(0, y), (W, y)], fill=(0, 0, 0))
 
 
 def base():
@@ -48,6 +56,7 @@ def base():
                fill=(int(BG2[0] * (1 - t) + BG[0] * t),
                      int(BG2[1] * (1 - t) + BG[1] * t),
                      int(BG2[2] * (1 - t) + BG[2] * t)))
+    scanlines(d)
     return img, d
 
 
@@ -74,9 +83,9 @@ def shot_game(path):
     img, d = base()
     center_text(d, W // 2, 60, "Ép tim cho Gấu Béo", font(34), TEXT)
     # stage
-    rrect(d, [40, 130, W - 40, 720], 22, (22, 24, 58))
+    rrect(d, [40, 130, W - 40, 720], 22, CARD)
     # progress
-    rrect(d, [60, 160, W - 60, 184], 12, (60, 63, 110))
+    rrect(d, [60, 160, W - 60, 184], 12, BG2)
     rrect(d, [60, 160, 360, 184], 12, GOOD)
     # beat ring + heart
     d.ellipse([W // 2 - 110, 360, W // 2 + 110, 580], outline=ACCENT2, width=6)

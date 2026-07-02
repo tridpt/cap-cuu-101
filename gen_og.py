@@ -2,12 +2,14 @@
 from PIL import Image, ImageDraw, ImageFont
 
 W, H = 1200, 630
-BG = (15, 16, 32)
-BG2 = (26, 28, 58)
-ACCENT = (255, 93, 115)
-ACCENT2 = (255, 210, 63)
-TEXT = (244, 244, 255)
-MUTED = (154, 160, 199)
+# Theme Terminal/8-bit
+BG = (4, 18, 10)         # #04120a
+BG2 = (8, 33, 15)        # #08210f
+ACCENT = (255, 93, 93)   # #ff5d5d đỏ báo động
+ACCENT2 = (255, 225, 77) # #ffe14d hổ phách
+TEXT = (125, 255, 176)   # #7dffb0 xanh terminal
+MUTED = (63, 157, 110)   # #3f9d6e
+GOOD = (70, 240, 138)    # #46f08a
 
 
 def font(size, bold=True):
@@ -25,11 +27,19 @@ def center(d, cx, y, txt, f, fill):
 
 
 def cross(d, cx, cy, r, color):
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color)
-    t = r * 0.32
+    """Chữ thập vuông pixel (khối, có viền phosphor) thay vòng tròn."""
+    box = [cx - r, cy - r, cx + r, cy + r]
+    d.rectangle(box, fill=color, outline=GOOD, width=6)
+    t = r * 0.24
     a = r * 0.62
     d.rectangle([cx - t, cy - a, cx + t, cy + a], fill=(255, 255, 255))
     d.rectangle([cx - a, cy - t, cx + a, cy + t], fill=(255, 255, 255))
+
+
+def scanlines(d):
+    """Phủ scanline CRT: kẻ ngang tối mỗi 3px."""
+    for y in range(0, H, 3):
+        d.line([(0, y), (W, y)], fill=(0, 0, 0))
 
 
 def main(path):
@@ -41,11 +51,12 @@ def main(path):
                fill=(int(BG2[0] * (1 - t) + BG[0] * t),
                      int(BG2[1] * (1 - t) + BG[1] * t),
                      int(BG2[2] * (1 - t) + BG[2] * t)))
-    cross(d, 230, H // 2, 150, ACCENT)
-    d.text((430, 170), "CẤP CỨU 101", font=font(96), fill=TEXT)
-    d.text((432, 285), "Đừng để chết nhảm", font=font(54, False), fill=ACCENT)
+    scanlines(d)
+    cross(d, 230, H // 2, 140, ACCENT)
+    d.text((430, 160), "CẤP CỨU 101", font=font(96), fill=TEXT)
+    d.text((432, 285), "Đừng để chết nhảm", font=font(54, False), fill=ACCENT2)
     d.text((434, 380), "Học sơ cứu kiểu Dumb Ways to Die", font=font(38, False), fill=MUTED)
-    d.text((434, 440), "CPR · Hóc dị vật · Bỏng · Cầm máu · Panic Mode", font=font(30, False), fill=ACCENT2)
+    d.text((434, 440), "CPR · Hóc dị vật · Bỏng · Cầm máu · Panic Mode", font=font(30, False), fill=GOOD)
     img.save(path)
     print("wrote", path)
 

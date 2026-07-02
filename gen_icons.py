@@ -1,21 +1,30 @@
-"""Sinh icon PWA cho Cap Cuu 101 (chạy 1 lần). Cần Pillow."""
+"""Sinh icon PWA cho Cap Cuu 101 (chạy 1 lần). Cần Pillow.
+Theme Terminal/8-bit: nền CRT xanh-đen, chữ thập pixel xanh phosphor."""
 from PIL import Image, ImageDraw
+
+BG = (4, 18, 10, 255)        # #04120a nền CRT
+LINE = (28, 90, 52, 255)     # #1c5a34 viền
+GOOD = (70, 240, 138, 255)   # #46f08a xanh phosphor
+AMBER = (255, 225, 77, 255)  # #ffe14d hổ phách
 
 
 def make_icon(size: int, path: str) -> None:
-    img = Image.new("RGBA", (size, size), (15, 16, 32, 255))  # nền #0f1020
+    img = Image.new("RGBA", (size, size), BG)
     d = ImageDraw.Draw(img)
 
-    # vòng tròn đỏ (an toàn trong vùng maskable ~80%)
-    pad = size * 0.16
-    d.ellipse([pad, pad, size - pad, size - pad], fill=(255, 93, 115, 255))  # #ff5d73
+    # viền pixel (trong vùng maskable an toàn)
+    b = size * 0.06
+    d.rectangle([b, b, size - b, size - b], outline=LINE, width=max(2, int(size * 0.02)))
 
-    # chữ thập trắng
+    # chữ thập pixel vuông (thay cho vòng tròn bo mềm)
     cx = cy = size / 2
-    arm = size * 0.26   # nửa chiều dài thanh
-    thick = size * 0.085  # nửa độ dày
-    d.rectangle([cx - thick, cy - arm, cx + thick, cy + arm], fill=(255, 255, 255, 255))
-    d.rectangle([cx - arm, cy - thick, cx + arm, cy + thick], fill=(255, 255, 255, 255))
+    arm = size * 0.28   # nửa chiều dài thanh
+    thick = size * 0.10  # nửa độ dày
+    d.rectangle([cx - thick, cy - arm, cx + thick, cy + arm], fill=GOOD)
+    d.rectangle([cx - arm, cy - thick, cx + arm, cy + thick], fill=GOOD)
+
+    # gạch hổ phách kiểu "baseline terminal"
+    d.rectangle([cx - arm, size * 0.82, cx + arm, size * 0.82 + size * 0.045], fill=AMBER)
 
     img.save(path, "PNG")
     print("wrote", path)
