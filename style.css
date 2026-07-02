@@ -1,21 +1,25 @@
 :root {
-  --bg: #0f1020;
-  --bg2: #1a1c3a;
-  --card: #232544;
-  --accent: #ff5d73;
-  --accent2: #ffd23f;
-  --good: #3ddc97;
-  --panic: #ff3b3b;
-  --text: #f4f4ff;
-  --muted: #9aa0c7;
-  --radius: 18px;
-  --shadow: 0 8px 24px rgba(0,0,0,.35);
+  /* ===== THEME: TERMINAL / 8-BIT Y TẾ ===== */
+  --bg: #04120a;        /* nền CRT xanh-đen */
+  --bg2: #08210f;       /* nền sáng hơn chút */
+  --card: #0a2414;      /* panel */
+  --accent: #ff5d5d;    /* đỏ báo động */
+  --accent2: #ffe14d;   /* hổ phách - điểm nhấn / sao */
+  --good: #46f08a;      /* xanh phosphor chủ đạo */
+  --panic: #ff3b3b;     /* đỏ khẩn cấp */
+  --text: #7dffb0;      /* chữ xanh terminal */
+  --muted: #3f9d6e;     /* xanh mờ */
+  --radius: 0px;        /* góc vuông pixel */
+  --shadow: 3px 3px 0 #06170d;
+  --pixel: "Press Start 2P", "JetBrains Mono", monospace;
+  --mono: "JetBrains Mono", "Courier New", monospace;
+  --line: #1c5a34;      /* màu viền */
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; }
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: var(--mono);
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
@@ -584,3 +588,159 @@ body.mode-serious .character.dead { animation: seriousFade .8s forwards; }
 .hb-item.open .hb-steps { display: block; animation: fadeIn .2s ease; }
 .hb-steps li { margin: 0 0 8px; line-height: 1.5; font-size: 14.5px; }
 .hb-steps li::marker { color: var(--accent2); font-weight: 800; }
+
+/* ============================================================
+   ===== THEME OVERRIDES: TERMINAL / 8-BIT Y TẾ =====
+   Giữ nguyên cấu trúc & JS, chỉ thay lớp da hiển thị.
+   Font: JetBrains Mono (hỗ trợ tiếng Việt) cho toàn bộ chữ,
+   Press Start 2P chỉ cho số/ASCII (101, 115...) để không vỡ dấu.
+   ============================================================ */
+
+/* --- Hiệu ứng scanline CRT phủ toàn khung --- */
+#app::before {
+  content: ""; position: absolute; inset: 0; z-index: 40; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 2px, transparent 2px 4px);
+}
+#app::after {
+  content: ""; position: absolute; inset: 0; z-index: 41; pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 50%, transparent 60%, rgba(0,0,0,.45));
+}
+#app { background: linear-gradient(180deg, var(--bg2), var(--bg)); }
+
+/* --- Nền home: bỏ glow hồng/vàng, thay bằng quầng phosphor + lưới --- */
+.home-bg {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(70,240,138,.10), transparent 60%),
+    linear-gradient(rgba(70,240,138,.04) 1px, transparent 1px) 0 0 / 100% 22px;
+}
+
+/* --- Tiêu đề: chữ VN dùng mono đậm + glow; "101" dùng pixel --- */
+.title, .splash-title {
+  font-family: var(--mono); font-weight: 800; letter-spacing: 1px;
+  text-transform: uppercase; text-shadow: 0 0 10px rgba(70,240,138,.45);
+  color: var(--good);
+}
+.title { font-size: 34px; }
+.title span, .splash-title span {
+  font-family: var(--pixel); font-size: .62em; color: var(--accent2);
+  text-shadow: 0 0 8px rgba(255,225,77,.5); margin-left: 4px;
+}
+.subtitle, .splash-sub {
+  color: var(--accent2); font-style: normal; letter-spacing: 2px;
+  text-transform: uppercase; font-size: 13px;
+}
+.subtitle::before, .splash-sub::before { content: "> "; color: var(--good); }
+.subtitle::after { content: "_"; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+
+/* --- Tiêu đề màn & khối --- */
+.topbar h2, .modal-card h2, .result-overlay h2 {
+  font-family: var(--mono); font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--good);
+}
+.emerg-card h3, .src-item h3, .hb-head, .badge .b-name, .ach-section-title {
+  text-transform: uppercase; letter-spacing: .5px;
+}
+
+/* --- Nút bấm kiểu terminal: viền + bóng pixel cứng --- */
+.btn {
+  border-radius: 0; border: 2px solid var(--good);
+  background: #0c2e1a; color: var(--good);
+  box-shadow: var(--shadow); font-family: var(--mono); font-weight: 800;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.btn:active { transform: translate(3px, 3px); box-shadow: none; }
+.btn-play  { background: #12351f; border-color: var(--accent2); color: var(--accent2); }
+.btn-panic { background: #3a0f0f; border-color: var(--accent);  color: #ff9a9a; }
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--muted); box-shadow: none; }
+.btn-replay{ background: #0f2e1c; border-color: var(--good); color: var(--good); }
+.btn-tools { background: #0a2436; border-color: #4ea1ff; color: #8cc9ff; }
+
+/* --- Panel/thẻ: vuông, viền pixel, bóng cứng --- */
+.level-card, .emerg-card, .src-item, .hb-item, .lesson-box,
+.badge, .ach-stat, .streak-banner, .num-btn, .choice, .voice-warn {
+  border-radius: 0; border: 2px solid var(--line);
+  background: var(--card); box-shadow: var(--shadow);
+}
+.modal-card, .tutorial-card {
+  border-radius: 0; border: 2px solid var(--good);
+  background: var(--card); box-shadow: 6px 6px 0 #06170d;
+}
+.panic-card {
+  border-radius: 0; border: 2px solid #5a2323; background: #180a0d;
+  color: var(--text); box-shadow: var(--shadow);
+}
+.panic-card:active { transform: translate(2px, 2px); }
+
+/* --- Ô nhỏ vuông góc --- */
+.icon-btn, .score-pill, .lang-opt, .voice-select,
+.medcard-form input, .medcard-form select, .medcard-form textarea {
+  border-radius: 0 !important;
+}
+.icon-btn { border: 2px solid var(--line); background: var(--card); color: var(--good); }
+.score-pill { border: 2px solid var(--line); color: var(--accent2); }
+
+/* --- Số & mã dùng font pixel (ASCII an toàn) --- */
+.num-btn b, .ach-stat .num, .title span, .splash-title span {
+  font-family: var(--pixel);
+}
+.num-btn b { font-size: 22px; }
+.ach-stat .num { font-size: 22px; }
+
+/* --- Số khẩn cấp: giữ mã màu --- */
+.num-btn { background: var(--bg2); }
+.num-btn.num-115 { border-color: var(--panic); }
+
+/* --- Khu chơi game: nền terminal --- */
+.game-stage {
+  border-radius: 0; border: 2px solid var(--line);
+  background: linear-gradient(180deg, #08210f, #04120a);
+}
+.tap-zone { border-radius: 0; border: 2px solid var(--accent); box-shadow: var(--shadow); }
+.tap-zone:active { transform: translate(3px, 3px); box-shadow: none; }
+.progress-bar, .tilt-meter, .force-track { border-radius: 0; border: 1px solid var(--line); }
+
+/* --- Vòng metronome: viền đôi kiểu HUD --- */
+.metronome-ring, .metro-ring2 { border-style: double; }
+
+/* --- Overlay kết quả / splash: nền xanh-đen --- */
+.result-overlay { background: rgba(4,18,10,.96); }
+.splash { background: radial-gradient(120% 90% at 50% 30%, var(--bg2), var(--bg)); }
+.splash-bar { border-radius: 0; border: 1px solid var(--line); }
+.splash-bar-fill { border-radius: 0; background: var(--good); box-shadow: 0 0 8px var(--good); }
+
+/* --- Modal cài đặt: công tắc vuông kiểu phím --- */
+.toggle-row input { border-radius: 0; background: #123f24; }
+.toggle-row input::after { border-radius: 0; }
+.toggle-row input:checked { background: var(--good); }
+
+/* --- Toast: hộp thoại terminal --- */
+.toast {
+  border-radius: 0; border: 2px solid var(--good);
+  background: #06170d; color: var(--good); box-shadow: var(--shadow);
+}
+
+/* --- Cảnh báo: khung đỏ đứt nét --- */
+.about-warn {
+  border-radius: 0; border: 2px dashed var(--panic);
+  background: rgba(255,59,59,.10);
+}
+
+/* --- Lưới lựa chọn quiz --- */
+.choice { border-color: var(--line); }
+.choice.correct { background: var(--good); color: #06281b; }
+.choice.wrong   { background: var(--accent); color: #180a0d; }
+
+/* --- Huy hiệu mở khoá: viền hổ phách phát sáng --- */
+.badge.unlocked { border-color: var(--accent2); box-shadow: 0 0 10px rgba(255,225,77,.25); }
+
+/* --- Nút ngôn ngữ đang chọn --- */
+.lang-opt.active { background: var(--good); color: #06170d; border: 2px solid var(--good); }
+
+/* --- Focus: viền phosphor cho hợp tông --- */
+:focus-visible { outline: 3px solid var(--good); outline-offset: 2px; border-radius: 0; }
+
+/* --- Tương phản cao: giữ nền đen, chữ xanh sáng --- */
+body.a11y-contrast {
+  --text: #b9ffd6; --muted: #7fe0a8; --bg: #000800; --card: #041a0d;
+}
